@@ -5,7 +5,5 @@
 	"semi": true,
 	"trailingComma": "es5",
 	"printWidth": 120,
-	"plugins": [
-		"prettier-plugin-tailwindcss"
-	]
+	"plugins": ["prettier-plugin-tailwindcss"]
 }

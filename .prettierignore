@@ -40,6 +40,8 @@ next-env.d.ts
 # ***************** extras different than .gitignore *****************
 # ********************************************************************
 package-lock.json
+.prettierignore
+.gitignore
 *.md
 # shadcn components
 /src/components/ui
