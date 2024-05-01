@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
 	title: "NaruDo",
@@ -17,6 +18,7 @@ export default function RootLayout({
 			<body>
 				<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
 					{children}
+					<SpeedInsights />
 				</ThemeProvider>
 			</body>
 		</html>
