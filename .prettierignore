@@ -34,3 +34,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# ********************************************************************
+# ***************** extras different than .gitignore *****************
+# ********************************************************************
+package-lock.json
+*.md
+# shadcn components
+/src/components/ui
