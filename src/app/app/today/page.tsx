@@ -35,15 +35,18 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { Calendar } from "@/components/ui/calendar";
 
 export default function Home() {
+	const [date, setDate] = React.useState<Date | undefined>(new Date());
+	const [month, setMonth] = React.useState<Date | undefined>(new Date());
 	return (
 		<>
 			<div className="h-screen w-screen">
-				<div className="flex h-screen w-80 flex-col border-r p-4 px-5">
+				<div className="flex h-screen w-80 flex-col border-r px-4 py-2">
 					{/* sidebar */}
 					<div className="flex h-screen flex-col">
-						<div className="flex items-center justify-between">
+						<div className="mb-2 flex items-center justify-between">
 							{/* clerk shit here... */}
 							<div className="p-1">delete</div>
 							<DropdownMenu>
@@ -80,7 +83,24 @@ export default function Home() {
 								</DropdownMenuContent>
 							</DropdownMenu>
 						</div>
-						{/* react calendar shit here .... */}
+
+						<Calendar
+							mode="single"
+							selected={date}
+							onSelect={setDate}
+							month={month}
+							onMonthChange={setMonth}
+							className="mb-2 rounded-md border"
+						/>
+						<Button
+							onClick={() => {
+								setDate(new Date());
+								setMonth(new Date());
+							}}
+						>
+							Go to Today
+						</Button>
+						<Separator className="my-2" />
 						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
 							<Inbox className="mr-2 h-4 w-4" />
 							Task Inbox
@@ -93,7 +113,7 @@ export default function Home() {
 							<Clock10 className="mr-2 h-4 w-4" />
 							Overdue (15)
 						</Link>
-						<Separator className="my-4" />
+						<Separator className="my-2" />
 						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
 							<Users className="mr-2 h-4 w-4" />
 							Friends
@@ -106,7 +126,7 @@ export default function Home() {
 							<Atom className="mr-2 h-4 w-4" />
 							Ai
 						</Link>
-						<Separator className="my-4" />
+						<Separator className="my-2" />
 						<Accordion type="single" collapsible className="w-full" defaultValue="item-1">
 							<AccordionItem value="item-1" className="border-b-0">
 								<AccordionTrigger className="hover:no-underline">
