@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -43,9 +44,9 @@ export default function Home() {
 								- [ ] Black Belt Your Productivity
 							</h1>
 						</div>
-						<Button className="mt-10 w-40">
+						<Link className={cn(buttonVariants(), "mt-10 w-40")} href="/app">
 							Go to the app <MoveRight className="ml-2 h-4 w-4" />
-						</Button>
+						</Link>
 					</div>
 					<Image src="/naruto.png" width={300} height={300} alt="Naruto" />
 				</div>

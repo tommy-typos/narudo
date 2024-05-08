@@ -7,13 +7,14 @@ import { cn } from "@/lib/utils";
 
 import { Select, SelectContent, SelectGroup, SelectLabel, SelectValue } from "@/components/ui/select";
 import { Check } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 
 export function LanguageToggle() {
 	return (
 		<Select defaultValue="english">
-			<SelectTrigger className="text-2xl">
+			<SelectTrigger_Language className="text-2xl">
 				<SelectValue placeholder="🇺🇸" />
-			</SelectTrigger>
+			</SelectTrigger_Language>
 			<SelectContent>
 				<SelectGroup>
 					<SelectLabel>Choose a Language</SelectLabel>
@@ -52,19 +53,12 @@ const SelectItem_Language = React.forwardRef<
 ));
 SelectItem_Language.displayName = SelectPrimitive.Item.displayName;
 
-const SelectTrigger = React.forwardRef<
+const SelectTrigger_Language = React.forwardRef<
 	React.ElementRef<typeof SelectPrimitive.Trigger>,
 	React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-	<SelectPrimitive.Trigger
-		ref={ref}
-		className={cn(
-			"inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-			className
-		)}
-		{...props}
-	>
+	<SelectPrimitive.Trigger ref={ref} className={cn(buttonVariants({ variant: "ghost" }), className)} {...props}>
 		{children}
 	</SelectPrimitive.Trigger>
 ));
-SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
+SelectTrigger_Language.displayName = SelectPrimitive.Trigger.displayName;
