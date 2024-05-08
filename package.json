@@ -7,7 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"pre-commit:prettier": "staged_files=$(git diff --cached --name-only) && prettier --write $staged_files && git add $staged_files"
+		"pre-commit:prettier": "echo '*** Staged files are getting styled with Prettier...' && staged_files=$(git diff --cached --name-only) && prettier --write $staged_files && git add $staged_files"
 	},
 	"pre-commit": [
 		"pre-commit:prettier"
