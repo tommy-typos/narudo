@@ -17,7 +17,12 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<ClerkProvider>
+		<ClerkProvider
+			signInForceRedirectUrl={"/app/today"}
+			signInFallbackRedirectUrl={"/app/today"}
+			signUpForceRedirectUrl={"/app/today"}
+			signUpFallbackRedirectUrl={"/app/today"}
+		>
 			<html lang="en">
 				<body>
 					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
