@@ -38,58 +38,9 @@ export default function Home() {
 	return (
 		<>
 			<div className="flex h-screen w-full">
-				<div className="flex h-screen w-80 flex-col border-r px-4 py-2">
+				<div className="flex h-screen w-80 flex-col border-r px-4 py-4">
 					{/* sidebar */}
 					<div className="flex h-screen flex-col">
-						<div className="mb-2 flex items-center justify-between">
-							{/* clerk shit here... */}
-							<div className="p-1">delete</div>
-							<Popover>
-								<PopoverTrigger asChild>
-									<Button variant="ghost" size="icon">
-										<EllipsisVertical className="h-4 w-4" />
-										<span className="sr-only">Settings and Stuff</span>
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent className="flex w-60 flex-col" align="end">
-									<div
-										className={cn(
-											"clerk-user-button-wrapper",
-											buttonVariants({ variant: "ghost" })
-										)}
-									>
-										<UserButton showName />
-									</div>
-									<Separator className="my-2" />
-									<Button variant="ghost" className="justify-start">
-										<Settings className="mr-2 h-4 w-4" />
-										Settings
-									</Button>
-									<Button variant="ghost" className="justify-start">
-										<Keyboard className="mr-2 h-4 w-4" />
-										Keyboard Shortcuts
-									</Button>
-									<Button variant="ghost" className="justify-start">
-										<Trash2 className="mr-2 h-4 w-4" />
-										Deleted Tasks
-									</Button>
-									<Button variant="ghost" className="justify-start">
-										<Newspaper className="mr-2 h-4 w-4" />
-										v1.2 <div className="m-2 h-0.5 w-0.5 rounded-full bg-foreground"></div>{" "}
-										What&apos;s new
-									</Button>
-									<a
-										href="/guides"
-										target="_blank"
-										className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
-									>
-										<GraduationCap className="mr-2 h-4 w-4" />
-										Guides
-									</a>
-								</PopoverContent>
-							</Popover>
-						</div>
-
 						<Calendar
 							mode="single"
 							selected={date}
@@ -192,7 +143,7 @@ export default function Home() {
 					</div>
 				</div>
 				<div className="w-full">
-					<div className="h-13 flex w-full items-center border-b p-2">
+					<div className="h-13 flex w-full items-center justify-between border-b p-2">
 						{/* topbar */}
 						<Button variant="ghost">
 							<Plus className="mr-2 h-4 w-4" />
@@ -204,6 +155,52 @@ export default function Home() {
 							<Command className="ml-6 mr-1 h-3 w-3" />
 							<p className="text-xs">K</p>
 						</Button>
+						<div className="flex items-center gap-2">
+							<Popover>
+								<PopoverTrigger asChild>
+									<Button variant="ghost" size="icon">
+										<EllipsisVertical className="h-4 w-4" />
+										<span className="sr-only">Settings and Stuff</span>
+									</Button>
+								</PopoverTrigger>
+								<PopoverContent className="flex w-60 flex-col" align="end">
+									<div
+										className={cn(
+											"clerk-user-button-wrapper",
+											buttonVariants({ variant: "ghost" })
+										)}
+									>
+										<UserButton showName />
+									</div>
+									<Separator className="my-2" />
+									<Button variant="ghost" className="justify-start">
+										<Settings className="mr-2 h-4 w-4" />
+										Settings
+									</Button>
+									<Button variant="ghost" className="justify-start">
+										<Keyboard className="mr-2 h-4 w-4" />
+										Keyboard Shortcuts
+									</Button>
+									<Button variant="ghost" className="justify-start">
+										<Trash2 className="mr-2 h-4 w-4" />
+										Deleted Tasks
+									</Button>
+									<Button variant="ghost" className="justify-start">
+										<Newspaper className="mr-2 h-4 w-4" />
+										v1.2 <div className="m-2 h-0.5 w-0.5 rounded-full bg-foreground"></div>{" "}
+										What&apos;s new
+									</Button>
+									<a
+										href="/guides"
+										target="_blank"
+										className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
+									>
+										<GraduationCap className="mr-2 h-4 w-4" />
+										Guides
+									</a>
+								</PopoverContent>
+							</Popover>
+						</div>
 					</div>
 					<div>{/* main content */}</div>
 				</div>

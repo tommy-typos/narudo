@@ -48,3 +48,4 @@ package-lock.json
 /src/components/ui
 *.png
 *.jpg
+*.svg
