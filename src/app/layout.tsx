@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
 	title: "NaruDo",
@@ -15,14 +16,16 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body>
-				<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-					{children}
-					<SpeedInsights />
-					<Analytics />
-				</ThemeProvider>
-			</body>
-		</html>
+		<ClerkProvider>
+			<html lang="en">
+				<body>
+					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+						{children}
+						<SpeedInsights />
+						<Analytics />
+					</ThemeProvider>
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }

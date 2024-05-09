@@ -1,0 +1,7 @@
+.cl-footer > div:nth-child(2) {
+	display: none;
+}
+
+.cl-logoBox {
+	height: 120px;
+}
