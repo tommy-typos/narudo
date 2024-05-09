@@ -12,8 +12,14 @@
 }
 
 /* user profile modal */
-.cl-userProfile-root .cl-footer {
-	display: none;
+.cl-userProfile-root {
+	.cl-navbar > :nth-child(2) {
+		display: none;
+	}
+
+	& .cl-footer {
+		display: none;
+	}
 }
 
 /* user button trigger */
@@ -33,5 +39,14 @@
 	/* user profile picture */
 	& span:nth-child(2) {
 		order: 1;
+	}
+}
+
+/* sign-in component */
+.cl-signIn-root {
+	/* hide "sign in with username" */
+	& .cl-dividerRow,
+	& .cl-form {
+		display: none;
 	}
 }
