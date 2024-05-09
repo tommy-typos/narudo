@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Atom,
+	BellRing,
 	Clock10,
 	Command,
 	Ellipsis,
@@ -29,6 +30,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import { UserButton } from "@clerk/nextjs";
+import { NarutoBeltSvg } from "@/svgs/svgExporter";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -155,7 +157,18 @@ export default function Home() {
 							<Command className="ml-6 mr-1 h-3 w-3" />
 							<p className="text-xs">K</p>
 						</Button>
-						<div className="flex items-center gap-2">
+						<div className="flex items-center ">
+							<Button variant="ghost" className="text-destructive hover:text-destructive">
+								<BellRing className={cn("mr-2 h-4 w-4 stroke-destructive")} />
+								14
+							</Button>
+							<Button
+								variant="ghost"
+								className="text-primary opacity-30 hover:text-primary hover:opacity-100"
+							>
+								<NarutoBeltSvg className={cn("narutoBeltSvg", "mr-2 h-4 w-4")} />
+								23
+							</Button>
 							<Popover>
 								<PopoverTrigger asChild>
 									<Button variant="ghost" size="icon">

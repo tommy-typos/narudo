@@ -108,3 +108,8 @@
 		@apply text-sm text-muted-foreground;
 	}
 }
+
+/* other stuff */
+.narutoBeltSvg * {
+	fill: hsl(var(--primary));
+}
