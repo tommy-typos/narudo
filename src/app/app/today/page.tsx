@@ -5,6 +5,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Atom,
 	Clock10,
+	Command,
 	Ellipsis,
 	EllipsisVertical,
 	GraduationCap,
@@ -14,6 +15,7 @@ import {
 	Newspaper,
 	Plus,
 	Rows4,
+	Search,
 	Settings,
 	Swords,
 	Trash2,
@@ -42,7 +44,7 @@ export default function Home() {
 	const [month, setMonth] = React.useState<Date | undefined>(new Date());
 	return (
 		<>
-			<div className="h-screen w-screen">
+			<div className="flex h-screen w-full">
 				<div className="flex h-screen w-80 flex-col border-r px-4 py-2">
 					{/* sidebar */}
 					<div className="flex h-screen flex-col">
@@ -91,6 +93,7 @@ export default function Home() {
 							month={month}
 							onMonthChange={setMonth}
 							className="mb-2 rounded-md border"
+							// showWeekNumber
 						/>
 						<Button
 							onClick={() => {
@@ -184,8 +187,20 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
-				<div>
-					<div>{/* topbar */}</div>
+				<div className="w-full">
+					<div className="h-13 flex w-full items-center border-b p-2">
+						{/* topbar */}
+						<Button variant="ghost">
+							<Plus className="mr-2 h-4 w-4" />
+							Add Task
+						</Button>
+						<Button variant="outline" className="">
+							<Search className="mr-2 h-4 w-4" />
+							Search
+							<Command className="ml-6 mr-1 h-3 w-3" />
+							<p className="text-xs">K</p>
+						</Button>
+					</div>
 					<div>{/* main content */}</div>
 				</div>
 			</div>
