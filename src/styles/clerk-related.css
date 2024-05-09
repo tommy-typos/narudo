@@ -50,3 +50,12 @@
 		display: none;
 	}
 }
+
+.clerk-user-button-wrapper * {
+	&:focus-visible,
+	&:active,
+	&:focus,
+	&:focus-within {
+		box-shadow: none;
+	}
+}

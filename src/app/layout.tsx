@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 export const metadata: Metadata = {
 	title: "NaruDo",
@@ -22,6 +23,14 @@ export default function RootLayout({
 			signInFallbackRedirectUrl={"/app/today"}
 			signUpForceRedirectUrl={"/app/today"}
 			signUpFallbackRedirectUrl={"/app/today"}
+			appearance={{
+				userButton: {
+					baseTheme: dark,
+				},
+				userProfile: {
+					baseTheme: dark,
+				},
+			}}
 		>
 			<html lang="en">
 				<body>
