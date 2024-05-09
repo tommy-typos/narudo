@@ -1,7 +1,37 @@
+/* sign-in & sign-up routes */
 .cl-footer > div:nth-child(2) {
 	display: none;
 }
-
 .cl-logoBox {
 	height: 120px;
+}
+
+/* user button popover */
+.cl-userButtonPopoverRootBox .cl-userButtonPopoverFooter {
+	display: none;
+}
+
+/* user profile modal */
+.cl-userProfile-root .cl-footer {
+	display: none;
+}
+
+/* user button trigger */
+.clerk-user-button-wrapper .cl-userButtonBox {
+	align-items: center;
+
+	/* username */
+	& span:nth-child(1) {
+		order: 2;
+		color: hsl(var(--foreground));
+		width: 140px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	/* user profile picture */
+	& span:nth-child(2) {
+		order: 1;
+	}
 }

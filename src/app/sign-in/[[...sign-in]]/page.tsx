@@ -1,5 +1,4 @@
 import { SignIn } from "@clerk/nextjs";
-import "@/styles/clerk-related.css";
 import { Protest_Revolution } from "next/font/google";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });

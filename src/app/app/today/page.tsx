@@ -1,4 +1,5 @@
 "use client";
+
 import { Protest_Revolution } from "next/font/google";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -22,22 +23,14 @@ import {
 	Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
-
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import * as React from "react";
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
-// import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
+import { UserButton } from "@clerk/nextjs";
+
+const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
 export default function Home() {
 	const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -51,39 +44,50 @@ export default function Home() {
 						<div className="mb-2 flex items-center justify-between">
 							{/* clerk shit here... */}
 							<div className="p-1">delete</div>
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
+							<Popover>
+								<PopoverTrigger asChild>
 									<Button variant="ghost" size="icon">
 										<EllipsisVertical className="h-4 w-4" />
 										<span className="sr-only">Settings and Stuff</span>
 									</Button>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent align="start">
-									<DropdownMenuItem>
+								</PopoverTrigger>
+								<PopoverContent className="flex w-60 flex-col" align="end">
+									<div
+										className={cn(
+											"clerk-user-button-wrapper",
+											buttonVariants({ variant: "ghost" })
+										)}
+									>
+										<UserButton showName />
+									</div>
+									<Separator className="my-2" />
+									<Button variant="ghost" className="justify-start">
 										<Settings className="mr-2 h-4 w-4" />
 										Settings
-									</DropdownMenuItem>
-									<DropdownMenuItem>
+									</Button>
+									<Button variant="ghost" className="justify-start">
 										<Keyboard className="mr-2 h-4 w-4" />
 										Keyboard Shortcuts
-									</DropdownMenuItem>
-									<DropdownMenuItem>
+									</Button>
+									<Button variant="ghost" className="justify-start">
 										<Trash2 className="mr-2 h-4 w-4" />
 										Deleted Tasks
-									</DropdownMenuItem>
-									<DropdownMenuItem>
+									</Button>
+									<Button variant="ghost" className="justify-start">
 										<Newspaper className="mr-2 h-4 w-4" />
 										v1.2 <div className="m-2 h-0.5 w-0.5 rounded-full bg-foreground"></div>{" "}
 										What&apos;s new
-									</DropdownMenuItem>
-									<DropdownMenuItem asChild>
-										<a href="/guides" target="_blank">
-											<GraduationCap className="mr-2 h-4 w-4" />
-											Guides
-										</a>
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
+									</Button>
+									<a
+										href="/guides"
+										target="_blank"
+										className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
+									>
+										<GraduationCap className="mr-2 h-4 w-4" />
+										Guides
+									</a>
+								</PopoverContent>
+							</Popover>
 						</div>
 
 						<Calendar
