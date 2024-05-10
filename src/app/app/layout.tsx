@@ -31,7 +31,8 @@ import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import { UserButton } from "@clerk/nextjs";
 import { NarutoBeltSvg } from "@/svgs/svgExporter";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { SettingsDialog } from "@/components/client/settingsDialog";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -206,10 +207,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 										<UserButton showName />
 									</div>
 									<Separator className="my-2" />
-									<Button variant="ghost" className="justify-start">
+									{/* <Button variant="ghost" className="justify-start">
 										<Settings className="mr-2 h-4 w-4" />
 										Settings
-									</Button>
+									</Button> */}
+									<SettingsDialog />
 									<Button variant="ghost" className="justify-start">
 										<Keyboard className="mr-2 h-4 w-4" />
 										Keyboard Shortcuts
