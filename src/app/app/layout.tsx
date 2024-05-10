@@ -91,7 +91,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 							<Users className="mr-2 h-4 w-4" />
 							Friends
 						</Link>
-						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
+						<Link
+							className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
+							href="/app/challenges"
+						>
 							<Swords className="mr-2 h-4 w-4" />
 							Daily Challenges
 						</Link>
