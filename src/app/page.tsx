@@ -1,7 +1,7 @@
 import { Protest_Revolution } from "next/font/google";
 import Link from "next/link";
-import { ThemeToggle } from "./_components/themeToggle";
-import { LanguageToggle } from "./_components/languageToggle";
+import { ThemeToggle } from "../components/client/themeToggle";
+import { LanguageToggle } from "../components/client/languageToggle";
 import { Button } from "@/components/ui/button";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
