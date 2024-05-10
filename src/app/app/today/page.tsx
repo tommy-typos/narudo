@@ -158,11 +158,15 @@ export default function Home() {
 							<Plus className="mr-2 h-4 w-4" />
 							Add Task
 						</Button>
-						<Button variant="outline" className="">
-							<Search className="mr-2 h-4 w-4" />
-							Search
-							<Command className="ml-6 mr-1 h-3 w-3" />
-							<p className="text-xs">K</p>
+						<Button variant="outline" className="w-52 justify-between">
+							<div className="flex items-center">
+								<Search className="mr-2 h-4 w-4" />
+								Search
+							</div>
+							<div className="ml-6 flex w-fit items-center rounded-md bg-muted p-0.5 px-2">
+								<Command className=" mr-1 h-3 w-3 opacity-50" />
+								<p className="text-xs opacity-50">K</p>
+							</div>
 						</Button>
 						<div className="flex items-center ">
 							<Button variant="ghost" className="text-destructive hover:text-destructive">
