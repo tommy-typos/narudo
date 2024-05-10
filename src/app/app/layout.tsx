@@ -31,12 +31,14 @@ import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import { UserButton } from "@clerk/nextjs";
 import { NarutoBeltSvg } from "@/svgs/svgExporter";
+import { redirect, useRouter } from "next/navigation";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const [date, setDate] = React.useState<Date | undefined>(new Date());
 	const [month, setMonth] = React.useState<Date | undefined>(new Date());
+	const router = useRouter();
 
 	return (
 		<>
@@ -63,12 +65,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 							onClick={() => {
 								setDate(new Date());
 								setMonth(new Date());
+								router.push("/app/today");
 							}}
 						>
 							Go to Today
 						</Button>
 						<Separator className="my-2" />
-						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
+						<Link
+							className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
+							href="/app/task-inbox"
+						>
 							<Inbox className="mr-2 h-4 w-4" />
 							Task Inbox
 						</Link>
@@ -81,7 +87,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 							Overdue (15)
 						</Link>
 						<Separator className="my-2" />
-						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
+						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app/friends">
 							<Users className="mr-2 h-4 w-4" />
 							Friends
 						</Link>

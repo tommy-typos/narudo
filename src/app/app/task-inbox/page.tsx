@@ -3,19 +3,14 @@
 import {
 	ArrowDownNarrowWide,
 	ArrowUpNarrowWide,
-	CalendarDays,
 	CheckCheck,
-	CircleOff,
 	Ellipsis,
-	Group,
-	Hash,
 	Inbox,
 	Slash,
 	SlidersHorizontal,
 	Tag,
 	ToggleLeft,
 	ToggleRight,
-	Watch,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -25,10 +20,7 @@ import * as React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
@@ -87,6 +79,9 @@ export default function Home() {
 				<div className="flex flex-1 flex-col gap-2">
 					<TaskCardOnTodayView />
 					<TaskCardOnTodayView />
+					<div className="mt-1 flex items-center text-sm">
+						<Plus className="mr-2 h-4 w-4 text-primary" /> Add Task
+					</div>
 					<Accordion type="single" collapsible>
 						<AccordionItem value="delegated-to-friends">
 							<AccordionTrigger className="py-2 text-sm hover:no-underline">
