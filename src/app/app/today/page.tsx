@@ -31,6 +31,7 @@ import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import { UserButton } from "@clerk/nextjs";
 import { NarutoBeltSvg } from "@/svgs/svgExporter";
+import { TodayMainContent } from "@/components/client/todayMainContent";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -40,7 +41,7 @@ export default function Home() {
 	return (
 		<>
 			<div className="flex h-screen w-full">
-				<div className="flex h-screen w-80 flex-col border-r px-4 py-4">
+				<div className="flex h-screen w-80 flex-col border-r px-4 py-2">
 					{/* sidebar */}
 					<div className="flex h-screen flex-col">
 						<Calendar
@@ -49,8 +50,14 @@ export default function Home() {
 							onSelect={setDate}
 							month={month}
 							onMonthChange={setMonth}
-							className="mb-2 rounded-md border"
-							// showWeekNumber
+							className="p-2"
+							classNames={{
+								row: "flex w-full mt-1",
+								caption: "flex pt-1 relative items-center justify-between px-4",
+								nav: "flex items-center gap-4",
+								nav_button_previous: "",
+								nav_button_next: "",
+							}}
 						/>
 						<Button
 							onClick={() => {
@@ -89,14 +96,14 @@ export default function Home() {
 						<Separator className="my-2" />
 						<Accordion type="single" collapsible className="w-full" defaultValue="item-1">
 							<AccordionItem value="item-1" className="border-b-0">
-								<AccordionTrigger className="hover:no-underline">
+								<AccordionTrigger className="py-2 hover:no-underline">
 									<>
 										<div className="flex w-full items-center justify-between pr-2">
 											<p>Projects</p>
 											<div
 												className={cn(
 													buttonVariants({ variant: "ghost", size: "icon" }),
-													"border-0 group-hover:bg-background"
+													"h-6 w-6 border-0 group-hover:bg-background"
 												)}
 												onClick={(e) => {
 													e.preventDefault();
@@ -215,7 +222,7 @@ export default function Home() {
 							</Popover>
 						</div>
 					</div>
-					<div>{/* main content */}</div>
+					<TodayMainContent />
 				</div>
 			</div>
 		</>
