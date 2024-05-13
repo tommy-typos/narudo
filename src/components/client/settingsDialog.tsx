@@ -19,10 +19,10 @@ export function SettingsDialog() {
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="flex h-[600px] gap-0 rounded-md p-0">
-				<div className="flex flex-col gap-2 bg-muted/50 p-2">
+				<div className="flex flex-col gap-2 bg-muted/40 p-2">
 					<Button
 						variant="ghost"
-						className={cn("justify-start", openTab == "general" && "bg-muted")}
+						className={cn("justify-start", openTab == "general" && "bg-accent")}
 						onClick={() => setOpenTab("general")}
 					>
 						<Settings className="mr-2 h-4 w-4" />
@@ -30,7 +30,7 @@ export function SettingsDialog() {
 					</Button>
 					<Button
 						variant="ghost"
-						className={cn("justify-start", openTab == "theme" && "bg-muted")}
+						className={cn("justify-start", openTab == "theme" && "bg-accent")}
 						onClick={() => setOpenTab("theme")}
 					>
 						<Palette className="mr-2 h-4 w-4" />
@@ -38,7 +38,7 @@ export function SettingsDialog() {
 					</Button>
 					<Button
 						variant="ghost"
-						className={cn("justify-start", openTab == "customization" && "bg-muted")}
+						className={cn("justify-start", openTab == "customization" && "bg-accent")}
 						onClick={() => setOpenTab("customization")}
 					>
 						<AppWindowMac className="mr-2 h-4 w-4" />
@@ -82,7 +82,7 @@ export function SettingsDialog() {
 										<h3 className="">Smart date recognition</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
-									<p className="text-sm text-foreground/60">
+									<p className="text-sm text-muted-foreground">
 										Automatically recognize due dates when typing a task
 									</p>
 								</div>
@@ -93,7 +93,9 @@ export function SettingsDialog() {
 										<h3 className="">Task complete tone</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
-									<p className="text-sm text-foreground/60">Play a sound when tasks are completed.</p>
+									<p className="text-sm text-muted-foreground">
+										Play a sound when tasks are completed.
+									</p>
 								</div>
 							</div>
 							<div className="mt-8 flex justify-end gap-4">
@@ -183,7 +185,7 @@ export function SettingsDialog() {
 										<h3 className="">All tasks</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
-									<p className="text-sm text-foreground/60"></p>
+									<p className="text-sm text-muted-foreground"></p>
 								</div>
 								<div className="my-2 flex flex-col gap-1">
 									<div className="flex items-center gap-2">
@@ -191,7 +193,7 @@ export function SettingsDialog() {
 										<h3 className="">Friends</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
-									<p className="text-sm text-foreground/60">
+									<p className="text-sm text-muted-foreground">
 										By hiding this, you won&lsquo;t see the option to add your friends to your new
 										tasks.
 									</p>
@@ -202,7 +204,7 @@ export function SettingsDialog() {
 										<h3 className="">Daily challenges</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
-									<p className="text-sm text-foreground/60">
+									<p className="text-sm text-muted-foreground">
 										By hiding this, your past daily challenges will be hidden in day view mode as
 										well. Only the active ones will be visible if there is any for today.
 									</p>
@@ -213,7 +215,7 @@ export function SettingsDialog() {
 										<h3 className="">Ai</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
-									<p className="text-sm text-foreground/60"></p>
+									<p className="text-sm text-muted-foreground"></p>
 								</div>
 								<h1 className="my-2 mt-6 text-xl">Show in Topbar</h1>
 								<div className="my-2 flex flex-col gap-1">
@@ -222,7 +224,7 @@ export function SettingsDialog() {
 										<h3 className="">Ninja Score</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
-									<p className="text-sm text-foreground/60"></p>
+									<p className="text-sm text-muted-foreground"></p>
 								</div>
 							</div>
 							<div className="mt-8 flex justify-end gap-4">

@@ -20,7 +20,7 @@ type FriendsLinkProps = {
 
 function FriendsLink({ link, text, active }: FriendsLinkProps) {
 	return (
-		<Link href={`/app/challenges/${link}`} className={cn(!active && "opacity-50 hover:opacity-80")}>
+		<Link href={`/app/challenges/${link}`} className={cn(!active && "text-muted-foreground hover:text-foreground")}>
 			{text}
 		</Link>
 	);
@@ -55,21 +55,18 @@ type ChallengeProps = {
 	checked?: boolean;
 };
 
-function Challenge({ checked }: ChallengeProps) {
+function Challenge({ checked: checkedProp }: ChallengeProps) {
+	const [checked, setChecked] = React.useState<boolean | undefined>(checkedProp);
 	return (
-		<div
-			className={cn(
-				"flex items-center rounded border p-2 hover:cursor-pointer hover:bg-secondary/30",
-				checked && "opacity-70"
-			)}
-		>
+		<div className={cn("flex items-center rounded border p-2 hover:cursor-pointer")}>
 			<Checkbox
-				className="ml-2 mr-4 h-6 w-6 data-[state=checked]:border-muted data-[state=checked]:bg-muted data-[state=checked]:text-primary-foreground"
+				className="ml-2 mr-4 h-6 w-6"
 				checked={checked}
+				onCheckedChange={() => setChecked((prev) => !prev)}
 			/>
 			<div className="w-full">
-				<p className={cn("shad-p mb-1", checked && "line-through")}>task name</p>
-				<div className="flex w-full items-center justify-between text-xs opacity-70">
+				<p className={cn("shad-p mb-1")}>task name</p>
+				<div className="flex w-full items-center justify-between text-xs text-muted-foreground">
 					<p>Hi I am a task description and I describe myself as a task</p>
 				</div>
 			</div>

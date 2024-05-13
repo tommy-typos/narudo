@@ -8,7 +8,7 @@ export default function Page() {
 		<div className="flex h-screen w-screen flex-col items-center justify-center" suppressHydrationWarning={true}>
 			<div className="mb-4 flex text-4xl">
 				<p className={protestRevolution.className}>naru</p>
-				<div className="text-primary">
+				<div className="text-narudorange">
 					<p className={protestRevolution.className}>do</p>
 				</div>
 			</div>

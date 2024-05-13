@@ -125,25 +125,22 @@ type TaskCardProps = {
 	checked?: boolean;
 };
 
-function TaskCardOnTodayView({ checked }: TaskCardProps) {
+function TaskCardOnTodayView({ checked: checkedProp }: TaskCardProps) {
+	const [checked, setChecked] = React.useState<boolean | undefined>(checkedProp);
 	return (
-		<div
-			className={cn(
-				"flex items-center rounded border p-2 hover:cursor-pointer hover:bg-secondary/30",
-				checked && "opacity-70"
-			)}
-		>
+		<div className={cn("flex items-center rounded border p-2 hover:cursor-pointer")}>
 			<Checkbox
-				className="ml-2 mr-4 h-6 w-6 data-[state=checked]:border-muted data-[state=checked]:bg-muted data-[state=checked]:text-primary-foreground"
+				className="ml-2 mr-4 h-6 w-6"
 				checked={checked}
+				onCheckedChange={() => setChecked((prev) => !prev)}
 			/>
 			<div className="w-full">
-				<p className={cn("shad-p mb-1", checked && "line-through")}>task name</p>
+				<p className={cn("shad-p mb-1")}>task name</p>
 				<div className="flex w-full items-center justify-between text-xs">
-					<div className="flex items-center text-primary opacity-70">
+					<div className="flex items-center text-primary">
 						<Watch className="h-4 w-4" /> 17:00
 					</div>
-					<div className="flex items-center opacity-70">
+					<div className="flex items-center text-muted-foreground">
 						<Inbox className="h-4 w-4" /> Task Inbox
 					</div>
 				</div>

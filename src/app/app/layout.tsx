@@ -145,7 +145,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 											<Button
 												variant="ghost"
 												size="icon"
-												className="invisible h-7 w-7  border-0 group-hover:visible group-hover:bg-background"
+												className="invisible h-7 w-7  border-0 group-hover:visible group-hover:bg-accent"
 												onClick={(e) => {
 													e.preventDefault();
 												}}
