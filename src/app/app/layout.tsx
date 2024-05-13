@@ -33,6 +33,7 @@ import { UserButton } from "@clerk/nextjs";
 import { NarutoBeltSvg } from "@/svgs/svgExporter";
 import { useRouter } from "next/navigation";
 import { SettingsDialog } from "@/components/client/settingsDialog";
+import { Badge } from "@/components/ui/badge";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -84,8 +85,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 							All Tasks
 						</Link>
 						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
-							<Clock10 className="mr-2 h-4 w-4" />
-							Overdue (15)
+							<Clock10 className="mr-2 h-4 w-4 stroke-destructive" />
+							<div className="flex w-full items-center justify-between">
+								<p className="text-destructive">Overdue</p>
+								<Badge variant="destructive">15</Badge>
+							</div>
 						</Link>
 						<Separator className="my-2" />
 						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app/friends">
@@ -179,15 +183,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 							</div>
 						</Button>
 						<div className="flex items-center ">
-							<Button variant="ghost" className="text-destructive hover:text-destructive">
+							<Button variant="ghost" className="text-destructive ">
 								<BellRing className={cn("mr-2 h-4 w-4 stroke-destructive")} />
-								14
+								<Badge variant="destructive" className="hover:bg-destructive">
+									14
+								</Badge>
 							</Button>
-							<Button
-								variant="ghost"
-								className="text-primary opacity-30 hover:text-primary hover:opacity-100"
-							>
-								<NarutoBeltSvg className={cn("narutoBeltSvg", "mr-2 h-4 w-4")} />
+							<Button variant="ghost" className="text-primary hover:text-primary">
+								<NarutoBeltSvg className={cn("*:fill-primary", "mr-2 h-4 w-4")} />
 								23
 							</Button>
 							<Popover>
