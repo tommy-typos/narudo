@@ -47,6 +47,10 @@ const config = {
 					DEFAULT: "hsl(var(--card))",
 					foreground: "hsl(var(--card-foreground))",
 				},
+				narudorange: {
+					DEFAULT: "hsl(var(--narudorange))",
+					foreground: "hsl(var(--narudorange-foreground))",
+				},
 			},
 			borderRadius: {
 				lg: "var(--radius)",

@@ -218,7 +218,7 @@ export function SettingsDialog() {
 								<h1 className="my-2 mt-6 text-xl">Show in Topbar</h1>
 								<div className="my-2 flex flex-col gap-1">
 									<div className="flex items-center gap-2">
-										<NarutoBeltSvg className={cn("*:fill-primary", "h-4 w-4")} />
+										<NarutoBeltSvg className={cn("*:fill-narudorange", "h-4 w-4")} />
 										<h3 className="">Ninja Score</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>

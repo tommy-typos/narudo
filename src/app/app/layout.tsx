@@ -160,7 +160,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 					</div>
 					<div className="flex justify-center text-xl">
 						<p className={protestRevolution.className}>naru</p>
-						<div className="text-primary">
+						<div className="text-narudorange">
 							<p className={protestRevolution.className}>do</p>
 						</div>
 					</div>
@@ -189,8 +189,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 									14
 								</Badge>
 							</Button>
-							<Button variant="ghost" className="text-primary hover:text-primary">
-								<NarutoBeltSvg className={cn("*:fill-primary", "mr-2 h-4 w-4")} />
+							<Button variant="ghost" className="text-narudorange hover:text-narudorange">
+								<NarutoBeltSvg className={cn("*:fill-narudorange", "mr-2 h-4 w-4")} />
 								23
 							</Button>
 							<Popover>

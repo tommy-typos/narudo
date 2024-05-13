@@ -16,7 +16,7 @@ export default function Home() {
 				<div className="m-10 flex w-4/5 max-w-[1200px] items-center justify-between">
 					<div className="flex text-xl">
 						<p className={protestRevolution.className}>naru</p>
-						<div className="text-primary">
+						<div className="text-narudorange">
 							<p className={protestRevolution.className}>do</p>
 						</div>
 					</div>
@@ -34,7 +34,7 @@ export default function Home() {
 					<div className="flex flex-col gap-6 pt-12">
 						<div className="flex text-8xl">
 							<p className={protestRevolution.className}>naru</p>
-							<div className="text-primary">
+							<div className="text-narudorange">
 								<p className={protestRevolution.className}>do</p>
 							</div>
 						</div>
