@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CalendarHeart, CircleSlash, Clock, HeartHandshake, Plus, Sun, Users, X } from "lucide-react";
+import { CalendarHeart, CircleSlash, Clock, HeartHandshake, Inbox, Plus, Sun, Users, X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -46,6 +46,7 @@ export function AddTask() {
 						<DatePickerWithPresets />
 						<TimePickerWithPresets />
 					</div>
+					<DestinationPicker />
 					<Separator className="my-1 bg-transparent" />
 					<AssignToFriends />
 				</div>
@@ -133,6 +134,158 @@ const friends: FriendType[] = [
 	},
 ];
 
+type ProjectType = {
+	id: string;
+	name: string;
+	subItems: {
+		id: string;
+		name: string;
+	}[];
+};
+
+const taskInbox: ProjectType = {
+	id: "inbox",
+	name: "Inbox",
+	subItems: [
+		{
+			id: "label_1",
+			name: "Label 1",
+		},
+		{
+			id: "label_2",
+			name: "Label 2",
+		},
+	],
+};
+
+const projects: ProjectType[] = [
+	{
+		id: "project_1",
+		name: "Project 1",
+		subItems: [
+			{
+				id: "child_1_1",
+				name: "Child 1",
+			},
+			{
+				id: "child_1_2",
+				name: "Child 2",
+			},
+		],
+	},
+	{
+		id: "project_2",
+		name: "Project 2",
+		subItems: [
+			{
+				id: "child_2_1",
+				name: "Child 1",
+			},
+			{
+				id: "child_2_2",
+				name: "Child 2",
+			},
+			{
+				id: "child_2_3",
+				name: "Child 3",
+			},
+		],
+	},
+	{
+		id: "project_3",
+		name: "Project 3",
+		subItems: [
+			{
+				id: "child_3_1",
+				name: "Child 1",
+			},
+			{
+				id: "child_3_2",
+				name: "Child 2",
+			},
+		],
+	},
+];
+
+function flattenProjectObject(obj: ProjectType) {
+	const result = [];
+
+	result.push({ id: obj.id, name: obj.name, parentId: obj.id, parentName: obj.id });
+
+	if (obj.subItems) {
+		obj.subItems.forEach((subItem) => {
+			result.push({ id: subItem.id, name: subItem.name, parentId: obj.id, parentName: obj.id });
+		});
+	}
+
+	return result;
+}
+
+type FlattenedProjectArrayItemType = {
+	id: string;
+	name: string;
+	parentId: string;
+	parentName: string;
+};
+
+function flattenProjectsArray(arr: ProjectType[]): FlattenedProjectArrayItemType[] {
+	const temp = arr.map((item) => flattenProjectObject(item));
+	return temp.reduce((acc, curr) => acc.concat(curr), []);
+}
+
+export function DestinationPicker() {
+	const [open, setOpen] = React.useState(false);
+	const [value, setValue] = React.useState<string>("inbox");
+
+	return (
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Button variant="outline" className="justify-start">
+					<Inbox className="mr-2 h-4 w-4" /> {value}
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-[160px] p-0">
+				<Command>
+					<CommandInput placeholder="Type a project name" />
+					<CommandList className="max-h-[220px]">
+						<CommandEmpty className="py-6 text-center text-sm text-destructive">
+							No such friend
+						</CommandEmpty>
+						<CommandGroup>
+							{flattenProjectsArray([taskInbox, ...projects]).map((project) => (
+								<CommandItem
+									key={project.id}
+									keywords={[project.name, project.parentName]}
+									value={project.name}
+									onSelect={(currentValue) => {
+										setValue((prev) => {
+											// if (prev.includes(currentValue)) {
+											// 	return prev.filter((i: string) => i !== currentValue);
+											// } else {
+											// 	return [...prev, currentValue];
+											// }
+											return currentValue;
+										});
+									}}
+									className={"!pointer-events-auto cursor-pointer !opacity-100"}
+								>
+									<Check
+										className={cn(
+											"mr-2 h-4 w-4",
+											value == project.name ? "opacity-100" : "opacity-0"
+										)}
+									/>
+									{project.name}
+								</CommandItem>
+							))}
+						</CommandGroup>
+					</CommandList>
+				</Command>
+			</PopoverContent>
+		</Popover>
+	);
+}
+
 export function FriendPicker() {
 	const [open, setOpen] = React.useState(false);
 	const [values, setValues] = React.useState<string[]>([]);
@@ -146,7 +299,7 @@ export function FriendPicker() {
 			</PopoverTrigger>
 			<PopoverContent className="w-[160px] p-0">
 				<Command>
-					<CommandInput placeholder="Time" />
+					<CommandInput placeholder="Friend" />
 					<CommandList className="max-h-[220px]">
 						<CommandEmpty className="py-6 text-center text-sm text-destructive">
 							No such friend
