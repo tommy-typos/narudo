@@ -31,27 +31,58 @@ import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import { UserButton } from "@clerk/nextjs";
 import { NarutoBeltSvg } from "@/svgs/svgExporter";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { SettingsDialog } from "@/components/client/settingsDialog";
 import { Badge } from "@/components/ui/badge";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-	const [date, setDate] = React.useState<Date | undefined>(new Date());
+	const pathName = usePathname();
+	const params = useParams();
+	const [date, setDate] = React.useState<Date | undefined>(undefined);
 	const [month, setMonth] = React.useState<Date | undefined>(new Date());
 	const router = useRouter();
 
+	function isPathDate() {
+		return pathName.includes("/app/today") || pathName.includes("/app/date/");
+	}
+
+	React.useEffect(() => {
+		if (!(pathName.includes("/app/today") || pathName.includes("/app/date/"))) {
+			setDate(undefined);
+			setMonth(undefined);
+		} else {
+			if (pathName.includes("/app/today")) {
+				setDate(new Date());
+				setMonth(new Date());
+			} else {
+				const dateStringInRoute = params.dateSlug as string;
+				const dateCreatedFromRoute = new Date(dateStringInRoute);
+				if (!isNaN(dateCreatedFromRoute.getTime())) {
+					setDate(new Date(dateCreatedFromRoute));
+					setMonth(new Date(dateCreatedFromRoute));
+				} else {
+					router.push("/app/today");
+				}
+			}
+		}
+	}, [pathName]);
+
 	return (
 		<>
-			<div className="flex h-screen w-full">
-				<div className="flex h-screen w-80 flex-col border-r px-4 py-2">
-					{/* sidebar */}
-					<div className="flex h-screen flex-col">
+			<div className="flex min-h-full w-full">
+				<div className="flex min-h-full w-80 flex-col border-r px-4 py-2">
+					<div className="flex flex-col justify-between">
 						<Calendar
 							mode="single"
 							selected={date}
-							onSelect={setDate}
+							onSelect={(calendarSelectedDate) => {
+								setDate(calendarSelectedDate);
+								router.push(
+									`/app/date/${calendarSelectedDate?.getFullYear()}-${calendarSelectedDate?.getMonth()! + 1}-${calendarSelectedDate?.getDate()}`
+								);
+							}}
 							month={month}
 							onMonthChange={setMonth}
 							className="p-2"
@@ -72,42 +103,42 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 						>
 							Go to Today
 						</Button>
+
 						<Separator className="my-2" />
-						<Link
-							className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
-							href="/app/task-inbox"
-						>
+
+						<RouteLink path="/app/task-inbox">
 							<Inbox className="mr-2 h-4 w-4" />
 							Task Inbox
-						</Link>
-						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
+						</RouteLink>
+						{/* <RouteLink path="/app/all-tasks">
 							<Rows4 className="mr-2 h-4 w-4" />
 							All Tasks
-						</Link>
-						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
+						</RouteLink> */}
+						<RouteLink path="/app/overdue">
 							<Clock10 className="mr-2 h-4 w-4 stroke-destructive" />
 							<div className="flex w-full items-center justify-between">
 								<p className="text-destructive">Overdue</p>
 								<Badge variant="destructive">15</Badge>
 							</div>
-						</Link>
+						</RouteLink>
+
 						<Separator className="my-2" />
-						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app/friends">
+
+						<RouteLink path="/app/friends">
 							<Users className="mr-2 h-4 w-4" />
 							Friends
-						</Link>
-						<Link
-							className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
-							href="/app/challenges"
-						>
+						</RouteLink>
+						<RouteLink path="/app/challenges">
 							<Swords className="mr-2 h-4 w-4" />
 							Daily Challenges
-						</Link>
-						<Link className={cn(buttonVariants({ variant: "ghost" }), "justify-start")} href="/app">
+						</RouteLink>
+						{/* <RouteLink path="/app/ai">
 							<Atom className="mr-2 h-4 w-4" />
 							Ai
-						</Link>
+						</RouteLink> */}
+
 						<Separator className="my-2" />
+
 						<Accordion type="single" collapsible className="w-full" defaultValue="item-1">
 							<AccordionItem value="item-1" className="border-b-0">
 								<AccordionTrigger className="py-2 hover:no-underline">
@@ -131,34 +162,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
 								<AccordionContent asChild>
 									<div className="flex flex-col">
-										<div className="group flex items-center justify-between rounded-md pr-2 hover:bg-accent ">
-											<Link
-												className={cn(
-													buttonVariants({ variant: "ghost" }),
-													"w-full justify-start hover:bg-transparent"
-												)}
-												href="/projects/projectId"
-											>
-												<Hash className="mr-2 h-4 w-4" />
-												project 1
-											</Link>
-											<Button
-												variant="ghost"
-												size="icon"
-												className="invisible h-7 w-7  border-0 group-hover:visible group-hover:bg-accent"
-												onClick={(e) => {
-													e.preventDefault();
-												}}
-											>
-												<Ellipsis className="h-4 w-4" />
-											</Button>
-										</div>
+										<ProjectRouteLink projectId={"1"}>project 1</ProjectRouteLink>
+										<ProjectRouteLink projectId={"2"}>project 2</ProjectRouteLink>
 									</div>
 								</AccordionContent>
 							</AccordionItem>
 						</Accordion>
 					</div>
-					<div className="flex justify-center text-xl">
+					<div className="mt-auto flex justify-center text-xl">
 						<p className={protestRevolution.className}>naru</p>
 						<div className="text-narudorange">
 							<p className={protestRevolution.className}>do</p>
@@ -210,10 +221,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 										<UserButton showName />
 									</div>
 									<Separator className="my-2" />
-									{/* <Button variant="ghost" className="justify-start">
-										<Settings className="mr-2 h-4 w-4" />
-										Settings
-									</Button> */}
 									<SettingsDialog />
 									<Button variant="ghost" className="justify-start">
 										<Keyboard className="mr-2 h-4 w-4" />
@@ -240,9 +247,60 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 							</Popover>
 						</div>
 					</div>
-					{children}
+					<div className="p-5">{children}</div>
 				</div>
 			</div>
 		</>
+	);
+}
+
+function RouteLink({ path, children }: { path: string; children: React.ReactNode }) {
+	const pathName = usePathname();
+
+	function isPath(path: string) {
+		return pathName.includes(path);
+	}
+
+	return (
+		<Link
+			className={cn(buttonVariants({ variant: "ghost" }), "justify-start", isPath(path) && "bg-accent")}
+			href={path}
+		>
+			{children}
+		</Link>
+	);
+}
+
+function ProjectRouteLink({ projectId, children }: { projectId: string; children: string }) {
+	const pathName = usePathname();
+
+	function isPath(path: string) {
+		return pathName.includes(path);
+	}
+
+	return (
+		<div className="group flex items-center justify-between rounded-md pr-2 hover:bg-accent ">
+			<Link
+				className={cn(
+					buttonVariants({ variant: "ghost" }),
+					"w-full justify-start hover:bg-transparent",
+					isPath(`/app/projects/${projectId}`) && "bg-accent"
+				)}
+				href={`/app/projects/${projectId}`}
+			>
+				<Hash className="mr-2 h-4 w-4" />
+				{children}
+			</Link>
+			<Button
+				variant="ghost"
+				size="icon"
+				className="invisible h-7 w-7  border-0 group-hover:visible group-hover:bg-background"
+				onClick={(e) => {
+					e.preventDefault();
+				}}
+			>
+				<Ellipsis className="h-4 w-4" />
+			</Button>
+		</div>
 	);
 }

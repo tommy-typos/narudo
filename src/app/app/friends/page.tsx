@@ -28,7 +28,7 @@ function FriendsLink({ link, text, active }: FriendsLinkProps) {
 
 export default function Home() {
 	return (
-		<div className="p-5">
+		<>
 			<div className="mb-6 flex items-center justify-between">
 				<div className="flex flex-col">
 					<div className="flex items-center">
@@ -78,7 +78,7 @@ export default function Home() {
 					</Accordion>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 

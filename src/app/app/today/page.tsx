@@ -21,7 +21,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 export default function Home() {
 	return (
-		<div className="p-5">
+		<>
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center">
 					<CalendarDays className="mr-2" />
@@ -98,7 +98,7 @@ export default function Home() {
 					<div className="min-h-80 w-full border"></div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 
