@@ -36,8 +36,8 @@ export default function RootLayout({
 				<body className="h-full">
 					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
 						{children}
-						<SpeedInsights />
-						<Analytics />
+						{/* <SpeedInsights />
+						<Analytics /> */}
 					</ThemeProvider>
 				</body>
 			</html>
