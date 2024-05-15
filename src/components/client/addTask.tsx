@@ -31,7 +31,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function AddTask() {
 	return (
-		<Dialog open>
+		<Dialog>
 			<DialogTrigger asChild>
 				<Button variant="ghost">
 					<Plus className="mr-2 h-4 w-4" />
@@ -244,7 +244,7 @@ export function DestinationPicker() {
 					<Inbox className="mr-2 h-4 w-4" /> {value}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-[160px] p-0">
+			<PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
 				<Command>
 					<CommandInput placeholder="Type a project name" />
 					<CommandList className="max-h-[220px]">
