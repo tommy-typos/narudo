@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CalendarHeart, CircleSlash, Clock, Plus, Sun } from "lucide-react";
+import { CalendarHeart, CircleSlash, Clock, HeartHandshake, Plus, Sun, Users, X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -25,10 +25,13 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function AddTask() {
 	return (
-		<Dialog>
+		<Dialog open>
 			<DialogTrigger asChild>
 				<Button variant="ghost">
 					<Plus className="mr-2 h-4 w-4" />
@@ -43,6 +46,8 @@ export function AddTask() {
 						<DatePickerWithPresets />
 						<TimePickerWithPresets />
 					</div>
+					<Separator className="my-1 bg-transparent" />
+					<AssignToFriends />
 				</div>
 				<DialogFooter>
 					<Button variant="secondary">Cancel</Button>
@@ -50,6 +55,133 @@ export function AddTask() {
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
+	);
+}
+
+function AssignToFriends() {
+	return (
+		<>
+			<Accordion type="single" collapsible className="w-full rounded-md border" defaultValue="item-1">
+				<AccordionItem value="item-1" className="border-b-0 text-muted-foreground">
+					<AccordionTrigger className="py-2 pl-4 pr-4 hover:no-underline ">
+						<div className="flex items-center">
+							<Users className="mr-2 h-4 w-4" />
+							<p className="text-sm">Assign to friends</p>
+						</div>
+					</AccordionTrigger>
+					<AccordionContent className="pl-4 pr-4 pt-1">
+						<div className="flex flex-col gap-2">
+							<div>
+								<p className="mb-1">They will do it:</p>
+								<Tabs defaultValue="together" className="w-full">
+									<TabsList className="grid w-full grid-cols-2">
+										<TabsTrigger value="together">
+											<HeartHandshake className="mr-2 h-4 w-4" />
+											Together With You
+										</TabsTrigger>
+										<TabsTrigger value="by-themselves">By Themselves</TabsTrigger>
+									</TabsList>
+								</Tabs>
+							</div>
+							<div className="flex items-end justify-between border-b pb-2">
+								<p>Assigned to:</p>
+								<FriendPicker />
+							</div>
+							<div className="flex flex-wrap gap-2">
+								<Button variant="outline" className="group text-foreground">
+									Asat <X className="w-r ml-2 h-4 group-hover:text-destructive" />
+								</Button>
+								<Button variant="outline" className="group text-foreground">
+									Asat <X className="w-r ml-2 h-4 group-hover:text-destructive" />
+								</Button>
+								<Button variant="outline" className="group text-foreground">
+									Asat <X className="w-r ml-2 h-4 group-hover:text-destructive" />
+								</Button>
+								<Button variant="outline" className="group text-foreground">
+									Akhmedov <X className="w-r ml-2 h-4 group-hover:text-destructive" />
+								</Button>
+							</div>
+						</div>
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</>
+	);
+}
+
+type FriendType = {
+	id: string;
+	name: string;
+	userName: string;
+};
+
+const friends: FriendType[] = [
+	{
+		id: "asat",
+		name: "Asat",
+		userName: "asatillo",
+	},
+	{
+		id: "rust",
+		name: "Rustam",
+		userName: "rustFoundation",
+	},
+	{
+		id: "maga",
+		name: "Mahammad",
+		userName: "magaBeast",
+	},
+];
+
+export function FriendPicker() {
+	const [open, setOpen] = React.useState(false);
+	const [values, setValues] = React.useState<string[]>([]);
+
+	return (
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Button variant="outline" className="">
+					<Plus className="mr-2 h-4 w-4" /> Add friends
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-[160px] p-0">
+				<Command>
+					<CommandInput placeholder="Time" />
+					<CommandList className="max-h-[220px]">
+						<CommandEmpty className="py-6 text-center text-sm text-destructive">
+							No such friend
+						</CommandEmpty>
+						<CommandGroup>
+							{friends.map((friend) => (
+								<CommandItem
+									key={friend.id}
+									keywords={[friend.name, friend.userName]}
+									value={friend.name}
+									onSelect={(currentValue) => {
+										setValues((prev) => {
+											if (prev.includes(currentValue)) {
+												return prev.filter((i: string) => i !== currentValue);
+											} else {
+												return [...prev, currentValue];
+											}
+										});
+									}}
+									className={"!pointer-events-auto cursor-pointer !opacity-100"}
+								>
+									<Check
+										className={cn(
+											"mr-2 h-4 w-4",
+											values.includes(friend.name) ? "opacity-100" : "opacity-0"
+										)}
+									/>
+									{friend.name}
+								</CommandItem>
+							))}
+						</CommandGroup>
+					</CommandList>
+				</Command>
+			</PopoverContent>
+		</Popover>
 	);
 }
 
@@ -147,7 +279,7 @@ export function TimePickerWithPresets() {
 					role="combobox"
 					aria-expanded={open}
 					className={cn(
-						"w-[120px] justify-start",
+						"w-[125px] justify-start",
 						(value === "" || value === "No Time") && "text-muted-foreground"
 					)}
 				>
