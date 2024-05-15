@@ -34,6 +34,7 @@ import { NarutoBeltSvg } from "@/svgs/svgExporter";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { SettingsDialog } from "@/components/client/settingsDialog";
 import { Badge } from "@/components/ui/badge";
+import { AddTask } from "@/components/client/addTask";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -178,11 +179,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 				</div>
 				<div className="w-full">
 					<div className="h-13 flex w-full items-center justify-between border-b p-2">
-						{/* topbar */}
-						<Button variant="ghost">
-							<Plus className="mr-2 h-4 w-4" />
-							Add Task
-						</Button>
+						<AddTask />
 						<Button variant="outline" className="w-52 justify-between">
 							<div className="flex items-center">
 								<Search className="mr-2 h-4 w-4" />

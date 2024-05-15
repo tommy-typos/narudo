@@ -27,6 +27,9 @@
 
 		--narudorange: 24.6 95% 53.1%;
 		--narudorange-foreground: 60 9.1% 97.8%;
+
+		--shad-green: hsl(142.1 76.2% 36.3%);
+		--shad-yellow: hsl(47.9 95.8% 53.1%);
 	}
 
 	.dark {
@@ -52,6 +55,9 @@
 
 		--narudorange: 20.5 90.2% 48.2%;
 		--narudorange-foreground: 60 9.1% 97.8%;
+
+		--shad-green: hsl(142.1 70.6% 45.3%);
+		--shad-yellow: hsl(47.9 95.8% 53.1%);
 	}
 }
 
