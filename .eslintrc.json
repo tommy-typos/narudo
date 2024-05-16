@@ -1,5 +1,5 @@
 {
-	"extends": ["next/core-web-vitals", "plugin:drizzle/all"],
+	"extends": ["next/core-web-vitals", "plugin:drizzle/all", "plugin:@tanstack/eslint-plugin-query/recommended"],
 	"plugins": ["drizzle"],
 	"rules": {
 		"drizzle/enforce-delete-with-where": [
