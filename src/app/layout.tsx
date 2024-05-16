@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { ReactQueryProvider } from "@/reactQuery/reactQueryProvider";
 
 export const metadata: Metadata = {
 	title: "NaruDo",
@@ -32,10 +33,10 @@ export default function RootLayout({
 				},
 			}}
 		>
-			<html lang="en" className="h-full">
+			<html lang="en" className="h-full" suppressHydrationWarning>
 				<body className="h-full">
 					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-						{children}
+						<ReactQueryProvider>{children}</ReactQueryProvider>
 						{/* <SpeedInsights />
 						<Analytics /> */}
 					</ThemeProvider>
