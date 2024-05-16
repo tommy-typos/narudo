@@ -49,3 +49,4 @@ package-lock.json
 *.png
 *.jpg
 *.svg
+.env-example
