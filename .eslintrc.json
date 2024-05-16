@@ -1,3 +1,18 @@
 {
-	"extends": "next/core-web-vitals"
+	"extends": ["next/core-web-vitals", "plugin:drizzle/all"],
+	"plugins": ["drizzle"],
+	"rules": {
+		"drizzle/enforce-delete-with-where": [
+			"error",
+			{
+				"drizzleObjectName": ["db"]
+			}
+		],
+		"drizzle/enforce-update-with-where": [
+			"error",
+			{
+				"drizzleObjectName": ["db"]
+			}
+		]
+	}
 }
