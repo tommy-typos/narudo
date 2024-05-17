@@ -7,7 +7,7 @@ export default defineConfig({
 	dbCredentials: {
 		url: process.env.POSTGRES_URL!,
 	},
-	tablesFilter: ["narudo_*"],
+	tablesFilter: ["narudo___*"],
 	verbose: true,
 	strict: true,
 });
