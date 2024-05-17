@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/styles/extra-themes.css";
 import "@/styles/clerk-related.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -35,7 +36,27 @@ export default function RootLayout({
 		>
 			<html lang="en" className="h-full" suppressHydrationWarning>
 				<body className="h-full">
-					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="dark"
+						enableSystem
+						disableTransitionOnChange
+						themes={[
+							"light",
+							"dark",
+							"system",
+							"light-blue",
+							"dark-blue",
+							"light-green",
+							"dark-green",
+							"light-yellow",
+							"dark-yellow",
+							"light-red",
+							"dark-red",
+							"light-purple",
+							"dark-purple",
+						]}
+					>
 						<ReactQueryProvider>{children}</ReactQueryProvider>
 						{/* <SpeedInsights />
 						<Analytics /> */}

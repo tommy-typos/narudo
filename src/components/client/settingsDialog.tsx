@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { AppWindowMac, Atom, Moon, Palette, Rows4, Settings, Sun, Swords, Users } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { NarutoBeltSvg } from "@/svgs/svgExporter";
+import { useTheme } from "next-themes";
 
 export function SettingsDialog() {
-	const [openTab, setOpenTab] = useState<"general" | "theme" | "customization">("customization");
+	const [openTab, setOpenTab] = useState<"general" | "theme" | "customization">("general");
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -106,69 +107,7 @@ export function SettingsDialog() {
 					)}
 					{openTab == "theme" && (
 						<>
-							<div className="flex flex-col gap-6 px-2">
-								<div className="flex flex-col gap-2">
-									<p>Mode</p>
-									<div className="flex gap-4">
-										<Button variant="outline">
-											<Sun className="mr-2 h-4 w-4" />
-											Light
-										</Button>
-										<Button variant="outline">
-											<Moon className="mr-2 h-4 w-4" />
-											Dark
-										</Button>
-									</div>
-								</div>
-								<div className="flex flex-col gap-2">
-									<p>Color</p>
-									<div className="flex flex-wrap justify-between gap-4">
-										<Button variant="outline" className="flex-1 justify-start px-2 py-6">
-											<div
-												className="mr-2 h-6 w-6 rounded-full"
-												style={{ backgroundColor: "hsl(24.6 95% 53.1%)" }}
-											></div>
-											Tokaji aszú 🥂
-										</Button>
-										<Button variant="outline" className="flex-1 justify-start px-2 py-6">
-											<div
-												className="mr-2 h-6 w-6 rounded-full"
-												style={{ backgroundColor: "hsl(221.2 83.2% 53.3%)" }}
-											></div>
-											Balaton 💧
-										</Button>
-										<Button variant="outline" className="flex-1 justify-start px-2 py-6">
-											<div
-												className="mr-2 h-6 w-6 rounded-full"
-												style={{ backgroundColor: "hsl(142.1 76.2% 36.3%)" }}
-											></div>
-											Soproni 🍾
-										</Button>
-										<Button variant="outline" className="flex-1 justify-start px-2 py-6">
-											<div
-												className="mr-2 h-6 w-6 rounded-full"
-												style={{ backgroundColor: "hsl(47.9 95.8% 53.1%)" }}
-											></div>
-											Villamos 🚡
-										</Button>
-										<Button variant="outline" className="flex-1 justify-start px-2 py-6">
-											<div
-												className="mr-2 h-6 w-6 rounded-full"
-												style={{ backgroundColor: "hsl(0 72.2% 50.6%)" }}
-											></div>
-											Paprika 🌶️
-										</Button>
-										<Button variant="outline" className="flex-1 justify-start px-2 py-6">
-											<div
-												className="mr-2 h-6 w-6 rounded-full"
-												style={{ backgroundColor: "hsl(262.1 83.3% 57.8%)" }}
-											></div>
-											Köszönöm 🪻
-										</Button>
-									</div>
-									<div className="flex gap-4"></div>
-								</div>
-							</div>
+							<AdvancedTheme />
 							<div className="mt-8 flex justify-end gap-4">
 								<Button variant="secondary">Cancel</Button>
 								<Button>Save Changes</Button>
@@ -236,5 +175,145 @@ export function SettingsDialog() {
 				</div>
 			</DialogContent>
 		</Dialog>
+	);
+}
+
+function getColor(theme: string) {
+	if (theme === "light" || theme === "dark" || theme === "system") {
+		return "orange";
+	} else {
+		return theme.split("-")[1];
+	}
+}
+
+function getMode(theme: string) {
+	if (theme.includes("dark") || theme === "system") {
+		return "dark";
+	} else {
+		return "light";
+	}
+}
+
+function AdvancedTheme() {
+	const { setTheme, theme } = useTheme();
+	const [color, setColor] = useState(() => getColor(theme!));
+	const [mode, setMode] = useState(() => getMode(theme!));
+
+	useEffect(() => {
+		if (color === "orange") {
+			setTheme(mode);
+		} else {
+			setTheme(`${mode}-${color}`);
+		}
+	}, [color, mode]);
+
+	return (
+		<div className="flex flex-col gap-6 px-2">
+			<div className="flex flex-col gap-2">
+				<p>Mode</p>
+				<div className="flex gap-4">
+					<Button
+						variant="outline"
+						className={cn(theme?.includes("light") && "ring ring-primary")}
+						onMouseDown={() => setMode("light")}
+					>
+						<Sun className="mr-2 h-4 w-4" />
+						Light
+					</Button>
+					<Button
+						variant="outline"
+						className={cn((theme?.includes("dark") || theme?.includes("system")) && "ring ring-primary")}
+						onMouseDown={() => setMode("dark")}
+					>
+						<Moon className="mr-2 h-4 w-4" />
+						Dark
+					</Button>
+				</div>
+			</div>
+			<div className="flex flex-col gap-2">
+				<p>Color</p>
+				<div className="flex flex-wrap justify-between gap-4">
+					<Button
+						variant="outline"
+						className={cn(
+							"flex-1 justify-start px-2 py-6",
+							(theme === "light" || theme === "dark" || theme === "system") && "ring ring-primary"
+						)}
+						onMouseDown={() => setColor("orange")}
+					>
+						<div
+							className="mr-2 h-6 w-6 rounded-full"
+							style={{ backgroundColor: "hsl(24.6 95% 53.1%)" }}
+						></div>
+						Tokaji aszú 🥂
+					</Button>
+					<Button
+						variant="outline"
+						className={cn("flex-1 justify-start px-2 py-6", theme?.includes("blue") && "ring ring-primary")}
+						onMouseDown={() => setColor("blue")}
+					>
+						<div
+							className="mr-2 h-6 w-6 rounded-full"
+							style={{ backgroundColor: "hsl(221.2 83.2% 53.3%)" }}
+						></div>
+						Balaton 💧
+					</Button>
+					<Button
+						variant="outline"
+						className={cn(
+							"flex-1 justify-start px-2 py-6",
+							theme?.includes("green") && "ring ring-primary"
+						)}
+						onMouseDown={() => setColor("green")}
+					>
+						<div
+							className="mr-2 h-6 w-6 rounded-full"
+							style={{ backgroundColor: "hsl(142.1 76.2% 36.3%)" }}
+						></div>
+						Soproni 🍾
+					</Button>
+					<Button
+						variant="outline"
+						className={cn(
+							"flex-1 justify-start px-2 py-6",
+							theme?.includes("yellow") && "ring ring-primary"
+						)}
+						onMouseDown={() => setColor("yellow")}
+					>
+						<div
+							className="mr-2 h-6 w-6 rounded-full"
+							style={{ backgroundColor: "hsl(47.9 95.8% 53.1%)" }}
+						></div>
+						Villamos 🚡
+					</Button>
+					<Button
+						variant="outline"
+						className={cn("flex-1 justify-start px-2 py-6", theme?.includes("red") && "ring ring-primary")}
+						onMouseDown={() => setColor("red")}
+					>
+						<div
+							className="mr-2 h-6 w-6 rounded-full"
+							style={{ backgroundColor: "hsl(0 72.2% 50.6%)" }}
+						></div>
+						Paprika 🌶️
+					</Button>
+					<Button
+						variant="outline"
+						className={cn(
+							"flex-1 justify-start px-2 py-6",
+							theme?.includes("purple") && "ring ring-primary"
+						)}
+						onMouseDown={() => setColor("purple")}
+					>
+						<div
+							className="mr-2 h-6 w-6 rounded-full"
+							style={{ backgroundColor: "hsl(262.1 83.3% 57.8%)" }}
+						></div>
+						Köszönöm 🪻
+					</Button>
+				</div>
+				<div className="flex gap-4"></div>
+			</div>
+		</div>
 	);
 }

@@ -62,7 +62,7 @@ export function AddTask() {
 function AssignToFriends() {
 	return (
 		<>
-			<Accordion type="single" collapsible className="w-full rounded-md border" defaultValue="item-1">
+			<Accordion type="single" collapsible className="w-full rounded-md border">
 				<AccordionItem value="item-1" className="border-b-0 text-muted-foreground">
 					<AccordionTrigger className="py-2 pl-4 pr-4 hover:no-underline ">
 						<div className="flex items-center">
