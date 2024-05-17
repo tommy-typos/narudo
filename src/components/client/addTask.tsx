@@ -339,6 +339,7 @@ export function FriendPicker() {
 }
 
 export function DatePickerWithPresets() {
+	const [open, setOpen] = React.useState(false);
 	const [date, setDate] = React.useState<Date>();
 	const [month, setMonth] = React.useState<Date | undefined>();
 
@@ -351,7 +352,7 @@ export function DatePickerWithPresets() {
 	}, [date]);
 
 	return (
-		<Popover>
+		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
 					variant={"outline"}
@@ -369,6 +370,7 @@ export function DatePickerWithPresets() {
 						className="justify-between"
 						onClick={() => {
 							setDate(new Date());
+							setOpen(false);
 						}}
 					>
 						<div className="flex items-center">
@@ -383,6 +385,7 @@ export function DatePickerWithPresets() {
 						className="justify-between"
 						onClick={() => {
 							setDate(tomorrow());
+							setOpen(false);
 						}}
 					>
 						<div className="flex items-center">
@@ -397,6 +400,7 @@ export function DatePickerWithPresets() {
 						className="justify-start text-muted-foreground"
 						onClick={() => {
 							setDate(undefined);
+							setOpen(false);
 						}}
 					>
 						<CircleSlash className="mr-2 h-4 w-4" /> No Date
@@ -406,7 +410,12 @@ export function DatePickerWithPresets() {
 				<Calendar
 					mode="single"
 					selected={date}
-					onSelect={setDate}
+					onSelect={(calendarSelectedDate) => {
+						if (calendarSelectedDate) {
+							setDate(calendarSelectedDate);
+						}
+						setOpen(false);
+					}}
 					month={month}
 					onMonthChange={setMonth}
 					disabled={[{ before: new Date() }]}

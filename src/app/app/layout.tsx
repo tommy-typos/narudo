@@ -79,10 +79,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 							mode="single"
 							selected={date}
 							onSelect={(calendarSelectedDate) => {
-								setDate(calendarSelectedDate);
-								router.push(
-									`/app/date/${calendarSelectedDate?.getFullYear()}-${calendarSelectedDate?.getMonth()! + 1}-${calendarSelectedDate?.getDate()}`
-								);
+								if (calendarSelectedDate) {
+									setDate(calendarSelectedDate);
+									router.push(
+										`/app/date/${calendarSelectedDate?.getFullYear()}-${calendarSelectedDate?.getMonth()! + 1}-${calendarSelectedDate?.getDate()}`
+									);
+								}
 							}}
 							month={month}
 							onMonthChange={setMonth}
