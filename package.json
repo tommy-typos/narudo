@@ -71,6 +71,7 @@
 		"sonner": "^1.4.41",
 		"tailwind-merge": "^2.3.0",
 		"tailwindcss-animate": "^1.0.7",
+		"uuid": "^9.0.1",
 		"vaul": "^0.9.0",
 		"zod": "^3.23.5"
 	},
@@ -80,6 +81,7 @@
 		"@types/node": "^20",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
+		"@types/uuid": "^9.0.8",
 		"drizzle-kit": "^0.21.2",
 		"eslint": "^8",
 		"eslint-config-next": "14.2.3",
