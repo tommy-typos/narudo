@@ -2,6 +2,10 @@
 
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+/*
+TODO :::
+make this route visible only in dev env.
+*/
 
 export default function Home() {
 	const { setTheme } = useTheme();
