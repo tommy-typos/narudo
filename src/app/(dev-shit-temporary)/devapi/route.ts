@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { getFriends, getProjects } from "@/app/_serverActions/queries";
 import { db } from "@/drizzle/db";
 import {
 	assignees_x_tasks,
@@ -17,7 +18,7 @@ import {
 } from "@/drizzle/schema";
 import { genId } from "@/lib/generateId";
 import { auth } from "@clerk/nextjs/server";
-import { eq, sql } from "drizzle-orm";
+import { eq, ne, or, sql } from "drizzle-orm";
 
 export async function GET(request: Request) {
 	const clerkUser = auth();
@@ -41,30 +42,17 @@ export async function GET(request: Request) {
 			// 	.set({
 			// 		ninjaScore: sql`${users.ninjaScore} + 10`,
 			// 	})
-			// 	.where(eq(users.id, user.id))
-			// 	.returning();
-			// db.insert(tasks).values({
-			// 	createdAt: new Date(),
-			// 	id: genId(),
-			// 	ownerId: user.id,
-			// 	title: 'task 1',
-			// 	date: '2024-05-18',
-			// 	time: '17:47',
-			// 	description: 'very first task',
-			// }).prepare("statement_name")
-			// data = await db.query.projects.findMany({
-			// 	where: eq(projects.ownerId, clerkUser.userId),
-			// 	with: {
-			// 		subCategories: {
-			// 			columns: {
-			// 				ownerId: false
-			// 			}
-			// 		}
-			// 	},
-			// 	columns: {
-			// 		ownerId: false
-			// 	}
-			// })
+			// data = await db
+			// 	.select({
+			// 		id: users.id,
+			// 	})
+			// 	.from(users)
+			// 	.where(ne(users.id, clerkUser.userId))
+			// 	.innerJoin(
+			// 		friendships,
+			// 		or(eq(friendships.userId_1, clerkUser.userId), eq(friendships.userId_2, clerkUser.userId))
+			// 	)
+			// data = await getFriends();
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //

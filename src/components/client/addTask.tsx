@@ -32,7 +32,7 @@ import { InsertTaskType, addNewTask } from "@/app/_serverActions/addNewTask";
 import { produce } from "immer";
 import { genId } from "@/lib/generateId";
 import { useQuery } from "@tanstack/react-query";
-import { getProjects } from "@/app/_serverActions/queries";
+import { getFriends, getProjects } from "@/app/_serverActions/queries";
 
 const emptyState: InsertTaskType = {
 	task: {
@@ -56,6 +56,10 @@ export function AddTask() {
 	const projectsQuery = useQuery({
 		queryKey: ["projects"],
 		queryFn: () => getProjects(),
+	});
+	const friendsQuery = useQuery({
+		queryKey: ["friends"],
+		queryFn: () => getFriends(),
 	});
 
 	const [open, setOpen] = React.useState(false);
