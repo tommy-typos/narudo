@@ -81,6 +81,7 @@ export function AddTask() {
 			project: task.project,
 		});
 		setOpen(false);
+		setTask(emptyState);
 	}
 
 	return (
@@ -134,7 +135,13 @@ export function AddTask() {
 					<AssignToFriends task={task} setTask={setTask} />
 				</div>
 				<DialogFooter>
-					<Button variant="secondary" onClick={() => setOpen(false)}>
+					<Button
+						variant="secondary"
+						onClick={() => {
+							setOpen(false);
+							setTask(emptyState);
+						}}
+					>
 						Cancel
 					</Button>
 					<Button onClick={handleClick} disabled={task.task.title === ""}>
@@ -153,7 +160,23 @@ function AssignToFriends({
 	setTask: React.Dispatch<React.SetStateAction<InsertTaskType>>;
 	task: InsertTaskType;
 }) {
+	const friendsQuery = useQuery({
+		queryKey: ["friends"],
+		queryFn: () => getFriends(),
+	});
+
+	const [values, setValues] = React.useState<string[]>([]);
+
+	React.useEffect(() => {
+		setTask(
+			produce((draft) => {
+				draft.assignees = values;
+			})
+		);
+	}, [values]);
+
 	const tabValue = task.task.isTogether ? "together" : "by-themselves";
+
 	return (
 		<>
 			<Accordion type="single" collapsible className="w-full rounded-md border">
@@ -190,24 +213,43 @@ function AssignToFriends({
 							</div>
 							<div className="flex items-end justify-between border-b pb-2">
 								<p>Assigned to:</p>
-								<FriendPicker setTask={setTask} />
+								<FriendPicker
+									setTask={setTask}
+									friends={friendsQuery.data}
+									values={values}
+									setValues={setValues}
+								/>
 							</div>
 							<div className="flex flex-wrap gap-2">
-								<Button variant="outline" className="group text-foreground">
-									Asat <X className="w-r ml-2 h-4 group-hover:text-destructive" />
-								</Button>
-								<Button variant="outline" className="group text-foreground">
-									Asat <X className="w-r ml-2 h-4 group-hover:text-destructive" />
-								</Button>
-								<Button variant="outline" className="group text-foreground">
-									Asat <X className="w-r ml-2 h-4 group-hover:text-destructive" />
-								</Button>
-
-								{task.assignees.map((assignee) => (
-									<Button key={assignee} variant="outline" className="group text-foreground">
-										{assignee} <X className="w-r ml-2 h-4 group-hover:text-destructive" />
-									</Button>
-								))}
+								{friendsQuery.data &&
+									friendsQuery.data
+										.filter((item) => values.includes(item.id))
+										.map((friend) => (
+											<Button
+												variant="outline"
+												className="group text-foreground"
+												key={friend.id}
+												onClick={() => {
+													setValues((prev) => {
+														if (prev.includes(friend.id)) {
+															return prev.filter((i: string) => i !== friend.id);
+														} else {
+															return [...prev, friend.id];
+														}
+													});
+												}}
+											>
+												<div className="flex items-center">
+													<img
+														src={friend.imageUrl}
+														className="mr-2 h-6 w-6 rounded-full"
+														alt={friend.firstName || "user image"}
+													></img>
+													<p>{friend.firstName || `@ ${friend.userName}`}</p>
+												</div>
+												<X className="w-r ml-2 h-4 group-hover:text-destructive" />
+											</Button>
+										))}
 							</div>
 						</div>
 					</AccordionContent>
@@ -219,27 +261,12 @@ function AssignToFriends({
 
 type FriendType = {
 	id: string;
-	name: string;
-	userName: string;
+	userName: string | null;
+	firstName: string | null;
+	lastName: string | null;
+	imageUrl: string;
+	hasImage: boolean;
 };
-
-const friends: FriendType[] = [
-	{
-		id: "asat",
-		name: "Asat",
-		userName: "asatillo",
-	},
-	{
-		id: "rust",
-		name: "Rustam",
-		userName: "rustFoundation",
-	},
-	{
-		id: "maga",
-		name: "Mahammad",
-		userName: "magaBeast",
-	},
-];
 
 type ProjectType = {
 	id: string;
@@ -397,14 +424,18 @@ export function DestinationPicker({ setTask }: { setTask: React.Dispatch<React.S
 	);
 }
 
-export function FriendPicker({ setTask }: { setTask: React.Dispatch<React.SetStateAction<InsertTaskType>> }) {
-	const friendsQuery = useQuery({
-		queryKey: ["friends"],
-		queryFn: () => getFriends(),
-	});
-
+export function FriendPicker({
+	setTask,
+	friends,
+	values,
+	setValues,
+}: {
+	setTask: React.Dispatch<React.SetStateAction<InsertTaskType>>;
+	friends: FriendType[] | undefined;
+	values: string[];
+	setValues: React.Dispatch<React.SetStateAction<string[]>>;
+}) {
 	const [open, setOpen] = React.useState(false);
-	const [values, setValues] = React.useState<string[]>([]);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -413,41 +444,53 @@ export function FriendPicker({ setTask }: { setTask: React.Dispatch<React.SetSta
 					<Plus className="mr-2 h-4 w-4" /> Add friends
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-[160px] p-0">
+			<PopoverContent className="w-[260px] p-0" side="top">
 				<Command>
-					<CommandInput placeholder="Friend" />
-					<CommandList className="max-h-[220px]">
+					<CommandList className="max-h-[220px] border-b pb-0.5">
 						<CommandEmpty className="py-6 text-center text-sm text-destructive">
 							No friend found
 						</CommandEmpty>
 						<CommandGroup>
-							{friends.map((friend) => (
-								<CommandItem
-									key={friend.id}
-									keywords={[friend.name, friend.userName]}
-									value={friend.name}
-									onSelect={(currentValue) => {
-										setValues((prev) => {
-											if (prev.includes(currentValue)) {
-												return prev.filter((i: string) => i !== currentValue);
-											} else {
-												return [...prev, currentValue];
-											}
-										});
-									}}
-									className={"!pointer-events-auto cursor-pointer !opacity-100"}
-								>
-									<Check
-										className={cn(
-											"mr-2 h-4 w-4",
-											values.includes(friend.name) ? "opacity-100" : "opacity-0"
-										)}
-									/>
-									{friend.name}
-								</CommandItem>
-							))}
+							{friends &&
+								friends.map((friend) => (
+									<CommandItem
+										key={friend.id}
+										keywords={[
+											friend.firstName || "",
+											friend.lastName || "",
+											friend.userName || "",
+										]}
+										value={friend.id}
+										onSelect={(currentValue) => {
+											setValues((prev) => {
+												if (prev.includes(currentValue)) {
+													return prev.filter((i: string) => i !== currentValue);
+												} else {
+													return [...prev, currentValue];
+												}
+											});
+										}}
+										className={"!pointer-events-auto cursor-pointer !opacity-100"}
+									>
+										<Check
+											className={cn(
+												"mr-2 h-4 w-4",
+												values.includes(friend.id) ? "opacity-100" : "opacity-0"
+											)}
+										/>
+										<div className="flex items-center">
+											<img
+												src={friend.imageUrl}
+												className="mr-2 h-6 w-6 rounded-full"
+												alt={friend.firstName || "user image"}
+											></img>
+											<p>{friend.firstName || `@ ${friend.userName}`}</p>
+										</div>
+									</CommandItem>
+								))}
 						</CommandGroup>
 					</CommandList>
+					<CommandInput placeholder="Friend" />
 				</Command>
 			</PopoverContent>
 		</Popover>
@@ -460,6 +503,15 @@ function stringifyDate(date: Date) {
 	const day = String(date.getDate()).padStart(2, "0"); // getDate() returns the day of the month
 
 	return `${year}-${month}-${day}`;
+}
+
+function isToday(date: Date) {
+	const today = new Date();
+	return (
+		date.getDate() === today.getDate() &&
+		date.getMonth() === today.getMonth() &&
+		date.getFullYear() === today.getFullYear()
+	);
 }
 
 export function DatePickerWithPresets({ setTask }: { setTask: React.Dispatch<React.SetStateAction<InsertTaskType>> }) {
@@ -482,7 +534,11 @@ export function DatePickerWithPresets({ setTask }: { setTask: React.Dispatch<Rea
 					variant={"outline"}
 					className={cn("w-[240px] justify-start text-left font-normal", !date && "text-muted-foreground")}
 				>
-					<CalendarIcon className="mr-2 h-4 w-4" />
+					{date && isToday(date) ? (
+						<CalendarHeart className="mr-2 h-4 w-4" style={{ color: "var(--shad-green)" }} />
+					) : (
+						<CalendarIcon className="mr-2 h-4 w-4" />
+					)}
 					{date ? format(date, "PPP") : <span>Pick a date</span>}
 				</Button>
 			</PopoverTrigger>
