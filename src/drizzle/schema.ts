@@ -110,7 +110,7 @@ export const projectSubCategories = createTable("project_sub_categories", {
 export const taskLocations = createTable(
 	"task_locations",
 	{
-		taskId: uuid("taskId").references(() => tasks.id),
+		taskId: uuid("task_id").references(() => tasks.id),
 		userId: uuid("user_id").references(() => users.id),
 		projectId: uuid("project_id").references(() => projects.id),
 		projectSubCatId: uuid("project_sub_cat_id").references(() => projectSubCategories.id),
