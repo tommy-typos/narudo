@@ -75,7 +75,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		<>
 			<Welcomer />
 			<div className="flex min-h-full w-full">
-				<div className="flex min-h-full w-80 flex-col border-r px-4 py-2">
+				<div className="flex min-h-full w-80 flex-col border-r bg-muted/40 px-4 py-2">
 					<div className="flex flex-col justify-between">
 						<Calendar
 							mode="single"
@@ -182,7 +182,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 					</div>
 				</div>
 				<div className="w-full">
-					<div className="h-13 flex w-full items-center justify-between border-b p-2">
+					<div className="h-13 flex w-full items-center justify-between border-b bg-muted/40 p-2">
 						<AddTask />
 						<Button variant="outline" className="w-52 justify-between">
 							<div className="flex items-center">

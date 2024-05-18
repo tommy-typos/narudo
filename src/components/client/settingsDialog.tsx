@@ -9,7 +9,7 @@ import { NarutoBeltSvg } from "@/lib/svgs/svgExporter";
 import { useTheme } from "next-themes";
 
 export function SettingsDialog() {
-	const [openTab, setOpenTab] = useState<"general" | "theme" | "customization">("general");
+	const [openTab, setOpenTab] = useState<"general" | "theme" | "customization">("theme");
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
