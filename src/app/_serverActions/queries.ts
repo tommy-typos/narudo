@@ -1,7 +1,7 @@
 "use server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
-import { InferInsertModel, eq, ne, or } from "drizzle-orm";
+import { InferInsertModel, and, eq, ne, or, sql } from "drizzle-orm";
 import { assignees_x_tasks, friendships, projectSubCategories, projects, tasks, users } from "@/drizzle/schema";
 import { genId } from "@/lib/generateId";
 import { Prettify } from "@/lib/someTypes";
@@ -50,6 +50,31 @@ export async function getFriends() {
 		imageUrl: friend.imageUrl,
 		hasImage: friend.hasImage,
 	}));
+
+	return data;
+}
+
+export async function getTasksByDate() {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const tarix = "2024-05-30";
+
+	/** Get all tasks by date that user is owner or assignee. */
+
+	const sq = db
+		.select({ id: assignees_x_tasks.taskId, assigneeId: assignees_x_tasks.assigneeId })
+		.from(assignees_x_tasks)
+		.where(eq(assignees_x_tasks.assigneeId, clerkUser.userId))
+		.as("sq");
+
+	const data = await db
+		.select()
+		.from(tasks)
+		.leftJoin(sq, eq(tasks.id, sq.id))
+		.where(
+			and(eq(tasks.date, tarix), or(eq(tasks.ownerId, clerkUser.userId), eq(sq.assigneeId, clerkUser.userId)))
+		);
 
 	return data;
 }
