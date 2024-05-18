@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "@/styles/extra-themes.css";
-import "@/styles/clerk-related.css";
+import "@/lib/styles/extra-themes.css";
+import "@/lib/styles/clerk-related.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { ReactQueryProvider } from "@/reactQuery/reactQueryProvider";
+import { ReactQueryProvider } from "@/lib/reactQueryProvider";
 
 export const metadata: Metadata = {
 	title: "NaruDo",

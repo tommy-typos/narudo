@@ -5,7 +5,7 @@ import { AppWindowMac, Atom, Moon, Palette, Rows4, Settings, Sun, Swords, Users 
 import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { NarutoBeltSvg } from "@/svgs/svgExporter";
+import { NarutoBeltSvg } from "@/lib/svgs/svgExporter";
 import { useTheme } from "next-themes";
 
 export function SettingsDialog() {

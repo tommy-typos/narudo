@@ -30,7 +30,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import { UserButton } from "@clerk/nextjs";
-import { NarutoBeltSvg } from "@/svgs/svgExporter";
+import { NarutoBeltSvg } from "@/lib/svgs/svgExporter";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { SettingsDialog } from "@/components/client/settingsDialog";
 import { Badge } from "@/components/ui/badge";
