@@ -52,8 +52,12 @@ export const tasks = createTable("tasks", {
 export const friendships = createTable(
 	"friendships",
 	{
-		userId_1: varchar("user_id_1", { length: 50 }).references(() => users.id),
-		userId_2: varchar("user_id_2", { length: 50 }).references(() => users.id),
+		userId_1: varchar("user_id_1", { length: 50 })
+			.notNull()
+			.references(() => users.id),
+		userId_2: varchar("user_id_2", { length: 50 })
+			.notNull()
+			.references(() => users.id),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.userId_1, table.userId_2] }),
@@ -63,7 +67,9 @@ export const friendships = createTable(
 export const notes = createTable(
 	"notes",
 	{
-		ownerId: varchar("owner_id", { length: 50 }).references(() => users.id),
+		ownerId: varchar("owner_id", { length: 50 })
+			.notNull()
+			.references(() => users.id),
 		date: date("date").notNull(),
 		lastModifiedTimestamp: timestamp("last_modified_timestamp").notNull(),
 		content: json("content"),
@@ -76,9 +82,15 @@ export const notes = createTable(
 export const assignees_x_tasks = createTable(
 	"assignees_x_tasks",
 	{
-		assigneeId: varchar("assignee_id", { length: 50 }).references(() => users.id),
-		taskOwnerId: varchar("task_owner_id", { length: 50 }).references(() => users.id),
-		taskId: uuid("task_id").references(() => tasks.id),
+		assigneeId: varchar("assignee_id", { length: 50 })
+			.notNull()
+			.references(() => users.id),
+		taskOwnerId: varchar("task_owner_id", { length: 50 })
+			.notNull()
+			.references(() => users.id),
+		taskId: uuid("task_id")
+			.notNull()
+			.references(() => tasks.id),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.assigneeId, table.taskOwnerId, table.taskId] }),
@@ -89,8 +101,12 @@ export const friendRequests = createTable(
 	"friend_requests",
 	{
 		id: uuid("id").notNull().defaultRandom(),
-		senderId: varchar("sender_id", { length: 50 }).references(() => users.id),
-		receiverId: varchar("receiver_id", { length: 50 }).references(() => users.id),
+		senderId: varchar("sender_id", { length: 50 })
+			.notNull()
+			.references(() => users.id),
+		receiverId: varchar("receiver_id", { length: 50 })
+			.notNull()
+			.references(() => users.id),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.senderId, table.receiverId] }),
@@ -99,24 +115,40 @@ export const friendRequests = createTable(
 
 export const projects = createTable("projects", {
 	id: uuid("id").primaryKey(),
-	ownerId: varchar("owner_id", { length: 50 }).references(() => users.id),
+	ownerId: varchar("owner_id", { length: 50 })
+		.notNull()
+		.references(() => users.id),
 	isInbox: boolean("is_inbox").notNull(),
+	name: varchar("name", { length: 256 }).notNull(),
 });
 
 export const projectSubCategories = createTable("project_sub_categories", {
 	id: uuid("id").primaryKey(),
-	projectId: uuid("project_id").references(() => projects.id),
-	ownerId: varchar("owner_id", { length: 50 }).references(() => users.id),
+	projectId: uuid("project_id")
+		.notNull()
+		.references(() => projects.id),
+	ownerId: varchar("owner_id", { length: 50 })
+		.notNull()
+		.references(() => users.id),
 	isDefault: boolean("is_default").notNull(),
+	name: varchar("name", { length: 256 }).notNull(),
 });
 
 export const taskLocations = createTable(
 	"task_locations",
 	{
-		taskId: uuid("task_id").references(() => tasks.id),
-		userId: varchar("user_id", { length: 50 }).references(() => users.id),
-		projectId: uuid("project_id").references(() => projects.id),
-		projectSubCatId: uuid("project_sub_cat_id").references(() => projectSubCategories.id),
+		taskId: uuid("task_id")
+			.notNull()
+			.references(() => tasks.id),
+		userId: varchar("user_id", { length: 50 })
+			.notNull()
+			.references(() => users.id),
+		projectId: uuid("project_id")
+			.notNull()
+			.references(() => projects.id),
+		projectSubCatId: uuid("project_sub_cat_id")
+			.notNull()
+			.references(() => projectSubCategories.id),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.taskId, table.userId, table.projectId, table.projectSubCatId] }),
@@ -139,8 +171,12 @@ export const dailyChallenges = createTable("daily_challenges", {
 export const challengeParticipants = createTable(
 	"challenge_participants",
 	{
-		challengeId: uuid("challenge_id").references(() => dailyChallenges.id),
-		userId: varchar("user_id", { length: 50 }).references(() => users.id),
+		challengeId: uuid("challenge_id")
+			.notNull()
+			.references(() => dailyChallenges.id),
+		userId: varchar("user_id", { length: 50 })
+			.notNull()
+			.references(() => users.id),
 		isCompleted: boolean("is_completed"),
 	},
 	(table) => ({
@@ -156,7 +192,9 @@ export const notificationActionTypeEnum = pgEnum("notification_action_type", [
 ]);
 
 export const notifications = createTable("notifications", {
-	userId: varchar("user_id", { length: 50 }).references(() => users.id),
+	userId: varchar("user_id", { length: 50 })
+		.notNull()
+		.references(() => users.id),
 	dateTime: timestamp("date_time").notNull(),
 	title: text("title"),
 	content: text("content"),
