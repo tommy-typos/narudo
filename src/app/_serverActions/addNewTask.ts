@@ -2,7 +2,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
 import { InferInsertModel, eq } from "drizzle-orm";
-import { assignees_x_tasks, projectSubCategories, projects, tasks, users } from "@/drizzle/schema";
+import { assignees_x_tasks, projectSubCategories, projects, taskLocations, tasks, users } from "@/drizzle/schema";
 import { genId } from "@/lib/generateId";
 import { Prettify } from "@/lib/someTypes";
 
@@ -25,6 +25,13 @@ export async function addNewTask(data: InsertTaskType) {
 	await db.insert(tasks).values({
 		ownerId: clerkUser.userId,
 		...data.task,
+	});
+
+	await db.insert(taskLocations).values({
+		projectId: data.project.projectId,
+		projectSubCatId: data.project.subCatId,
+		taskId: data.task.id,
+		userId: clerkUser.userId,
 	});
 
 	if (data.assignees.length) {

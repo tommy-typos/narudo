@@ -10,7 +10,21 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CalendarHeart, CircleSlash, Clock, HeartHandshake, Inbox, Plus, Sun, Users, X } from "lucide-react";
+import {
+	CalendarHeart,
+	CircleSlash,
+	Clock,
+	CornerDownRight,
+	Hash,
+	HeartHandshake,
+	Inbox,
+	Plus,
+	Slash,
+	Sun,
+	Tag,
+	Users,
+	X,
+} from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -53,15 +67,6 @@ const emptyState: InsertTaskType = {
 };
 
 export function AddTask() {
-	const projectsQuery = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
-	const friendsQuery = useQuery({
-		queryKey: ["friends"],
-		queryFn: () => getFriends(),
-	});
-
 	const [open, setOpen] = React.useState(false);
 	const [task, setTask] = React.useState<InsertTaskType>(emptyState);
 
@@ -79,7 +84,15 @@ export function AddTask() {
 	}
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog
+			open={open}
+			onOpenChange={(isOpen) => {
+				setOpen(isOpen);
+				if (!isOpen) {
+					setTask(emptyState);
+				}
+			}}
+		>
 			<DialogTrigger asChild>
 				<Button variant="ghost">
 					<Plus className="mr-2 h-4 w-4" />
@@ -116,7 +129,7 @@ export function AddTask() {
 						<DatePickerWithPresets setTask={setTask} />
 						<TimePickerWithPresets setTask={setTask} />
 					</div>
-					<DestinationPicker />
+					<DestinationPicker setTask={setTask} />
 					<Separator className="my-1 bg-transparent" />
 					<AssignToFriends task={task} setTask={setTask} />
 				</div>
@@ -143,7 +156,7 @@ function AssignToFriends({
 	const tabValue = task.task.isTogether ? "together" : "by-themselves";
 	return (
 		<>
-			<Accordion type="single" collapsible className="w-full rounded-md border" defaultValue="item-1">
+			<Accordion type="single" collapsible className="w-full rounded-md border">
 				<AccordionItem value="item-1" className="border-b-0 text-muted-foreground">
 					<AccordionTrigger className="py-2 pl-4 pr-4 hover:no-underline ">
 						<div className="flex items-center">
@@ -177,7 +190,7 @@ function AssignToFriends({
 							</div>
 							<div className="flex items-end justify-between border-b pb-2">
 								<p>Assigned to:</p>
-								<FriendPicker />
+								<FriendPicker setTask={setTask} />
 							</div>
 							<div className="flex flex-wrap gap-2">
 								<Button variant="outline" className="group text-foreground">
@@ -189,9 +202,12 @@ function AssignToFriends({
 								<Button variant="outline" className="group text-foreground">
 									Asat <X className="w-r ml-2 h-4 group-hover:text-destructive" />
 								</Button>
-								<Button variant="outline" className="group text-foreground">
-									Akhmedov <X className="w-r ml-2 h-4 group-hover:text-destructive" />
-								</Button>
+
+								{task.assignees.map((assignee) => (
+									<Button key={assignee} variant="outline" className="group text-foreground">
+										{assignee} <X className="w-r ml-2 h-4 group-hover:text-destructive" />
+									</Button>
+								))}
 							</div>
 						</div>
 					</AccordionContent>
@@ -228,111 +244,98 @@ const friends: FriendType[] = [
 type ProjectType = {
 	id: string;
 	name: string;
-	subItems: {
+	isInbox: boolean;
+	subCategories: {
 		id: string;
 		name: string;
+		projectId: string;
+		isDefault: boolean;
 	}[];
 };
 
-const taskInbox: ProjectType = {
-	id: "inbox",
-	name: "Inbox",
-	subItems: [
-		{
-			id: "label_1",
-			name: "Label 1",
-		},
-		{
-			id: "label_2",
-			name: "Label 2",
-		},
-	],
-};
-
-const projects: ProjectType[] = [
-	{
-		id: "project_1",
-		name: "Project 1",
-		subItems: [
-			{
-				id: "child_1_1",
-				name: "Child 1",
-			},
-			{
-				id: "child_1_2",
-				name: "Child 2",
-			},
-		],
-	},
-	{
-		id: "project_2",
-		name: "Project 2",
-		subItems: [
-			{
-				id: "child_2_1",
-				name: "Child 1",
-			},
-			{
-				id: "child_2_2",
-				name: "Child 2",
-			},
-			{
-				id: "child_2_3",
-				name: "Child 3",
-			},
-		],
-	},
-	{
-		id: "project_3",
-		name: "Project 3",
-		subItems: [
-			{
-				id: "child_3_1",
-				name: "Child 1",
-			},
-			{
-				id: "child_3_2",
-				name: "Child 2",
-			},
-		],
-	},
-];
-
-function flattenProjectObject(obj: ProjectType) {
-	const result = [];
-
-	result.push({ id: obj.id, name: obj.name, parentId: obj.id, parentName: obj.id });
-
-	if (obj.subItems) {
-		obj.subItems.forEach((subItem) => {
-			result.push({ id: subItem.id, name: subItem.name, parentId: obj.id, parentName: obj.id });
-		});
-	}
-
-	return result;
-}
-
-type FlattenedProjectArrayItemType = {
+type SubcatType = {
 	id: string;
 	name: string;
-	parentId: string;
-	parentName: string;
+	projectId: string;
+	isDefault: boolean;
+	projectName: string;
+	isProjectInbox: boolean;
 };
 
-function flattenProjectsArray(arr: ProjectType[]): FlattenedProjectArrayItemType[] {
-	const temp = arr.map((item) => flattenProjectObject(item));
-	return temp.reduce((acc, curr) => acc.concat(curr), []);
+function flattenProjectsToSubCats(projects: ProjectType[] | undefined): SubcatType[][] {
+	const flattened: SubcatType[][] = [];
+	if (projects) {
+		projects.forEach((project) => {
+			const temp: SubcatType[] = [];
+			project.subCategories.forEach((subCat) => {
+				temp.push({
+					...subCat,
+					projectName: project.name,
+					isProjectInbox: project.isInbox,
+				});
+			});
+			flattened.push(temp);
+		});
+	}
+	return flattened;
 }
 
-export function DestinationPicker() {
+export function DestinationPicker({ setTask }: { setTask: React.Dispatch<React.SetStateAction<InsertTaskType>> }) {
+	const { data, isSuccess } = useQuery({
+		queryKey: ["projects"],
+		queryFn: () => getProjects(),
+	});
+
+	const flattenedProjects = React.useMemo(() => flattenProjectsToSubCats(data), [data]);
 	const [open, setOpen] = React.useState(false);
-	const [value, setValue] = React.useState<string>("inbox");
+	const [value, setValue] = React.useState<string>("");
+
+	const chosenSubCat: SubcatType = [].concat(...(flattenedProjects as any)).find((subCat: SubcatType) => {
+		if (value) {
+			return subCat.id === value;
+		} else {
+			return data ? subCat.id === data[0].subCategories[0].id : false;
+		}
+	}) as any;
+
+	React.useEffect(() => {
+		if (chosenSubCat) {
+			setTask(
+				produce((draft) => {
+					draft.project = {
+						projectId: chosenSubCat.projectId,
+						subCatId: chosenSubCat.id,
+					};
+				})
+			);
+		}
+	}, [chosenSubCat]);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button variant="outline" className="justify-start">
-					<Inbox className="mr-2 h-4 w-4" /> {value}
+					{chosenSubCat ? (
+						chosenSubCat.isProjectInbox ? (
+							<Inbox className="mr-2 h-4 w-4" />
+						) : (
+							<Hash className="mr-2 h-4 w-4" />
+						)
+					) : (
+						<Inbox className="mr-2 h-4 w-4" />
+					)}
+					{chosenSubCat ? <p>{chosenSubCat.projectName}</p> : <p>Task Inbox</p>}
+					{chosenSubCat && !chosenSubCat.isDefault && (
+						<>
+							<Slash className="mx-2 h-3.5 w-3.5 rotate-[-20deg]" />
+							{chosenSubCat.isProjectInbox ? (
+								<Tag className="mr-2 h-4 w-4 rotate-90" />
+							) : (
+								<CornerDownRight className="mr-2 h-4 w-4" />
+							)}
+							<p>{chosenSubCat.name}</p>
+						</>
+					)}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
@@ -340,35 +343,52 @@ export function DestinationPicker() {
 					<CommandInput placeholder="Type a project name" />
 					<CommandList className="max-h-[220px]">
 						<CommandEmpty className="py-6 text-center text-sm text-destructive">
-							No such friend
+							No project found
 						</CommandEmpty>
 						<CommandGroup>
-							{flattenProjectsArray([taskInbox, ...projects]).map((project) => (
-								<CommandItem
-									key={project.id}
-									keywords={[project.name, project.parentName]}
-									value={project.name}
-									onSelect={(currentValue) => {
-										setValue((prev) => {
-											// if (prev.includes(currentValue)) {
-											// 	return prev.filter((i: string) => i !== currentValue);
-											// } else {
-											// 	return [...prev, currentValue];
-											// }
-											return currentValue;
-										});
-									}}
-									className={"!pointer-events-auto cursor-pointer !opacity-100"}
-								>
-									<Check
-										className={cn(
-											"mr-2 h-4 w-4",
-											value == project.name ? "opacity-100" : "opacity-0"
-										)}
-									/>
-									{project.name}
-								</CommandItem>
-							))}
+							{data &&
+								flattenedProjects.map((project) =>
+									project.map((subCat: SubcatType) => (
+										<CommandItem
+											key={subCat.id}
+											keywords={[subCat.name, subCat.projectName]}
+											value={subCat.id}
+											onSelect={(currentValue) => {
+												setValue((prev) => {
+													return currentValue;
+												});
+												setOpen(false);
+											}}
+											className={
+												"!pointer-events-auto cursor-pointer justify-between px-2 !opacity-100"
+											}
+										>
+											<div className="flex items-center">
+												{subCat.isProjectInbox &&
+													(subCat.isDefault ? (
+														<Inbox className="mr-2 h-4 w-4" />
+													) : (
+														<Tag className="ml-6 mr-2 h-4 w-4 rotate-90" />
+													))}
+												{!subCat.isProjectInbox &&
+													(subCat.isDefault ? (
+														<Hash className="mr-2 h-4 w-4" />
+													) : (
+														<CornerDownRight className="ml-6 mr-2 h-4 w-4" />
+													))}
+
+												{subCat.isDefault ? subCat.projectName : subCat.name}
+											</div>
+
+											<Check
+												className={cn(
+													"mr-2 h-4 w-4",
+													value == subCat.name ? "opacity-100" : "opacity-0"
+												)}
+											/>
+										</CommandItem>
+									))
+								)}
 						</CommandGroup>
 					</CommandList>
 				</Command>
@@ -377,7 +397,12 @@ export function DestinationPicker() {
 	);
 }
 
-export function FriendPicker() {
+export function FriendPicker({ setTask }: { setTask: React.Dispatch<React.SetStateAction<InsertTaskType>> }) {
+	const friendsQuery = useQuery({
+		queryKey: ["friends"],
+		queryFn: () => getFriends(),
+	});
+
 	const [open, setOpen] = React.useState(false);
 	const [values, setValues] = React.useState<string[]>([]);
 
@@ -393,7 +418,7 @@ export function FriendPicker() {
 					<CommandInput placeholder="Friend" />
 					<CommandList className="max-h-[220px]">
 						<CommandEmpty className="py-6 text-center text-sm text-destructive">
-							No such friend
+							No friend found
 						</CommandEmpty>
 						<CommandGroup>
 							{friends.map((friend) => (
