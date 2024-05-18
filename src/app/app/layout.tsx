@@ -35,6 +35,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { SettingsDialog } from "@/components/client/settingsDialog";
 import { Badge } from "@/components/ui/badge";
 import { AddTask } from "@/components/client/addTask";
+import { Welcomer } from "@/components/client/welcomer";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -72,6 +73,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
 	return (
 		<>
+			<Welcomer />
 			<div className="flex min-h-full w-full">
 				<div className="flex min-h-full w-80 flex-col border-r px-4 py-2">
 					<div className="flex flex-col justify-between">

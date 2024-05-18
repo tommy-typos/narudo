@@ -1,3 +1,4 @@
+import "server-only";
 import "@/drizzle/envConfig";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
