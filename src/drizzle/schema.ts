@@ -1,14 +1,11 @@
 import {
 	integer,
-	pgTable,
 	pgTableCreator,
 	primaryKey,
-	serial,
 	text,
 	boolean,
 	timestamp,
 	date,
-	foreignKey,
 	uuid,
 	varchar,
 	time,
@@ -16,7 +13,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-const createTable = pgTableCreator((name) => `narudo___${name}`);
+const createTable = pgTableCreator((name) => `narudo_${name}`);
 
 //  ||--------------------------------------------------------------------------------||
 //  ||                                schemas below...                                ||
@@ -29,44 +26,44 @@ tasks > if all assigness opts out && assignee_x_task is empty for the task, then
 for a table > learn how to create index for just "name", also for "name" & "date" as combination.
 */
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-export const users_table = createTable("users", {
+export const users = createTable("users", {
 	id: uuid("id").primaryKey(),
-	ninjaScore: integer("ninjaScore").default(0),
+	ninjaScore: integer("ninja_score").default(0),
 });
 
-export const tasks_table = createTable("tasks", {
+export const tasks = createTable("tasks", {
 	id: uuid("id").primaryKey(),
-	createdAt: timestamp("createdAt").notNull(),
+	createdAt: timestamp("created_at").notNull(),
 	title: varchar("title", { length: 256 }).notNull(),
 	description: text("description"),
 	date: date("date"),
 	time: time("time"),
-	isCompleted: boolean("isCompleted").default(false),
-	ownerId: uuid("ownerId")
-		.references(() => users_table.id)
+	isCompleted: boolean("is_completed").default(false),
+	ownerId: uuid("owner_id")
+		.references(() => users.id)
 		.notNull(),
-	isTogether: boolean("isTogether").default(false),
-	assignedToSomeone: boolean("assignedToSomeone").default(false),
-	commentsAndLogs: json("commentsAndLogs"),
+	isTogether: boolean("is_together").default(false),
+	isAssignedToSb: boolean("is_assigned_to_sb").default(false),
+	commentsAndLogs: json("comments_and_logs"),
 });
 
-export const friendships_table = createTable(
+export const friendships = createTable(
 	"friendships",
 	{
-		userId_1: uuid("userId_1").references(() => users_table.id),
-		userId_2: uuid("userId_2").references(() => users_table.id),
+		userId_1: uuid("user_id_1").references(() => users.id),
+		userId_2: uuid("user_id_2").references(() => users.id),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.userId_1, table.userId_2] }),
 	})
 );
 
-export const notes_table = createTable(
+export const notes = createTable(
 	"notes",
 	{
-		ownerId: uuid("ownerId").references(() => users_table.id),
+		ownerId: uuid("owner_id").references(() => users.id),
 		date: date("date").notNull(),
-		lastModifiedTimestamp: timestamp("lastModifiedTimestamp").notNull(),
+		lastModifiedTimestamp: timestamp("last_modified_timestamp").notNull(),
 		content: json("content"),
 	},
 	(table) => ({
@@ -74,74 +71,74 @@ export const notes_table = createTable(
 	})
 );
 
-export const assignee_X_task_table = createTable(
-	"assignee_X_task",
+export const assignees_x_tasks = createTable(
+	"assignees_x_tasks",
 	{
-		assigneeId: uuid("assigneeId").references(() => users_table.id),
-		taskOwnerId: uuid("taskOwnerId").references(() => users_table.id),
-		taskId: uuid("taskId").references(() => tasks_table.id),
+		assigneeId: uuid("assignee_id").references(() => users.id),
+		taskOwnerId: uuid("task_owner_id").references(() => users.id),
+		taskId: uuid("task_id").references(() => tasks.id),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.assigneeId, table.taskOwnerId, table.taskId] }),
 	})
 );
 
-export const friendRequests_table = createTable(
-	"friendRequests",
+export const friendRequests = createTable(
+	"friend_requests",
 	{
-		senderId: uuid("senderId").references(() => users_table.id),
-		receiverId: uuid("receiverId").references(() => users_table.id),
+		senderId: uuid("sender_id").references(() => users.id),
+		receiverId: uuid("receiver_id").references(() => users.id),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.senderId, table.receiverId] }),
 	})
 );
 
-export const projects_table = createTable("projects", {
+export const projects = createTable("projects", {
 	id: uuid("id").primaryKey(),
-	ownerId: uuid("ownerId").references(() => users_table.id),
-	isInbox: boolean("isInbox").notNull(),
+	ownerId: uuid("owner_id").references(() => users.id),
+	isInbox: boolean("is_inbox").notNull(),
 });
 
-export const projectSubCategories_table = createTable("projectSubCategories", {
+export const projectSubCategories = createTable("project_sub_categories", {
 	id: uuid("id").primaryKey(),
-	projectId: uuid("projectId").references(() => projects_table.id),
-	ownerId: uuid("ownerId").references(() => users_table.id),
-	isDefault: boolean("isDefault").notNull(),
+	projectId: uuid("project_id").references(() => projects.id),
+	ownerId: uuid("owner_id").references(() => users.id),
+	isDefault: boolean("is_default").notNull(),
 });
 
 export const taskLocations = createTable(
-	"taskLocations",
+	"task_locations",
 	{
-		taskId: uuid("taskId").references(() => tasks_table.id),
-		userId: uuid("userId").references(() => users_table.id),
-		projectId: uuid("projectId").references(() => projects_table.id),
-		projectSubCategoryId: uuid("projectSubCategoryId").references(() => projectSubCategories_table.id),
+		taskId: uuid("taskId").references(() => tasks.id),
+		userId: uuid("user_id").references(() => users.id),
+		projectId: uuid("project_id").references(() => projects.id),
+		projectSubCatId: uuid("project_sub_cat_id").references(() => projectSubCategories.id),
 	},
 	(table) => ({
-		pk: primaryKey({ columns: [table.taskId, table.userId, table.projectId, table.projectSubCategoryId] }),
+		pk: primaryKey({ columns: [table.taskId, table.userId, table.projectId, table.projectSubCatId] }),
 	})
 );
 
-export const dailyChallenges = createTable("dailyChallenges", {
+export const dailyChallenges = createTable("daily_challenges", {
 	id: uuid("id").primaryKey(),
-	ownerId: uuid("ownerId")
-		.references(() => users_table.id)
+	ownerId: uuid("owner_id")
+		.references(() => users.id)
 		.notNull(),
 	title: varchar("title", { length: 256 }).notNull(),
 	description: text("description"),
-	finishersCount: integer("finishersCount"),
-	joinersCount: integer("joinersCount"),
-	reactionsJson: json("reactionsJson"),
-	createdAt: date("createdAt"),
+	finishersCount: integer("finishers_count"),
+	joinersCount: integer("joiners_count"),
+	reactions: json("reactions"),
+	createdAt: date("created_at"),
 });
 
 export const challengeParticipants = createTable(
-	"challengeParticipants",
+	"challenge_participants",
 	{
-		challengeId: uuid("challengeId").references(() => dailyChallenges.id),
-		userId: uuid("userId").references(() => users_table.id),
-		isCompleted: boolean("isCompleted"),
+		challengeId: uuid("challenge_id").references(() => dailyChallenges.id),
+		userId: uuid("user_id").references(() => users.id),
+		isCompleted: boolean("is_completed"),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.challengeId, table.userId] }),
