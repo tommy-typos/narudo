@@ -25,6 +25,7 @@ tasks > isTogether can be true only if (assignedToSomeone is true && there is ro
 tasks > time can be have value only if date has value too.
 tasks > if all assigness opts out && assignee_x_task is empty for the task, then set assignedToSomeone and isTogether for the task to be false.
 for a table > learn how to create index for just "name", also for "name" & "date" as combination.
+notifications > if action type is different than no_action, then there has to be actionable item id.
 */
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 export const users = createTable("users", {
@@ -160,6 +161,7 @@ export const notifications = createTable("notifications", {
 	content: text("content"),
 	isRead: boolean("is_read"),
 	actionType: notificationActionTypeEnum("action_type").notNull(),
+	actionableItemId: uuid("actionable_item_id"),
 });
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
