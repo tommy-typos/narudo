@@ -10,6 +10,7 @@ import {
 	varchar,
 	time,
 	json,
+	pgEnum,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -145,5 +146,20 @@ export const challengeParticipants = createTable(
 	})
 );
 
+export const notificationActionTypeEnum = pgEnum("notification_action_type", [
+	"no_action",
+	"open_friend_request",
+	"open_task",
+	"open_challenge",
+]);
+
+export const notifications = createTable("notifications", {
+	userId: uuid("user_id").references(() => users.id),
+	dateTime: timestamp("date_time").notNull(),
+	title: text("title"),
+	content: text("content"),
+	isRead: boolean("is_read"),
+	actionType: notificationActionTypeEnum("action_type").notNull(),
+});
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
