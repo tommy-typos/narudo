@@ -54,11 +54,9 @@ export async function getFriends() {
 	return data;
 }
 
-export async function getTasksByDate() {
+export async function getTasksByDate(date: string) {
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
-
-	const tarix = "2024-05-30";
 
 	/** Get all tasks by date that user is owner or assignee. */
 
@@ -72,9 +70,7 @@ export async function getTasksByDate() {
 		.select()
 		.from(tasks)
 		.leftJoin(sq, eq(tasks.id, sq.id))
-		.where(
-			and(eq(tasks.date, tarix), or(eq(tasks.ownerId, clerkUser.userId), eq(sq.assigneeId, clerkUser.userId)))
-		);
+		.where(and(eq(tasks.date, date), or(eq(tasks.ownerId, clerkUser.userId), eq(sq.assigneeId, clerkUser.userId))));
 
 	return data;
 }
