@@ -16,6 +16,7 @@ import {
 	users,
 } from "@/drizzle/schema";
 import { genId } from "@/lib/generateId";
+import { eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
 	if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
@@ -32,17 +33,19 @@ export async function GET(request: Request) {
 			// const user = (await db.insert(users).values({ id: randomUUID() }).returning())[0];
 			// console.log(user.id);
 			const user = { id: "8d91fdab-203a-4252-8590-dc4894426d8f" };
+			const taskId = "a7badf68-7a03-4c2a-b858-82fd2267f0b7";
 
 			const task = await db
-				.insert(tasks)
-				.values({
+				.update(tasks)
+				.set({
 					createdAt: new Date(),
 					title: "first note",
-					id: genId(),
 					ownerId: user.id,
 					date: "2000-03-19",
 					time: "21:42",
+					isCompleted: true,
 				})
+				.where(eq(tasks.id, taskId))
 				.returning();
 
 			data = task;
