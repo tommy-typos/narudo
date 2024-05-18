@@ -28,10 +28,54 @@ import { cn } from "@/lib/utils";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { InsertTaskType, addNewTask } from "@/app/_serverActions/addNewTask";
+import { produce } from "immer";
+import { genId } from "@/lib/generateId";
+import { useQuery } from "@tanstack/react-query";
+import { getProjects } from "@/app/_serverActions/queries";
+
+const emptyState: InsertTaskType = {
+	task: {
+		date: null,
+		id: "",
+		createdAt: new Date(),
+		title: "",
+		description: "",
+		time: null,
+		isTogether: true,
+		isAssignedToSb: false,
+	},
+	assignees: [],
+	project: {
+		projectId: "",
+		subCatId: "",
+	},
+};
 
 export function AddTask() {
+	const projectsQuery = useQuery({
+		queryKey: ["projects"],
+		queryFn: () => getProjects(),
+	});
+
+	const [open, setOpen] = React.useState(false);
+	const [task, setTask] = React.useState<InsertTaskType>(emptyState);
+
+	async function handleClick() {
+		await addNewTask({
+			task: {
+				...task.task,
+				createdAt: new Date(),
+				id: genId(),
+			},
+			assignees: task.assignees,
+			project: task.project,
+		});
+		setOpen(false);
+	}
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button variant="ghost">
 					<Plus className="mr-2 h-4 w-4" />
@@ -40,29 +84,62 @@ export function AddTask() {
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<div className="flex flex-col gap-2">
-					<Input placeholder="Task name" className="border-0 text-xl !ring-0 !ring-offset-0" />
-					<Textarea placeholder="Description" className="min-h-[120px] resize-none !ring-0 !ring-offset-0" />
+					<Input
+						placeholder="Task name"
+						className="border-0 text-xl !ring-0 !ring-offset-0"
+						value={task.task.title}
+						onChange={(e) => {
+							setTask(
+								produce((draft) => {
+									draft!.task.title = e.target.value;
+								})
+							);
+						}}
+					/>
+					<Textarea
+						placeholder="Description"
+						className="min-h-[120px] resize-none !ring-0 !ring-offset-0"
+						value={task.task.description as string}
+						onChange={(e) => {
+							setTask(
+								produce((draft) => {
+									draft!.task.description = e.target.value;
+								})
+							);
+						}}
+					/>
 					<div className="flex justify-between">
-						<DatePickerWithPresets />
-						<TimePickerWithPresets />
+						<DatePickerWithPresets setTask={setTask} />
+						<TimePickerWithPresets setTask={setTask} />
 					</div>
 					<DestinationPicker />
 					<Separator className="my-1 bg-transparent" />
-					<AssignToFriends />
+					<AssignToFriends task={task} setTask={setTask} />
 				</div>
 				<DialogFooter>
-					<Button variant="secondary">Cancel</Button>
-					<Button>Add task</Button>
+					<Button variant="secondary" onClick={() => setOpen(false)}>
+						Cancel
+					</Button>
+					<Button onClick={handleClick} disabled={task.task.title === ""}>
+						Add task
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);
 }
 
-function AssignToFriends() {
+function AssignToFriends({
+	task,
+	setTask,
+}: {
+	setTask: React.Dispatch<React.SetStateAction<InsertTaskType>>;
+	task: InsertTaskType;
+}) {
+	const tabValue = task.task.isTogether ? "together" : "by-themselves";
 	return (
 		<>
-			<Accordion type="single" collapsible className="w-full rounded-md border">
+			<Accordion type="single" collapsible className="w-full rounded-md border" defaultValue="item-1">
 				<AccordionItem value="item-1" className="border-b-0 text-muted-foreground">
 					<AccordionTrigger className="py-2 pl-4 pr-4 hover:no-underline ">
 						<div className="flex items-center">
@@ -74,7 +151,17 @@ function AssignToFriends() {
 						<div className="flex flex-col gap-2">
 							<div>
 								<p className="mb-1">They will do it:</p>
-								<Tabs defaultValue="together" className="w-full">
+								<Tabs
+									defaultValue={tabValue}
+									className="w-full"
+									onValueChange={(value) => {
+										setTask(
+											produce((draft) => {
+												draft.task.isTogether = value === "together" ? true : false;
+											})
+										);
+									}}
+								>
 									<TabsList className="grid w-full grid-cols-2">
 										<TabsTrigger value="together">
 											<HeartHandshake className="mr-2 h-4 w-4" />
@@ -338,7 +425,15 @@ export function FriendPicker() {
 	);
 }
 
-export function DatePickerWithPresets() {
+function stringifyDate(date: Date) {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() returns 0-11, so we add 1
+	const day = String(date.getDate()).padStart(2, "0"); // getDate() returns the day of the month
+
+	return `${year}-${month}-${day}`;
+}
+
+export function DatePickerWithPresets({ setTask }: { setTask: React.Dispatch<React.SetStateAction<InsertTaskType>> }) {
 	const [open, setOpen] = React.useState(false);
 	const [date, setDate] = React.useState<Date>();
 	const [month, setMonth] = React.useState<Date | undefined>();
@@ -370,6 +465,11 @@ export function DatePickerWithPresets() {
 						className="justify-between"
 						onClick={() => {
 							setDate(new Date());
+							setTask(
+								produce((draft) => {
+									draft.task.date = stringifyDate(new Date());
+								})
+							);
 							setOpen(false);
 						}}
 					>
@@ -385,6 +485,11 @@ export function DatePickerWithPresets() {
 						className="justify-between"
 						onClick={() => {
 							setDate(tomorrow());
+							setTask(
+								produce((draft) => {
+									draft.task.date = stringifyDate(tomorrow());
+								})
+							);
 							setOpen(false);
 						}}
 					>
@@ -400,6 +505,11 @@ export function DatePickerWithPresets() {
 						className="justify-start text-muted-foreground"
 						onClick={() => {
 							setDate(undefined);
+							setTask(
+								produce((draft) => {
+									draft.task.date = null;
+								})
+							);
 							setOpen(false);
 						}}
 					>
@@ -413,6 +523,11 @@ export function DatePickerWithPresets() {
 					onSelect={(calendarSelectedDate) => {
 						if (calendarSelectedDate) {
 							setDate(calendarSelectedDate);
+							setTask(
+								produce((draft) => {
+									draft.task.date = stringifyDate(calendarSelectedDate);
+								})
+							);
 						}
 						setOpen(false);
 					}}
@@ -428,7 +543,7 @@ export function DatePickerWithPresets() {
 	);
 }
 
-export function TimePickerWithPresets() {
+export function TimePickerWithPresets({ setTask }: { setTask: React.Dispatch<React.SetStateAction<InsertTaskType>> }) {
 	const [open, setOpen] = React.useState(false);
 	const [value, setValue] = React.useState("");
 	const [cmdInput, setCmdInput] = React.useState("");
@@ -460,6 +575,11 @@ export function TimePickerWithPresets() {
 								value={"No Time"}
 								onSelect={(currentValue) => {
 									setValue(currentValue === value ? "" : currentValue);
+									setTask(
+										produce((draft) => {
+											draft.task.time = null;
+										})
+									);
 									setOpen(false);
 								}}
 								className={"!pointer-events-auto h-12 cursor-pointer !opacity-100"}
@@ -479,6 +599,11 @@ export function TimePickerWithPresets() {
 										value={formatTimeIntoTwoDigits(cmdInput)}
 										onSelect={(currentValue) => {
 											setValue(currentValue === value ? "" : currentValue);
+											setTask(
+												produce((draft) => {
+													draft.task.time = currentValue;
+												})
+											);
 											setOpen(false);
 										}}
 										className={"!pointer-events-auto cursor-pointer !opacity-100"}
@@ -499,6 +624,11 @@ export function TimePickerWithPresets() {
 									value={generatedTime.value}
 									onSelect={(currentValue) => {
 										setValue(currentValue === value ? "" : currentValue);
+										setTask(
+											produce((draft) => {
+												draft.task.time = currentValue;
+											})
+										);
 										setOpen(false);
 									}}
 									className={"!pointer-events-auto cursor-pointer !opacity-100"}

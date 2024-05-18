@@ -202,5 +202,20 @@ export const notifications = createTable("notifications", {
 	actionType: notificationActionTypeEnum("action_type").notNull(),
 	actionableItemId: uuid("actionable_item_id"),
 });
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// RELATIONSHIPS GURU
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+export const projectRelations = relations(projects, ({ many }) => ({
+	subCategories: many(projectSubCategories),
+}));
+
+export const projectSubCategoryRelations = relations(projectSubCategories, ({ one }) => ({
+	project: one(projects, {
+		fields: [projectSubCategories.projectId],
+		references: [projects.id],
+	}),
+}));

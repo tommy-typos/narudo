@@ -58,6 +58,7 @@
 		"drizzle-orm": "^0.30.10",
 		"embla-carousel-react": "^8.0.2",
 		"eslint-plugin-drizzle": "^0.2.3",
+		"immer": "^10.1.1",
 		"input-otp": "^1.2.4",
 		"lucide-react": "^0.376.0",
 		"next": "14.2.3",
