@@ -33,20 +33,13 @@ export async function getFriends() {
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
 
-	const friendIds = await db
-		.select({
-			id: users.id,
-		})
-		.from(users)
-		.where(ne(users.id, clerkUser.userId))
-		.leftJoin(
-			friendships,
-			or(eq(friendships.userId_1, clerkUser.userId), eq(friendships.userId_2, clerkUser.userId))
-		)
-		.groupBy(users.id);
+	const friendshipsList = await db
+		.select()
+		.from(friendships)
+		.where(or(eq(friendships.userId_1, clerkUser.userId), eq(friendships.userId_2, clerkUser.userId)));
 
 	const friends = await clerkClient.users.getUserList({
-		userId: friendIds.map((item) => item.id),
+		userId: friendshipsList.map((item) => (item.userId_1 !== clerkUser.userId ? item.userId_1 : item.userId_2)),
 	});
 
 	const data = friends.data.map((friend) => ({
