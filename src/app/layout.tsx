@@ -25,6 +25,8 @@ export default function RootLayout({
 			signInFallbackRedirectUrl={"/app/today"}
 			signUpForceRedirectUrl={"/app/today"}
 			signUpFallbackRedirectUrl={"/app/today"}
+			signInUrl={"/sign-in"}
+			signUpUrl={"/sign-up"}
 			appearance={{
 				userButton: {
 					baseTheme: dark,
