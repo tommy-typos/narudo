@@ -17,7 +17,7 @@ import {
 	users,
 } from "@/drizzle/schema";
 import { genId } from "@/lib/generateId";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { eq, ne, or, sql } from "drizzle-orm";
 
 export async function GET(request: Request) {
@@ -53,6 +53,18 @@ export async function GET(request: Request) {
 			// 		or(eq(friendships.userId_1, clerkUser.userId), eq(friendships.userId_2, clerkUser.userId))
 			// 	)
 			// data = await getProjects();
+			// const user = await clerkClient.users.getUser("user_2gFWJI9NSwt4RRvn98W6gsVGofP");
+			// data = {
+			// 	id: user.id,
+			// 	userName: user.username,
+			// 	firstName: user.firstName,
+			// 	lastName: user.lastName,
+			// 	imageUrl: user.imageUrl,
+			// }
+			// data = await clerkClient.users.getUserList({
+			// 	userId: ['user_2geT4BCtRGPRSqwabjAzQ9vahGp', 'user_2geNcwNuJb3gMrUW2YePEvdybXf']
+			// })
+			// data = await getFriends()
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //
