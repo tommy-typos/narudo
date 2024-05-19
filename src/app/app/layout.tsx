@@ -75,6 +75,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		}
 	}, [pathName]);
 
+	const unReadNotifCount: number = notifQuery.data?.filter((notif) => notif.isRead !== true).length || 0;
+
 	return (
 		<>
 			<Welcomer />
@@ -200,15 +202,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 						</Button>
 						<div className="flex items-center ">
 							<Link
-								className={cn(buttonVariants({ variant: "ghost" }), "text-destructive")}
+								className={cn(
+									buttonVariants({ variant: "ghost" }),
+									unReadNotifCount > 0 && "text-destructive"
+								)}
 								href="/app/notifications"
 							>
-								<BellRing className={cn("mr-2 h-4 w-4 stroke-destructive")} />
-								<Badge variant="destructive" className="hover:bg-destructive">
-									{notifQuery.data
-										? notifQuery.data.filter((notif) => notif.isRead !== true).length
-										: 0}
-								</Badge>
+								<BellRing
+									className={cn("mr-2 h-4 w-4", unReadNotifCount > 0 && "stroke-destructive")}
+								/>
+								{notifQuery.data && unReadNotifCount > 0 && (
+									<Badge variant="destructive" className="hover:bg-destructive">
+										{notifQuery.data && unReadNotifCount}
+									</Badge>
+								)}
 							</Link>
 							<Button variant="ghost" className="text-narudorange hover:text-narudorange">
 								<NarutoBeltSvg className={cn("*:fill-narudorange", "mr-2 h-4 w-4")} />
