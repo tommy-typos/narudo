@@ -11,6 +11,7 @@ import {
 	time,
 	json,
 	pgEnum,
+	serial,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -192,6 +193,7 @@ export const notificationActionTypeEnum = pgEnum("notification_action_type", [
 ]);
 
 export const notifications = createTable("notifications", {
+	id: serial("id").notNull().primaryKey(),
 	userId: varchar("user_id", { length: 50 })
 		.notNull()
 		.references(() => users.id),
