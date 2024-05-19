@@ -103,7 +103,15 @@ export async function getTasksByDate(date: string) {
 		.from(tasks)
 		.leftJoin(sq, eq(tasks.id, sq.id))
 		.leftJoin(taskLocations, eq(tasks.id, taskLocations.taskId))
-		.where(and(eq(tasks.date, date), or(eq(tasks.ownerId, clerkUser.userId), eq(sq.assigneeId, clerkUser.userId))))
+		.where(
+			and(
+				eq(tasks.date, date),
+				and(
+					or(eq(tasks.ownerId, clerkUser.userId), eq(sq.assigneeId, clerkUser.userId)),
+					eq(taskLocations.userId, clerkUser.userId)
+				)
+			)
+		)
 		.orderBy(asc(tasks.time));
 
 	const assignees = await db

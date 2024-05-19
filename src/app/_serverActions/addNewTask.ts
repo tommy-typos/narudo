@@ -1,7 +1,7 @@
 "use server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
-import { InferInsertModel, eq } from "drizzle-orm";
+import { InferInsertModel, and, eq, inArray } from "drizzle-orm";
 import { assignees_x_tasks, projectSubCategories, projects, taskLocations, tasks, users } from "@/drizzle/schema";
 import { genId } from "@/lib/generateId";
 import { Prettify } from "@/lib/someTypes";
@@ -27,12 +27,33 @@ export async function addNewTask(data: InsertTaskType) {
 		...data.task,
 	});
 
-	await db.insert(taskLocations).values({
-		projectId: data.project.projectId,
-		projectSubCatId: data.project.subCatId,
-		taskId: data.task.id,
-		userId: clerkUser.userId,
-	});
+	const userProjectSubCat = await db
+		.select({ userId: users.id, projectId: projects.id, subCatId: projectSubCategories.id })
+		.from(users)
+		.where(
+			and(
+				inArray(users.id, [...(data.assignees || [])]),
+				eq(projects.isInbox, true),
+				eq(projectSubCategories.isDefault, true)
+			)
+		)
+		.leftJoin(projects, eq(projects.ownerId, users.id))
+		.leftJoin(projectSubCategories, eq(projects.id, projectSubCategories.projectId));
+
+	await db.insert(taskLocations).values([
+		{
+			projectId: data.project.projectId,
+			projectSubCatId: data.project.subCatId,
+			taskId: data.task.id,
+			userId: clerkUser.userId,
+		},
+		...userProjectSubCat.map((item) => ({
+			projectId: item.projectId as string,
+			projectSubCatId: item.subCatId as string,
+			taskId: data.task.id,
+			userId: item.userId,
+		})),
+	]);
 
 	if (data.assignees.length) {
 		const assigneeArray: InferInsertAssigneesXTasks[] = [];
