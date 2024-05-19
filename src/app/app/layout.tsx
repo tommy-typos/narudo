@@ -278,7 +278,7 @@ function ProjectsList() {
 		},
 	});
 	return (
-		<Accordion type="single" collapsible className="w-full" value="item-1">
+		<Accordion type="single" collapsible className="w-full" defaultValue="item-1">
 			<AccordionItem value="item-1" className="border-b-0">
 				<AccordionTrigger className="py-2 hover:no-underline">
 					<>
