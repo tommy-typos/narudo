@@ -36,8 +36,21 @@ import { SettingsDialog } from "@/components/client/settingsDialog";
 import { Badge } from "@/components/ui/badge";
 import { AddTask } from "@/components/client/addTask";
 import { Welcomer } from "@/components/client/welcomer";
-import { useQuery } from "@tanstack/react-query";
-import { getNotifications } from "../_serverActions/queries";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getNotifications, getProjects } from "../_serverActions/queries";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { createNewProject } from "../_serverActions/addNewProjectSubCat";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -150,35 +163,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
 						<Separator className="my-2" />
 
-						<Accordion type="single" collapsible className="w-full" defaultValue="item-1">
-							<AccordionItem value="item-1" className="border-b-0">
-								<AccordionTrigger className="py-2 hover:no-underline">
-									<>
-										<div className="flex w-full items-center justify-between pr-2">
-											<p>Projects</p>
-											<div
-												className={cn(
-													buttonVariants({ variant: "ghost", size: "icon" }),
-													"h-6 w-6 border-0 group-hover:bg-background"
-												)}
-												onClick={(e) => {
-													e.preventDefault();
-												}}
-											>
-												<Plus className="h-4 w-4" />
-											</div>
-										</div>
-									</>
-								</AccordionTrigger>
-
-								<AccordionContent asChild>
-									<div className="flex flex-col">
-										<ProjectRouteLink projectId={"1"}>project 1</ProjectRouteLink>
-										<ProjectRouteLink projectId={"2"}>project 2</ProjectRouteLink>
-									</div>
-								</AccordionContent>
-							</AccordionItem>
-						</Accordion>
+						<ProjectsList />
 					</div>
 					<div className="mt-auto flex justify-center text-xl">
 						<p className={protestRevolution.className}>naru</p>
@@ -268,6 +253,123 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 				</div>
 			</div>
 		</>
+	);
+}
+
+/*
+TODO :::
+Any click on the dialog that is defined inside of accordion, will trigger accordion item to collapse/expance. Fix this.
+*/
+
+function ProjectsList() {
+	const projectsQuery = useQuery({
+		queryKey: ["projects"],
+		queryFn: () => getProjects(),
+	});
+	const [value, setValue] = React.useState("");
+	const [open, setOpen] = React.useState(false);
+
+	const queryClient = useQueryClient();
+
+	const mutation = useMutation({
+		mutationFn: (value: string) => createNewProject(value),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["projects"] });
+		},
+	});
+	return (
+		<Accordion type="single" collapsible className="w-full" value="item-1">
+			<AccordionItem value="item-1" className="border-b-0">
+				<AccordionTrigger className="py-2 hover:no-underline">
+					<>
+						<div className="flex w-full items-center justify-between pr-2">
+							<p>Projects</p>
+							<Dialog open={open} onOpenChange={setOpen}>
+								<DialogTrigger asChild>
+									{/* <Button variant="outline">Edit Profile</Button> */}
+									<div
+										className={cn(
+											buttonVariants({ variant: "ghost", size: "icon" }),
+											"h-6 w-6 border-0 group-hover:bg-background"
+										)}
+										onClick={(e) => {
+											e.preventDefault();
+											setOpen(true);
+										}}
+									>
+										<Plus className="h-4 w-4" />
+									</div>
+								</DialogTrigger>
+								<DialogContent className="sm:max-w-[425px]">
+									<DialogHeader>
+										<DialogTitle>Create a new project</DialogTitle>
+										<DialogDescription>Please enter name for the new project.</DialogDescription>
+									</DialogHeader>
+									<div className="grid gap-4 py-4">
+										<div className="grid grid-cols-4 items-center gap-4">
+											<Label htmlFor="name" className="text-right">
+												Name
+											</Label>
+											<Input
+												id="name"
+												defaultValue="Pedro Duarte"
+												className="col-span-3"
+												value={value}
+												onChange={(e) => setValue(e.target.value)}
+											/>
+										</div>
+									</div>
+									<DialogFooter>
+										<Button
+											type="submit"
+											disabled={value === ""}
+											onClick={() => {
+												mutation.mutate(value);
+												setOpen(false);
+											}}
+										>
+											Create project
+										</Button>
+									</DialogFooter>
+								</DialogContent>
+							</Dialog>
+						</div>
+					</>
+				</AccordionTrigger>
+
+				<AccordionContent asChild>
+					<div className="flex flex-col">
+						{projectsQuery.data && projectsQuery.data.length > 1
+							? projectsQuery.data.slice(1).map((project) => (
+									<ProjectRouteLink key={project.id} projectId={"1"}>
+										{project.name}
+									</ProjectRouteLink>
+								))
+							: projectsQuery.data &&
+								projectsQuery.data.length === 1 && (
+									<p className="text-center text-muted-foreground">No project found</p>
+								)}
+
+						{projectsQuery.isLoading && (
+							<div key="flkdsajlfdjslfjsdlafjsafldsjlfjs">
+								<div className="my-2 ml-4 flex items-center space-x-4">
+									<Skeleton className="h-6 w-6 rounded-full" />
+									<div className="space-y-2">
+										<Skeleton className="h-4 w-32" />
+									</div>
+								</div>
+								<div className="my-2 ml-4 flex items-center space-x-4">
+									<Skeleton className="h-6 w-6 rounded-full" />
+									<div className="space-y-2">
+										<Skeleton className="h-4 w-20" />
+									</div>
+								</div>
+							</div>
+						)}
+					</div>
+				</AccordionContent>
+			</AccordionItem>
+		</Accordion>
 	);
 }
 
