@@ -45,8 +45,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InsertTaskType, addNewTask } from "@/app/_serverActions/addNewTask";
 import { produce } from "immer";
 import { genId } from "@/lib/generateId";
-import { useQuery } from "@tanstack/react-query";
-import { getFriends, getProjects } from "@/app/_serverActions/queries";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { TaskType, getFriends, getProjects } from "@/app/_serverActions/queries";
+import { usePathname } from "next/navigation";
 
 const emptyState: InsertTaskType = {
 	task: {
@@ -70,8 +71,18 @@ export function AddTask() {
 	const [open, setOpen] = React.useState(false);
 	const [task, setTask] = React.useState<InsertTaskType>(emptyState);
 
+	const queryClient = useQueryClient();
+	const pathName = usePathname();
+
+	const mutation = useMutation({
+		mutationFn: (data: InsertTaskType) => addNewTask(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: [pathName] });
+		},
+	});
+
 	async function handleClick() {
-		await addNewTask({
+		mutation.mutate({
 			task: {
 				...task.task,
 				createdAt: new Date(),

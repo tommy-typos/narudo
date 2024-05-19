@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
 	CalendarDays,
@@ -37,26 +37,20 @@ export default function Home() {
 	}
 }
 
-function getQueryKey(dateSlug: string) {
-	if (isToday(new Date(dateSlug))) {
-		return "today";
-	}
-
-	return dateSlug;
-}
-
 function DateWrapper() {
 	const params = useParams<{ dateSlug: string }>();
-	const routeString = params.dateSlug;
 	const dateFromRoute = new Date(params.dateSlug);
+
+	const pathName = usePathname();
 
 	const { data: projectsList } = useQuery({
 		queryKey: ["projects"],
 		queryFn: () => getProjects(),
 	});
+
 	const taskQuery = useQuery({
-		queryKey: ["tasks", getQueryKey(routeString)],
-		queryFn: () => getTasksByDate(routeString),
+		queryKey: [pathName],
+		queryFn: () => getTasksByDate(pathName.split("/").at(-1) as string),
 	});
 	return (
 		<>
@@ -235,9 +229,9 @@ function getLocationDetail(task: TaskType, projectsList: projectListType): locat
 }
 
 function TaskCardOnTodayView({ task, projectsList }: { task: TaskType; projectsList: projectListType }) {
-	const params = useParams<{ dateSlug: string }>();
-	const routeString = params.dateSlug;
 	const locationDetails = getLocationDetail(task, projectsList);
+
+	const pathName = usePathname();
 
 	const queryClient = useQueryClient();
 
@@ -246,7 +240,7 @@ function TaskCardOnTodayView({ task, projectsList }: { task: TaskType; projectsL
 	const mutation = useMutation({
 		mutationFn: () => toggleTask(task.task.id),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tasks", getQueryKey(routeString)], exact: true });
+			queryClient.invalidateQueries({ queryKey: [pathName] });
 		},
 	});
 

@@ -112,7 +112,7 @@ export async function getTasksByDate(date: string) {
 				)
 			)
 		)
-		.orderBy(asc(tasks.time));
+		.orderBy(asc(tasks.time), asc(tasks.createdAt));
 
 	if (taskList.length > 0) {
 		const assignees = await db
