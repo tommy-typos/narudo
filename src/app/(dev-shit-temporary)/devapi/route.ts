@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { getFriends, getProjects, getTasksByDate } from "@/app/_serverActions/queries";
+import { toggleTask } from "@/app/_serverActions/toggleTask";
 import { db } from "@/drizzle/db";
 import {
 	assignees_x_tasks,
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
 			// 	.update(users)
 			// 	.set({
 			// 		ninjaScore: sql`${users.ninjaScore} + 10`,
-			// 	})
+			// 	}).where(eq(users.id, clerkUser.userId))
 			// data = await db
 			// 	.select({
 			// 		id: users.id,
@@ -64,7 +65,8 @@ export async function GET(request: Request) {
 			// data = await clerkClient.users.getUserList({
 			// 	userId: ['user_2geT4BCtRGPRSqwabjAzQ9vahGp', 'user_2geNcwNuJb3gMrUW2YePEvdybXf']
 			// })
-			data = await getTasksByDate("2024-05-30");
+			// data = await getTasksByDate("2024-05-19");
+			// data = await toggleTask("27e19e20-c9f5-4ef0-a4bd-5b06ba26a99b")
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //
