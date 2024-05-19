@@ -27,33 +27,44 @@ export async function addNewTask(data: InsertTaskType) {
 		...data.task,
 	});
 
-	const userProjectSubCat = await db
-		.select({ userId: users.id, projectId: projects.id, subCatId: projectSubCategories.id })
-		.from(users)
-		.where(
-			and(
-				inArray(users.id, [...(data.assignees || [])]),
-				eq(projects.isInbox, true),
-				eq(projectSubCategories.isDefault, true)
+	if (data.assignees.length > 0) {
+		const userProjectSubCat = await db
+			.select({ userId: users.id, projectId: projects.id, subCatId: projectSubCategories.id })
+			.from(users)
+			.where(
+				and(
+					inArray(users.id, [...(data.assignees || [])]),
+					eq(projects.isInbox, true),
+					eq(projectSubCategories.isDefault, true)
+				)
 			)
-		)
-		.leftJoin(projects, eq(projects.ownerId, users.id))
-		.leftJoin(projectSubCategories, eq(projects.id, projectSubCategories.projectId));
+			.leftJoin(projects, eq(projects.ownerId, users.id))
+			.leftJoin(projectSubCategories, eq(projects.id, projectSubCategories.projectId));
 
-	await db.insert(taskLocations).values([
-		{
-			projectId: data.project.projectId,
-			projectSubCatId: data.project.subCatId,
-			taskId: data.task.id,
-			userId: clerkUser.userId,
-		},
-		...userProjectSubCat.map((item) => ({
-			projectId: item.projectId as string,
-			projectSubCatId: item.subCatId as string,
-			taskId: data.task.id,
-			userId: item.userId,
-		})),
-	]);
+		await db.insert(taskLocations).values([
+			{
+				projectId: data.project.projectId,
+				projectSubCatId: data.project.subCatId,
+				taskId: data.task.id,
+				userId: clerkUser.userId,
+			},
+			...userProjectSubCat.map((item) => ({
+				projectId: item.projectId as string,
+				projectSubCatId: item.subCatId as string,
+				taskId: data.task.id,
+				userId: item.userId,
+			})),
+		]);
+	} else {
+		await db.insert(taskLocations).values([
+			{
+				projectId: data.project.projectId,
+				projectSubCatId: data.project.subCatId,
+				taskId: data.task.id,
+				userId: clerkUser.userId,
+			},
+		]);
+	}
 
 	if (data.assignees.length) {
 		const assigneeArray: InferInsertAssigneesXTasks[] = [];

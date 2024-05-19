@@ -505,7 +505,7 @@ export function stringifyDate(date: Date) {
 	return `${year}-${month}-${day}`;
 }
 
-function isToday(date: Date) {
+export function isToday(date: Date) {
 	const today = new Date();
 	return (
 		date.getDate() === today.getDate() &&

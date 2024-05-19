@@ -114,21 +114,23 @@ export async function getTasksByDate(date: string) {
 		)
 		.orderBy(asc(tasks.time));
 
-	const assignees = await db
-		.select({ assigneeId: assignees_x_tasks.assigneeId, taskId: assignees_x_tasks.taskId })
-		.from(assignees_x_tasks)
-		.where(
-			inArray(
-				assignees_x_tasks.taskId,
-				taskList.map((item) => item.task.id)
-			)
-		);
+	if (taskList.length > 0) {
+		const assignees = await db
+			.select({ assigneeId: assignees_x_tasks.assigneeId, taskId: assignees_x_tasks.taskId })
+			.from(assignees_x_tasks)
+			.where(
+				inArray(
+					assignees_x_tasks.taskId,
+					taskList.map((item) => item.task.id)
+				)
+			);
 
-	taskList.forEach((task) => {
-		task.assignees = assignees
-			.filter((assignee) => assignee.taskId === task.task.id)
-			.map((assignee) => assignee.assigneeId);
-	});
+		taskList.forEach((task) => {
+			task.assignees = assignees
+				.filter((assignee) => assignee.taskId === task.task.id)
+				.map((assignee) => assignee.assigneeId);
+		});
+	}
 
 	return taskList;
 }

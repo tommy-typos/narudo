@@ -37,11 +37,12 @@ export default function Home() {
 	return (
 		<>
 			<div className="mb-4 flex items-center justify-between">
-				<div className="flex items-center">
+				<div className={cn("flex items-center", "text-primary")}>
 					<CalendarDays className="mr-2" />
 
 					<h3 className="shad-h3">Today</h3>
-					<div className="mx-3 h-1 w-1 rounded-full bg-foreground"></div>
+					<div className={cn("mx-3 h-1 w-1 rounded-full bg-foreground", "bg-primary")}></div>
+
 					<h3 className="shad-h3">May 12, 2024</h3>
 				</div>
 
@@ -101,6 +102,13 @@ export default function Home() {
 								{taskQuery.data.map((task) => (
 									<TaskCardOnTodayView key={task.task.id} task={task} projectsList={projectsList} />
 								))}
+							</>
+						)}
+						{taskQuery.data?.length === 0 && (
+							<>
+								<div className="flex w-full items-center">
+									<p className="text-muted-foreground">No task found for this date.</p>
+								</div>
 							</>
 						)}
 						{/* <div className="flex items-center text-sm">
