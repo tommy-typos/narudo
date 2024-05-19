@@ -47,7 +47,7 @@ export default function Home() {
 							Go to the app <MoveRight className="ml-2 h-4 w-4" />
 						</Link>
 					</div>
-					<Image src="/naruto.png" width={300} height={300} alt="Naruto" />
+					<Image src="/naruto.png" width={300} height={300} alt="Naruto" priority />
 				</div>
 			</div>
 		</>
