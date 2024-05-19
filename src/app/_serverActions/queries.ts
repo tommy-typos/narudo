@@ -1,7 +1,7 @@
 "use server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
-import { InferInsertModel, and, eq, ne, or, sql } from "drizzle-orm";
+import { InferInsertModel, and, eq, inArray, ne, or, sql } from "drizzle-orm";
 import {
 	assignees_x_tasks,
 	friendships,
@@ -74,12 +74,52 @@ export async function getTasksByDate(date: string) {
 		.where(eq(assignees_x_tasks.assigneeId, clerkUser.userId))
 		.as("sq");
 
-	const data = await db
-		.select()
+	type TaskType = {
+		task: {
+			date: string | null;
+			id: string;
+			createdAt: Date;
+			title: string;
+			description: string | null;
+			time: string | null;
+			isCompleted: boolean | null;
+			ownerId: string;
+			isTogether: boolean | null;
+			isAssignedToSb: boolean | null;
+			commentsAndLogs: unknown;
+		};
+		taskLocation: {
+			projectId: string;
+			subCatId: string;
+		} | null;
+		assignees?: string[];
+	};
+
+	const taskList: TaskType[] = await db
+		.select({
+			task: tasks,
+			taskLocation: { projectId: taskLocations.projectId, subCatId: taskLocations.projectSubCatId },
+		})
 		.from(tasks)
 		.leftJoin(sq, eq(tasks.id, sq.id))
 		.leftJoin(taskLocations, eq(tasks.id, taskLocations.taskId))
 		.where(and(eq(tasks.date, date), or(eq(tasks.ownerId, clerkUser.userId), eq(sq.assigneeId, clerkUser.userId))));
 
-	return data;
+	const assignees = await db
+		.select({ assigneeId: assignees_x_tasks.assigneeId, taskId: assignees_x_tasks.taskId })
+		.from(assignees_x_tasks)
+		.where(
+			inArray(
+				assignees_x_tasks.taskId,
+				taskList.map((item) => item.task.id)
+			)
+		);
+
+	taskList.forEach((task) => {
+		task.assignees = assignees
+			.filter((assignee) => assignee.taskId === task.task.id)
+			.map((assignee) => assignee.assigneeId);
+	});
+
+	return taskList;
 }
