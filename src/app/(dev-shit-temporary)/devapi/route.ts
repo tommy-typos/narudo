@@ -103,7 +103,8 @@ export async function GET(request: Request) {
 			// 	  "isAssignedToSb": false
 			// 	},
 			// 	"assignees": [
-			// 	  "user_2geNcwNuJb3gMrUW2YePEvdybXf"
+			// 	  "user_2geNcwNuJb3gMrUW2YePEvdybXf",
+			// 	  "user_2geT4BCtRGPRSqwabjAzQ9vahGp"
 			// 	],
 			// 	"project": {
 			// 	  "projectId": "a9d699e3-e113-4d04-8cfe-aef9d47ca14b",

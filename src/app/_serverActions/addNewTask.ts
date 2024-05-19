@@ -1,8 +1,16 @@
 "use server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
 import { InferInsertModel, and, eq, inArray } from "drizzle-orm";
-import { assignees_x_tasks, projectSubCategories, projects, taskLocations, tasks, users } from "@/drizzle/schema";
+import {
+	assignees_x_tasks,
+	notifications,
+	projectSubCategories,
+	projects,
+	taskLocations,
+	tasks,
+	users,
+} from "@/drizzle/schema";
 import { genId } from "@/lib/generateId";
 import { Prettify } from "@/lib/someTypes";
 
@@ -55,6 +63,19 @@ export async function addNewTask(data: InsertTaskType) {
 				userId: item.userId,
 			})),
 		]);
+
+		const clerkUserDetails = await clerkClient.users.getUser(clerkUser.userId);
+
+		const haha = data.assignees.map((assigneeId) => ({
+			actionType: "no_action",
+			dateTime: data.task.createdAt,
+			userId: assigneeId,
+			title: `${clerkUserDetails.fullName ? clerkUserDetails.fullName : "@ " + clerkUserDetails.username} added you on a task.`,
+			content: `Task title: ${data.task.title}`,
+			isRead: false,
+		}));
+
+		await db.insert(notifications).values(haha as any);
 	} else {
 		await db.insert(taskLocations).values([
 			{
