@@ -2,7 +2,15 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
 import { InferInsertModel, and, eq, ne, or, sql } from "drizzle-orm";
-import { assignees_x_tasks, friendships, projectSubCategories, projects, tasks, users } from "@/drizzle/schema";
+import {
+	assignees_x_tasks,
+	friendships,
+	projectSubCategories,
+	projects,
+	taskLocations,
+	tasks,
+	users,
+} from "@/drizzle/schema";
 import { genId } from "@/lib/generateId";
 import { Prettify } from "@/lib/someTypes";
 
@@ -70,6 +78,7 @@ export async function getTasksByDate(date: string) {
 		.select()
 		.from(tasks)
 		.leftJoin(sq, eq(tasks.id, sq.id))
+		.leftJoin(taskLocations, eq(tasks.id, taskLocations.taskId))
 		.where(and(eq(tasks.date, date), or(eq(tasks.ownerId, clerkUser.userId), eq(sq.assigneeId, clerkUser.userId))));
 
 	return data;

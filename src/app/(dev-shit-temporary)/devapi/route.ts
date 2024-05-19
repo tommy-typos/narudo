@@ -64,7 +64,7 @@ export async function GET(request: Request) {
 			// data = await clerkClient.users.getUserList({
 			// 	userId: ['user_2geT4BCtRGPRSqwabjAzQ9vahGp', 'user_2geNcwNuJb3gMrUW2YePEvdybXf']
 			// })
-			// data = await getTasksByDate()
+			data = await getTasksByDate("2024-05-30");
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //
