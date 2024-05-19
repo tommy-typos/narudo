@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { addNewTask } from "@/app/_serverActions/addNewTask";
 import { getFriends, getProjects, getTasksByDate } from "@/app/_serverActions/queries";
-import { toggleTask } from "@/app/_serverActions/toggleTask";
+import { toggleTask } from "@/app/_serverActions/toggleTaskNotification";
 import { db } from "@/drizzle/db";
 import {
 	assignees_x_tasks,

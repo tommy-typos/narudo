@@ -27,6 +27,7 @@ tasks > time can be have value only if date has value too.
 tasks > if all assigness opts out && assignee_x_task is empty for the task, then set assignedToSomeone and isTogether for the task to be false.
 for a table > learn how to create index for just "name", also for "name" & "date" as combination.
 notifications > if action type is different than no_action, then there has to be actionable item id.
+notifications > older than 30 days should be removed??
 */
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 export const users = createTable("users", {

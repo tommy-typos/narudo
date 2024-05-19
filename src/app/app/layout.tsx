@@ -31,11 +31,13 @@ import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import { UserButton } from "@clerk/nextjs";
 import { NarutoBeltSvg } from "@/lib/svgs/svgExporter";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { redirect, useParams, usePathname, useRouter } from "next/navigation";
 import { SettingsDialog } from "@/components/client/settingsDialog";
 import { Badge } from "@/components/ui/badge";
 import { AddTask } from "@/components/client/addTask";
 import { Welcomer } from "@/components/client/welcomer";
+import { useQuery } from "@tanstack/react-query";
+import { getNotifications } from "../_serverActions/queries";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -46,9 +48,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	const [month, setMonth] = React.useState<Date | undefined>(new Date());
 	const router = useRouter();
 
-	function isPathDate() {
-		return pathName.includes("/app/today") || pathName.includes("/app/date/");
-	}
+	const notifQuery = useQuery({
+		queryKey: ["notifications"],
+		queryFn: () => getNotifications(),
+		refetchInterval: 5000,
+	});
 
 	React.useEffect(() => {
 		if (!(pathName.includes("/app/today") || pathName.includes("/app/date/"))) {
@@ -195,12 +199,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 							</div>
 						</Button>
 						<div className="flex items-center ">
-							<Button variant="ghost" className="text-destructive ">
+							<Link
+								className={cn(buttonVariants({ variant: "ghost" }), "text-destructive")}
+								href="/app/notifications"
+							>
 								<BellRing className={cn("mr-2 h-4 w-4 stroke-destructive")} />
 								<Badge variant="destructive" className="hover:bg-destructive">
-									14
+									{notifQuery.data
+										? notifQuery.data.filter((notif) => notif.isRead !== true).length
+										: 0}
 								</Badge>
-							</Button>
+							</Link>
 							<Button variant="ghost" className="text-narudorange hover:text-narudorange">
 								<NarutoBeltSvg className={cn("*:fill-narudorange", "mr-2 h-4 w-4")} />
 								23

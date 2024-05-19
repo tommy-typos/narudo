@@ -24,7 +24,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskType, getProjects, getTasksByDate } from "@/app/_serverActions/queries";
 import { isToday, stringifyDate } from "@/components/client/addTask";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toggleTask } from "@/app/_serverActions/toggleTask";
+import { toggleTask } from "@/app/_serverActions/toggleTaskNotification";
 
 export default function Home() {
 	const params = useParams<{ dateSlug: string }>();

@@ -5,6 +5,7 @@ import { InferInsertModel, and, asc, desc, eq, inArray, ne, or, sql } from "driz
 import {
 	assignees_x_tasks,
 	friendships,
+	notifications,
 	projectSubCategories,
 	projects,
 	taskLocations,
@@ -133,4 +134,17 @@ export async function getTasksByDate(date: string) {
 	}
 
 	return taskList;
+}
+
+export async function getNotifications() {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const data = await db
+		.select()
+		.from(notifications)
+		.where(eq(notifications.userId, clerkUser.userId))
+		.orderBy(desc(notifications.dateTime));
+
+	return data;
 }
