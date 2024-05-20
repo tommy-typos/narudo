@@ -47,6 +47,10 @@ export async function getFriends() {
 		.from(friendships)
 		.where(or(eq(friendships.userId_1, clerkUser.userId), eq(friendships.userId_2, clerkUser.userId)));
 
+	if (friendshipsList.length === 0) {
+		return [];
+	}
+
 	const friends = await clerkClient.users.getUserList({
 		userId: friendshipsList.map((item) => (item.userId_1 !== clerkUser.userId ? item.userId_1 : item.userId_2)),
 	});
