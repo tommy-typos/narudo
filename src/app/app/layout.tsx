@@ -194,7 +194,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 								href="/app/notifications"
 							>
 								<BellRing
-									className={cn("mr-2 h-4 w-4", unReadNotifCount > 0 && "stroke-destructive")}
+									className={cn("h-4 w-4", unReadNotifCount > 0 && "mr-2 stroke-destructive")}
 								/>
 								{notifQuery.data && unReadNotifCount > 0 && (
 									<Badge variant="destructive" className="hover:bg-destructive">
