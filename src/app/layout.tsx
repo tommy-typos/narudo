@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { ReactQueryProvider } from "@/lib/reactQueryProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
 	title: "NaruDo",
@@ -59,7 +60,10 @@ export default function RootLayout({
 							"dark-purple",
 						]}
 					>
-						<ReactQueryProvider>{children}</ReactQueryProvider>
+						<ReactQueryProvider>
+							{children}
+							<Toaster />
+						</ReactQueryProvider>
 						{/* <SpeedInsights />
 						<Analytics /> */}
 					</ThemeProvider>
