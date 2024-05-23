@@ -82,8 +82,6 @@ function AddFriendDialog() {
 		},
 	});
 
-	console.log(mutation.isPending);
-
 	return (
 		<>
 			<Dialog
