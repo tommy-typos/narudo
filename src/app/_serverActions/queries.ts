@@ -4,6 +4,7 @@ import { db } from "@/drizzle/db";
 import { InferInsertModel, and, asc, desc, eq, inArray, ne, or, sql } from "drizzle-orm";
 import {
 	assignees_x_tasks,
+	friendRequests,
 	friendships,
 	notifications,
 	projectSubCategories,
@@ -152,3 +153,52 @@ export async function getNotifications() {
 
 	return data;
 }
+
+export async function getFriendRequestsPending() {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const data = await db.select().from(friendRequests).where(eq(friendRequests.senderId, clerkUser.userId));
+
+	if (data.length === 0) {
+		return [];
+	}
+
+	const clerkUsers = await clerkClient.users.getUserList({
+		userId: data.map((item) => item.receiverId),
+	});
+
+	return clerkUsers.data.map((item) => ({
+		userId: item.id,
+		userName: item.username,
+	}));
+}
+
+export async function getFriendRequestsIncoming() {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const data = await db.select().from(friendRequests).where(eq(friendRequests.receiverId, clerkUser.userId));
+
+	if (data.length === 0) {
+		return [];
+	}
+
+	const clerkUsers = await clerkClient.users.getUserList({
+		userId: data.map((item) => item.senderId),
+	});
+
+	return clerkUsers.data.map((item) => ({
+		userId: item.id,
+		userName: item.username,
+		firstName: item.firstName,
+		lastName: item.lastName,
+		imageUrl: item.imageUrl,
+		hasImage: item.hasImage,
+	}));
+}
+
+// TODO ::: if user sent you a request before, now you send to them, then it should be automatically friendship.
+// TODO ::: user can't send request to himself
+// TODO ::: dont forget that passing empty array to clerk returns list of all users.
+// TODO ::: input field should be reset after succesfull friend request sent.

@@ -17,8 +17,6 @@ export async function addNewFriend(userName: string, sentDate: Date) {
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
 
-	await new Promise((resolve) => setTimeout(resolve, 2000));
-
 	const futureFriendData = await clerkClient.users.getUserList({ username: [userName] });
 
 	if (futureFriendData.totalCount === 0) {
@@ -52,6 +50,49 @@ export async function addNewFriend(userName: string, sentDate: Date) {
 		userId: futureFriendData.data[0].id,
 		title: `${clerkUserDetails.fullName ? clerkUserDetails.fullName : "@ " + clerkUserDetails.username} sent you a friend request`,
 		content: `Go to Incoming Requests Page to see all your requests.`,
+		isRead: false,
+	});
+}
+export async function cancelFriendRequest(userId: string) {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	await db
+		.delete(friendRequests)
+		.where(
+			or(
+				and(eq(friendRequests.senderId, clerkUser.userId), eq(friendRequests.receiverId, userId)),
+				and(eq(friendRequests.senderId, userId), eq(friendRequests.receiverId, clerkUser.userId))
+			)
+		);
+}
+export async function acceptFriendRequest(userId: string, sentDate: Date) {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	// TODO ::: do returning here and check if request actually existed before adding into friendships
+	await db
+		.delete(friendRequests)
+		.where(
+			or(
+				and(eq(friendRequests.senderId, clerkUser.userId), eq(friendRequests.receiverId, userId)),
+				and(eq(friendRequests.senderId, userId), eq(friendRequests.receiverId, clerkUser.userId))
+			)
+		);
+
+	await db.insert(friendships).values({
+		userId_1: clerkUser.userId,
+		userId_2: userId,
+	});
+
+	const clerkUserDetails = await clerkClient.users.getUser(clerkUser.userId);
+
+	await db.insert(notifications).values({
+		actionType: "no_action",
+		dateTime: sentDate,
+		userId: userId,
+		title: `${clerkUserDetails.fullName ? clerkUserDetails.fullName : "@ " + clerkUserDetails.username} accepted your friend request`,
+		content: ``,
 		isRead: false,
 	});
 }
