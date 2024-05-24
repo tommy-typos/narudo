@@ -66,6 +66,7 @@ export default function Home() {
 							<Separator className="my-2" />
 						</div>
 					))}
+				{requestsQuery.data && requestsQuery.data.length === 0 && <p>No incoming request</p>}
 			</div>
 		</>
 	);
