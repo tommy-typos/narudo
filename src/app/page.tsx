@@ -43,7 +43,7 @@ export default function Home() {
 								- [ ] Black Belt Your Productivity
 							</h1>
 						</div>
-						<Link className={cn(buttonVariants(), "mt-10 w-40")} href="/sign-in">
+						<Link className={cn(buttonVariants(), "mt-10 w-40")} href="/app/today">
 							Go to the app <MoveRight className="ml-2 h-4 w-4" />
 						</Link>
 					</div>
