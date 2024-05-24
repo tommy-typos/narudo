@@ -25,7 +25,7 @@ export default function Home() {
 		<>
 			<div className="flex justify-between">
 				<Card className="w-60 border-0 pr-2 shadow-none">
-					<CardContent className="flex w-full flex-col gap-1 p-2 ">
+					<CardContent className="flex w-full flex-col gap-1 p-0 ">
 						{/* <div className="mb-2 ml-4 mt-2 flex items-center text-xs opacity-50">
 							<Pin className="mr-2 h-3 w-3 rotate-45" /> Pinned
 						</div>
@@ -69,7 +69,7 @@ function FriendLinkComponent({ data }: { data: FriendType }) {
 	return (
 		<div
 			className={cn(
-				"group flex items-center justify-between rounded-md pr-2 hover:bg-accent",
+				"group relative flex items-center justify-between rounded-md pr-2 hover:bg-accent",
 				pathname.includes(data.id) && "bg-accent"
 			)}
 		>
@@ -80,7 +80,7 @@ function FriendLinkComponent({ data }: { data: FriendType }) {
 				<div className="mr-2 size-8">
 					<img
 						src={data.imageUrl}
-						className="size-8 rounded-full border-0"
+						className="size-8 rounded-full border-0 object-cover"
 						alt={data.fullName || "user image"}
 					></img>
 				</div>
@@ -89,7 +89,7 @@ function FriendLinkComponent({ data }: { data: FriendType }) {
 			<Button
 				variant="ghost"
 				size="icon"
-				className="invisible h-7 w-7  border-0 group-hover:visible group-hover:bg-background"
+				className="invisible absolute right-2  h-7 w-7 border-0 group-hover:visible group-hover:bg-background"
 				onClick={(e) => {
 					e.preventDefault();
 				}}
