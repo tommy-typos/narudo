@@ -36,61 +36,7 @@ export async function GET(request: Request) {
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //
-			// const user = (await db.insert(users).values({ id: randomUUID() }).returning())[0];
-			// console.log(user.id);
-			// const user = { id: "user_2gFWJI9NSwt4RRvn98W6gsVGofP" };
-			// data = await db
-			// 	.update(users)
-			// 	.set({
 			// 		ninjaScore: sql`${users.ninjaScore} + 10`,
-			// 	}).where(eq(users.id, clerkUser.userId))
-			// data = await db
-			// 	.select({
-			// 		id: users.id,
-			// 	})
-			// 	.from(users)
-			// 	.where(ne(users.id, clerkUser.userId))
-			// 	.innerJoin(
-			// 		friendships,
-			// 		or(eq(friendships.userId_1, clerkUser.userId), eq(friendships.userId_2, clerkUser.userId))
-			// 	)
-			// data = await getProjects();
-			// const user = await clerkClient.users.getUser("user_2gFWJI9NSwt4RRvn98W6gsVGofP");
-			// data = {
-			// 	id: user.id,
-			// 	userName: user.username,
-			// 	firstName: user.firstName,
-			// 	lastName: user.lastName,
-			// 	imageUrl: user.imageUrl,
-			/**
-			 * gmail 2
-			user_2gFWJI9NSwt4RRvn98W6gsVGofP
-
-			gmail 1
-			user_2geNcwNuJb3gMrUW2YePEvdybXf
-
-			iqaqpg micro
-			user_2geT4BCtRGPRSqwabjAzQ9vahGp
-			 */
-			// }
-			// data = await clerkClient.users.getUserList({
-			// 	userId: ['user_2geT4BCtRGPRSqwabjAzQ9vahGp', 'user_2geNcwNuJb3gMrUW2YePEvdybXf']
-			// })
-			// data = await getTasksByDate("2024-05-19");
-			// data = await toggleTask("27e19e20-c9f5-4ef0-a4bd-5b06ba26a99b")
-			// {id: users.id, countProject: sql`array_agg(${projects.id})`}
-			// data = await db
-			// 	.select({userId: users.id, projectId: projects.id, subCatId: projectSubCategories.id})
-			// 	.from(users)
-			// 	.where(
-			// 		and(
-			// 			inArray(users.id, ["user_2gFWJI9NSwt4RRvn98W6gsVGofP", "user_2geNcwNuJb3gMrUW2YePEvdybXf"]),
-			// 			eq(projects.isInbox, true),
-			// 			eq(projectSubCategories.isDefault, true)
-			// 		)
-			// 	)
-			// 	.leftJoin(projects, eq(projects.ownerId, users.id))
-			// 	.leftJoin(projectSubCategories, eq(projects.id, projectSubCategories.projectId));
 			// data = await addNewTask({
 			// 	task: {
 			// 	  "date": "2024-05-19",
@@ -111,10 +57,16 @@ export async function GET(request: Request) {
 			// 	  "subCatId": "5284a9b7-4f09-451c-8395-7f0f598d907f"
 			// 	}
 			//   })
-			// data = await getTasksByDate('2024-05-19')
-			// data = await getFriends()
-			// data = await clerkClient.users.getUserList()
-			// data = data.data.map(item => item.username)
+			// const clerkUsers = await clerkClient.users.getUserList();
+			// data =  clerkUsers.data.map((item) => ({
+			// 	userId: item.id,
+			// 	userName: item.username,
+			// 	firstName: item.firstName,
+			// 	lastName: item.lastName,
+			// 	fullName: item.fullName,
+			// 	imageUrl: item.imageUrl,
+			// 	hasImage: item.hasImage,
+			// }));
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //

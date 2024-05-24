@@ -13,6 +13,7 @@
 			{
 				"drizzleObjectName": ["db"]
 			}
-		]
+		],
+		"@next/next/no-img-element": "off"
 	}
 }

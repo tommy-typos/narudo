@@ -37,7 +37,7 @@ import { Badge } from "@/components/ui/badge";
 import { AddTask } from "@/components/client/addTask";
 import { Welcomer } from "@/components/client/welcomer";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getNotifications, getProjects } from "../_serverActions/queries";
+import { getFriends, getNotifications, getProjects } from "../_serverActions/queries";
 import {
 	Dialog,
 	DialogContent,
@@ -65,6 +65,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		queryKey: ["notifications"],
 		queryFn: () => getNotifications(),
 		refetchInterval: 5000,
+	});
+
+	const friendsQuery = useQuery({
+		queryKey: ["friends"],
+		queryFn: () => getFriends(),
 	});
 
 	React.useEffect(() => {
