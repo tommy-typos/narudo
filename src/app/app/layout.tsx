@@ -54,7 +54,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
 	const pathName = usePathname();
 	const params = useParams();
 	const [date, setDate] = React.useState<Date | undefined>(undefined);
@@ -87,6 +87,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 			}
 		}
 	}, [pathName]);
+
+	const queryClient = useQueryClient();
+
+	React.useEffect(() => {
+		// TODO ::: delete this temporary solution for 'queries keep hanging on loading state when redirected from '/sign-in' page.
+		setTimeout(() => {
+			queryClient.cancelQueries();
+			queryClient.refetchQueries();
+		}, 1);
+	}, []);
 
 	const unReadNotifCount: number = notifQuery.data?.filter((notif) => notif.isRead !== true).length || 0;
 

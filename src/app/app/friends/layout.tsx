@@ -36,7 +36,7 @@ function FriendsLink({ link, text, active }: FriendsLinkProps) {
 	);
 }
 
-export default function Home({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<>
 			<div className="mb-6 flex items-center justify-between">
