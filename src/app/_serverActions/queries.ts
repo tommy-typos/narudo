@@ -242,7 +242,7 @@ export async function getTasksByFriend(friendId: string) {
 				taskloc.project_sub_cat_id as project_sub_cat_id,
 				COALESCE((
 					SELECT array_agg(axt.assignee_id)
-					FROM narudo_assignees_x_tasks axt
+					FROM ${assignees_x_tasks} axt
 					WHERE axt.task_id = user_tasks.id
 				), '{}') AS assignees
 			FROM 
