@@ -39,13 +39,10 @@ export default function Home() {
 									<img
 										src={request.imageUrl}
 										className="mr-2 h-8 w-8 rounded-full border"
-										alt={request.firstName || "user image"}
+										alt={request.fullName || "user image"}
 									></img>
 									<div>
-										<p>
-											{request.firstName || ""}
-											{request.lastName || ""}
-										</p>
+										<p>{request.fullName || ""}</p>
 										<p className="text-sm">@ {request.userName}</p>
 									</div>
 								</div>

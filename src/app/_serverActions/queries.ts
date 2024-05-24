@@ -59,8 +59,7 @@ export async function getFriends() {
 	const data = friends.data.map((friend) => ({
 		id: friend.id,
 		userName: friend.username,
-		firstName: friend.firstName,
-		lastName: friend.lastName,
+		fullName: friend.fullName,
 		imageUrl: friend.imageUrl,
 		hasImage: friend.hasImage,
 	}));
@@ -191,8 +190,7 @@ export async function getFriendRequestsIncoming() {
 	return clerkUsers.data.map((item) => ({
 		userId: item.id,
 		userName: item.username,
-		firstName: item.firstName,
-		lastName: item.lastName,
+		fullName: item.fullName,
 		imageUrl: item.imageUrl,
 		hasImage: item.hasImage,
 	}));

@@ -59,8 +59,7 @@ export default function Home() {
 type FriendType = {
 	id: string;
 	userName: string | null;
-	firstName: string | null;
-	lastName: string | null;
+	fullName: string | null;
 	imageUrl: string;
 	hasImage: boolean;
 };
@@ -82,10 +81,10 @@ function FriendLinkComponent({ data }: { data: FriendType }) {
 					<img
 						src={data.imageUrl}
 						className="size-8 rounded-full border-0"
-						alt={data.firstName || "user image"}
+						alt={data.fullName || "user image"}
 					></img>
 				</div>
-				{data.lastName || `@ ${data.userName}`}
+				{data.fullName || `@ ${data.userName}`}
 			</Link>
 			<Button
 				variant="ghost"

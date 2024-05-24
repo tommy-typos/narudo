@@ -254,9 +254,9 @@ function AssignToFriends({
 													<img
 														src={friend.imageUrl}
 														className="mr-2 h-6 w-6 rounded-full"
-														alt={friend.firstName || "user image"}
+														alt={friend.fullName || "user image"}
 													></img>
-													<p>{friend.firstName || `@ ${friend.userName}`}</p>
+													<p>{friend.fullName || `@ ${friend.userName}`}</p>
 												</div>
 												<X className="w-r ml-2 h-4 group-hover:text-destructive" />
 											</Button>
@@ -273,8 +273,7 @@ function AssignToFriends({
 type FriendType = {
 	id: string;
 	userName: string | null;
-	firstName: string | null;
-	lastName: string | null;
+	fullName: string | null;
 	imageUrl: string;
 	hasImage: boolean;
 };
@@ -466,11 +465,7 @@ export function FriendPicker({
 								friends.map((friend) => (
 									<CommandItem
 										key={friend.id}
-										keywords={[
-											friend.firstName || "",
-											friend.lastName || "",
-											friend.userName || "",
-										]}
+										keywords={[friend.fullName || "", friend.userName || ""]}
 										value={friend.id}
 										onSelect={(currentValue) => {
 											setValues((prev) => {
@@ -493,9 +488,9 @@ export function FriendPicker({
 											<img
 												src={friend.imageUrl}
 												className="mr-2 h-6 w-6 rounded-full"
-												alt={friend.firstName || "user image"}
+												alt={friend.fullName || "user image"}
 											></img>
-											<p>{friend.firstName || `@ ${friend.userName}`}</p>
+											<p>{friend.fullName || `@ ${friend.userName}`}</p>
 										</div>
 									</CommandItem>
 								))}
