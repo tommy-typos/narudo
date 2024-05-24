@@ -211,50 +211,50 @@ export async function getTasksByFriend(friendId: string) {
 	 */
 
 	const rawSqlForTasks = sql`
-			WITH user_tasks AS (
-				SELECT DISTINCT ON(t.id)
-					t.*
-				FROM 
-					${tasks} t
-				INNER JOIN 
-					${assignees_x_tasks} axt ON t.id = axt.task_id
-				WHERE 
-					(t.owner_id = ${clerkUser.userId} AND axt.assignee_id = ${friendId})
-					OR (t.owner_id = ${friendId} AND axt.assignee_id = ${clerkUser.userId})
-					OR (t.owner_id != ${clerkUser.userId} AND t.owner_id != ${friendId} 
-						AND EXISTS (
-							SELECT 1 
-							FROM ${assignees_x_tasks} axt1 
-							WHERE axt1.task_id = t.id 
-							AND axt1.assignee_id = ${clerkUser.userId}
-						) 
-						AND EXISTS (
-							SELECT 1 
-							FROM ${assignees_x_tasks} axt2 
-							WHERE axt2.task_id = t.id 
-							AND axt2.assignee_id = ${friendId}
-						)
-					)
-			)
-			SELECT
-				user_tasks.*,
-				COALESCE((
-					SELECT json_build_object('project_id', taskloc.project_id, 'project_sub_cat_id', taskloc.project_sub_cat_id)
-					FROM ${taskLocations} taskloc
-					WHERE taskloc.task_id = user_tasks.id and taskloc.user_id = ${clerkUser.userId}
-				), '{}'::json) as task_location,
-				COALESCE((
-					SELECT array_agg(axt.assignee_id)
-					FROM ${assignees_x_tasks} axt
-					WHERE axt.task_id = user_tasks.id
-				), '{}') AS assignees
+		WITH user_tasks AS (
+			SELECT DISTINCT ON(t.id)
+				t.*
 			FROM 
-				user_tasks
-			ORDER BY
-				user_tasks.date ASC,
-				user_tasks.time ASC,
-				user_tasks.created_at ASC;
-		`;
+				${tasks} t
+			INNER JOIN 
+				${assignees_x_tasks} axt ON t.id = axt.task_id
+			WHERE 
+				(t.owner_id = ${clerkUser.userId} AND axt.assignee_id = ${friendId})
+				OR (t.owner_id = ${friendId} AND axt.assignee_id = ${clerkUser.userId})
+				OR (t.owner_id != ${clerkUser.userId} AND t.owner_id != ${friendId} 
+					AND EXISTS (
+						SELECT 1 
+						FROM ${assignees_x_tasks} axt1 
+						WHERE axt1.task_id = t.id 
+						AND axt1.assignee_id = ${clerkUser.userId}
+					) 
+					AND EXISTS (
+						SELECT 1 
+						FROM ${assignees_x_tasks} axt2 
+						WHERE axt2.task_id = t.id 
+						AND axt2.assignee_id = ${friendId}
+					)
+				)
+		)
+		SELECT
+			user_tasks.*,
+			COALESCE((
+				SELECT json_build_object('project_id', taskloc.project_id, 'project_sub_cat_id', taskloc.project_sub_cat_id)
+				FROM ${taskLocations} taskloc
+				WHERE taskloc.task_id = user_tasks.id and taskloc.user_id = ${clerkUser.userId}
+			), '{}'::json) as task_location,
+			COALESCE((
+				SELECT array_agg(axt.assignee_id)
+				FROM ${assignees_x_tasks} axt
+				WHERE axt.task_id = user_tasks.id
+			), '{}') AS assignees
+		FROM 
+			user_tasks
+		ORDER BY
+			user_tasks.date ASC,
+			user_tasks.time ASC,
+			user_tasks.created_at ASC;
+	`;
 
 	const tasksData = await db.execute(rawSqlForTasks);
 	return tasksData.rows;
