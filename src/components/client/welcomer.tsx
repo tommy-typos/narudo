@@ -2,6 +2,7 @@
 
 import { handleNewUser } from "@/app/_serverActions/handleNewUser";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useQueryClient } from "@tanstack/react-query";
 import { Protest_Revolution } from "next/font/google";
 import { useEffect, useState } from "react";
 
@@ -18,9 +19,12 @@ export function Welcomer() {
 		checkIfNewUser();
 	}, []);
 
+	const queryClient = useQueryClient();
+
 	useEffect(() => {
 		if (isNewUser) {
 			setWelcome(true);
+			queryClient.invalidateQueries({ queryKey: ["projects"] });
 		}
 	}, [isNewUser]);
 	return (
