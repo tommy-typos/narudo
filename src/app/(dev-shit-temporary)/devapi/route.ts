@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { addNewTask } from "@/app/_serverActions/addNewTask";
-import { getFriends, getProjects, getTasksByDate } from "@/app/_serverActions/queries";
+import { getFriends, getProjects, getTasksByDate, getTasksByFriend } from "@/app/_serverActions/queries";
 import { toggleTask } from "@/app/_serverActions/toggleTaskNotification";
 import { db } from "@/drizzle/db";
 import {
@@ -67,6 +67,7 @@ export async function GET(request: Request) {
 			// 	imageUrl: item.imageUrl,
 			// 	hasImage: item.hasImage,
 			// }));
+			// data = await getTasksByFriend('user_2ggPhKPHYhN40Nhpuy4agsJ7bvk');
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //

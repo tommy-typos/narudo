@@ -196,7 +196,67 @@ export async function getFriendRequestsIncoming() {
 	}));
 }
 
+export async function getTasksByFriend(friendId: string) {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	// TODO ::: server side check if they are really friends.
+
+	/** Get all tasks that both user and the friend are member of */
+	/**
+	 * Possibilities:
+	 * 1. user is owner, friend is assignee.
+	 * 2. user is assignee, friend is owner.
+	 * 3. none is owner, both are assignees on the task.
+	 */
+
+	const rawSqlForTasks = sql`
+			WITH user_tasks AS (
+				SELECT DISTINCT ON(t.id)
+					t.*
+				FROM 
+					${tasks} t
+				INNER JOIN 
+					${assignees_x_tasks} axt ON t.id = axt.task_id
+				WHERE 
+					(t.owner_id = ${clerkUser.userId} AND axt.assignee_id = ${friendId})
+					OR (t.owner_id = ${friendId} AND axt.assignee_id = ${clerkUser.userId})
+					OR (t.owner_id != ${clerkUser.userId} AND t.owner_id != ${friendId} 
+						AND EXISTS (
+							SELECT 1 
+							FROM ${assignees_x_tasks} axt1 
+							WHERE axt1.task_id = t.id 
+							AND axt1.assignee_id = ${clerkUser.userId}
+						) 
+						AND EXISTS (
+							SELECT 1 
+							FROM ${assignees_x_tasks} axt2 
+							WHERE axt2.task_id = t.id 
+							AND axt2.assignee_id = ${friendId}
+						)
+					)
+			)
+			SELECT
+				user_tasks.*,
+				taskloc.project_id as project_id,
+				taskloc.project_sub_cat_id as project_sub_cat_id,
+				COALESCE((
+					SELECT array_agg(axt.assignee_id)
+					FROM narudo_assignees_x_tasks axt
+					WHERE axt.task_id = user_tasks.id
+				), '{}') AS assignees
+			FROM 
+				user_tasks
+			LEFT JOIN
+				${taskLocations} taskloc ON taskloc.task_id = user_tasks.id and taskloc.user_id = ${clerkUser.userId}
+		`;
+
+	const tasksData = await db.execute(rawSqlForTasks);
+	return tasksData.rows;
+}
+
 // TODO ::: if user sent you a request before, now you send to them, then it should be automatically friendship.
 // TODO ::: user can't send request to himself
 // TODO ::: dont forget that passing empty array to clerk returns list of all users.
 // TODO ::: input field should be reset after succesfull friend request sent.
+// TODO ::: some users might be no longer friends, so better to return user data not just assignee ids or owner id
