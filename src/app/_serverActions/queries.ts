@@ -238,8 +238,11 @@ export async function getTasksByFriend(friendId: string) {
 			)
 			SELECT
 				user_tasks.*,
-				taskloc.project_id as project_id,
-				taskloc.project_sub_cat_id as project_sub_cat_id,
+				COALESCE((
+					SELECT json_build_object('project_id', taskloc.project_id, 'project_sub_cat_id', taskloc.project_sub_cat_id)
+					FROM ${taskLocations} taskloc
+					WHERE taskloc.task_id = user_tasks.id and taskloc.user_id = ${clerkUser.userId}
+				), '{}'::json) as task_location,
 				COALESCE((
 					SELECT array_agg(axt.assignee_id)
 					FROM ${assignees_x_tasks} axt
@@ -247,12 +250,24 @@ export async function getTasksByFriend(friendId: string) {
 				), '{}') AS assignees
 			FROM 
 				user_tasks
-			LEFT JOIN
-				${taskLocations} taskloc ON taskloc.task_id = user_tasks.id and taskloc.user_id = ${clerkUser.userId}
+			ORDER BY
+				user_tasks.date ASC,
+				user_tasks.time ASC,
+				user_tasks.created_at ASC;
 		`;
 
 	const tasksData = await db.execute(rawSqlForTasks);
 	return tasksData.rows;
+
+	/* alternative *
+...
+taskloc.project_id as project_id,
+taskloc.project_sub_cat_id as project_sub_cat_id,
+...
+LEFT JOIN
+	${taskLocations} taskloc ON taskloc.task_id = user_tasks.id and taskloc.user_id = ${clerkUser.userId}
+...
+*/
 }
 
 // TODO ::: if user sent you a request before, now you send to them, then it should be automatically friendship.
