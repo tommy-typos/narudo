@@ -21,6 +21,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addNewFriend } from "@/app/_serverActions/friendshipActions";
 import { useToast } from "@/components/ui/use-toast";
 import { getFriends } from "@/app/_serverActions/queries";
+import { usePathname } from "next/navigation";
 
 type FriendsLinkProps = {
 	link: string;
@@ -37,6 +38,8 @@ function FriendsLink({ link, text, active }: FriendsLinkProps) {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+	const pathname = usePathname();
+
 	return (
 		<>
 			<div className="mb-6 flex items-center justify-between">
@@ -46,9 +49,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						<h3 className="shad-h3">Friends</h3>
 					</div>
 					<div className="flex items-center gap-12 py-4">
-						<FriendsLink link="" text="All" active />
-						<FriendsLink link="pending-requests" text="Pending" />
-						<FriendsLink link="incoming-requests" text="Incoming Requests" />
+						<FriendsLink
+							link=""
+							text="All"
+							active={!(pathname.includes("pending-requests") || pathname.includes("incoming-requests"))}
+						/>
+						<FriendsLink
+							link="pending-requests"
+							text="Pending"
+							active={pathname.includes("pending-requests")}
+						/>
+						<FriendsLink
+							link="incoming-requests"
+							text="Incoming Requests"
+							active={pathname.includes("incoming-requests")}
+						/>
 						<AddFriendDialog />
 					</div>
 				</div>
