@@ -413,13 +413,14 @@ function ProjectRouteLink({ projectId, children }: { projectId: string; children
 	}
 
 	return (
-		<div className="group flex items-center justify-between rounded-md pr-2 hover:bg-accent ">
+		<div
+			className={cn(
+				"group flex items-center justify-between rounded-md pr-2 hover:bg-accent ",
+				isPath(`/app/projects/${projectId}`) && "bg-accent"
+			)}
+		>
 			<Link
-				className={cn(
-					buttonVariants({ variant: "ghost" }),
-					"w-full justify-start hover:bg-transparent",
-					isPath(`/app/projects/${projectId}`) && "bg-accent"
-				)}
+				className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start hover:bg-transparent")}
 				href={`/app/projects/${projectId}`}
 			>
 				<Hash className="mr-2 h-4 w-4" />
