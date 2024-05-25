@@ -315,6 +315,7 @@ export async function getTasksByFriend(friendId: string): Promise<TaskType[]> {
 // TODO ::: user can't send request to himself
 // TODO ::: dont forget that passing empty array to clerk returns list of all users.
 // TODO ::: input field should be reset after succesfull friend request sent.
+// TODO ::: task toggle should rather read toggle value from the user. because two people can try to toggle as completed at the same time, then as a result task will be incomplete after 2 toggles if we use not operator.
 // TODO ::: some users might be no longer friends, so better to return user data not just assignee ids or owner id
 
 export async function getTasksBySubCategory(subCatId: string) {
@@ -348,5 +349,6 @@ export async function getTasksBySubCategory(subCatId: string) {
 			)
 		)) as TaskType[];
 
+	// .orderBy(tasks.id, asc(tasks.date), asc(tasks.time), asc(tasks.createdAt)))
 	return data;
 }
