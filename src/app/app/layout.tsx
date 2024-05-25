@@ -52,6 +52,14 @@ import { Label } from "@/components/ui/label";
 import { createNewProject } from "../_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
 
+function stringifyDate(date: Date) {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() returns 0-11, so we add 1
+	const day = String(date.getDate()).padStart(2, "0"); // getDate() returns the day of the month
+
+	return `${year}-${month}-${day}`;
+}
+
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -99,7 +107,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					setDate(new Date(dateCreatedFromRoute));
 					setMonth(new Date(dateCreatedFromRoute));
 				} else {
-					router.push("/app/today");
+					router.push(`/app/date/${stringifyDate(new Date())}`);
 				}
 			}
 		}
@@ -107,13 +115,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	const queryClient = useQueryClient();
 
-	React.useEffect(() => {
-		// TODO ::: delete this temporary solution for 'queries keep hanging on loading state when redirected from '/sign-in' page.
-		setTimeout(() => {
-			queryClient.cancelQueries();
-			queryClient.refetchQueries();
-		}, 1);
-	}, []);
+	// React.useEffect(() => {
+	// 	// TODO ::: delete this temporary solution for 'queries keep hanging on loading state when redirected from '/sign-in' page.
+	// 	setTimeout(() => {
+	// 		queryClient.cancelQueries();
+	// 		queryClient.refetchQueries();
+	// 	}, 1);
+	// }, []);
 
 	const unReadNotifCount: number = notifQuery.data?.filter((notif) => notif.isRead !== true).length || 0;
 
@@ -149,7 +157,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							onClick={() => {
 								setDate(new Date());
 								setMonth(new Date());
-								router.push("/app/today");
+								router.push(`/app/date/${stringifyDate(new Date())}`);
 							}}
 						>
 							Go to Today

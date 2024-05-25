@@ -7,7 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { ReactQueryProvider } from "@/lib/reactQueryProvider";
 import { Toaster } from "@/components/ui/toaster";
-import { MyClerkWrapper } from "@/components/client/clerkWrapper";
+import { MyClerkWrapper } from "@/lib/clerkWrapper";
 
 export const metadata: Metadata = {
 	title: "NaruDo",
