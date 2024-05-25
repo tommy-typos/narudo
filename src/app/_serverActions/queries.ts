@@ -404,7 +404,7 @@ export async function getOverdueTasks(userCurrentDateTime: Date) {
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
 
-	const data = await db
+	const data = (await db
 		.selectDistinctOn([tasks.id], {
 			task: tasks,
 			taskLocation: {
@@ -438,7 +438,7 @@ export async function getOverdueTasks(userCurrentDateTime: Date) {
 					) < ${userCurrentDateTime}
 				`
 			)
-		);
+		)) as TaskType[];
 
 	return data;
 }
