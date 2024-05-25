@@ -4,6 +4,7 @@ import { addNewTask } from "@/app/_serverActions/addNewTask";
 import {
 	getFriends,
 	getOverdueTasks,
+	getOverdueTasksCount,
 	getProjects,
 	getTasksByDate,
 	getTasksByFriend,

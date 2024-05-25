@@ -443,6 +443,38 @@ export async function getOverdueTasks(userCurrentDateTime: Date) {
 	return data;
 }
 
+export async function getOverdueTasksCount(userCurrentDateTime: Date) {
+	// TODO ::: learn proper counting, man
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const data = await db
+		.selectDistinctOn([tasks.id], {
+			dummy: sql`0`,
+		})
+		.from(tasks)
+		.leftJoin(assignees_x_tasks, eq(assignees_x_tasks.taskId, tasks.id))
+		.where(
+			and(
+				or(eq(tasks.ownerId, clerkUser.userId), eq(assignees_x_tasks.assigneeId, clerkUser.userId)),
+				eq(tasks.isCompleted, false),
+				isNotNull(tasks.date),
+				sql`
+					make_timestamp(
+						extract(year FROM ${tasks.date})::int,
+						extract(month FROM ${tasks.date})::int,
+						extract(day FROM ${tasks.date})::int,
+						extract(hour FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
+						extract(minute FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
+						extract(second FROM COALESCE(${tasks.time}, '23:59:59'::time))::int
+					) < ${userCurrentDateTime}
+				`
+			)
+		);
+
+	return data.length;
+}
+
 function createDateFromDateTime(dateStr: string, timeStr: string | null) {
 	const dateTimeStr = `${dateStr}T${timeStr ? timeStr : "23:59:59"}`;
 
