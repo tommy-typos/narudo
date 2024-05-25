@@ -72,6 +72,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		queryFn: () => getFriends(),
 	});
 
+	const projectsQuery = useQuery({
+		queryKey: ["projects"],
+		queryFn: () => getProjects(),
+	});
+
 	React.useEffect(() => {
 		if (!(pathName.includes("/app/today") || pathName.includes("/app/date/"))) {
 			setDate(undefined);
@@ -144,8 +149,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						</Button>
 
 						<Separator className="my-2" />
-
-						<RouteLink path="/app/task-inbox">
+						<RouteLink
+							path={"/app/task-inbox"}
+							highlightPath={
+								projectsQuery.data
+									? `/app/projects/${projectsQuery.data[0].id}/$${projectsQuery.data[0].subCategories[0].id}`
+									: "/app/task-inbox"
+							}
+						>
 							<Inbox className="mr-2 h-4 w-4" />
 							Task Inbox
 						</RouteLink>
@@ -153,7 +164,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							<Rows4 className="mr-2 h-4 w-4" />
 							All Tasks
 						</RouteLink> */}
-						<RouteLink path="/app/overdue">
+						<RouteLink path="/app/overdue" highlightPath="/app/overdue">
 							<Clock10 className="mr-2 h-4 w-4 stroke-destructive" />
 							<div className="flex w-full items-center justify-between">
 								<p className="text-destructive">Overdue</p>
@@ -163,11 +174,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 						<Separator className="my-2" />
 
-						<RouteLink path="/app/friends">
+						<RouteLink path="/app/friends" highlightPath="/app/friends">
 							<Users className="mr-2 h-4 w-4" />
 							Friends
 						</RouteLink>
-						<RouteLink path="/app/challenges">
+						<RouteLink path="/app/challenges" highlightPath="/app/challenges">
 							<Swords className="mr-2 h-4 w-4" />
 							Daily Challenges
 						</RouteLink>
@@ -356,7 +367,11 @@ function ProjectsList() {
 					<div className="flex flex-col">
 						{projectsQuery.data && projectsQuery.data.length > 1
 							? projectsQuery.data.slice(1).map((project) => (
-									<ProjectRouteLink key={project.id} projectId={"1"}>
+									<ProjectRouteLink
+										key={project.id}
+										projectId={project.id}
+										defaultSubCatId={project.subCategories[0].id}
+									>
 										{project.name}
 									</ProjectRouteLink>
 								))
@@ -388,7 +403,15 @@ function ProjectsList() {
 	);
 }
 
-function RouteLink({ path, children }: { path: string; children: React.ReactNode }) {
+function RouteLink({
+	path,
+	children,
+	highlightPath,
+}: {
+	path: string;
+	children: React.ReactNode;
+	highlightPath: string;
+}) {
 	const pathName = usePathname();
 
 	function isPath(path: string) {
@@ -397,7 +420,7 @@ function RouteLink({ path, children }: { path: string; children: React.ReactNode
 
 	return (
 		<Link
-			className={cn(buttonVariants({ variant: "ghost" }), "justify-start", isPath(path) && "bg-accent")}
+			className={cn(buttonVariants({ variant: "ghost" }), "justify-start", isPath(highlightPath) && "bg-accent")}
 			href={path}
 		>
 			{children}
@@ -405,7 +428,15 @@ function RouteLink({ path, children }: { path: string; children: React.ReactNode
 	);
 }
 
-function ProjectRouteLink({ projectId, children }: { projectId: string; children: string }) {
+function ProjectRouteLink({
+	projectId,
+	children,
+	defaultSubCatId,
+}: {
+	projectId: string;
+	children: string;
+	defaultSubCatId: string;
+}) {
 	const pathName = usePathname();
 
 	function isPath(path: string) {
@@ -421,7 +452,7 @@ function ProjectRouteLink({ projectId, children }: { projectId: string; children
 		>
 			<Link
 				className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start hover:bg-transparent")}
-				href={`/app/projects/${projectId}`}
+				href={`/app/projects/${projectId}/${defaultSubCatId}`}
 			>
 				<Hash className="mr-2 h-4 w-4" />
 				{children}
