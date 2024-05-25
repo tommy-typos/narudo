@@ -10,3 +10,7 @@ export default function Home() {
 	// TODO ::: learn if it is better to user router.push here (for the sake of useQuery issue)
 	return <></>;
 }
+/**
+ * redirect caused queries to get stuck in loading/fetching mode.
+ *
+ */
