@@ -106,6 +106,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	const queryClient = useQueryClient();
 
+	React.useEffect(() => {
+		// TODO ::: delete this temporary solution for 'queries keep hanging on loading state when redirected from '/sign-in' page.
+		setTimeout(() => {
+			queryClient.cancelQueries();
+			queryClient.refetchQueries();
+		}, 1);
+	}, []);
+
 	const unReadNotifCount: number = notifQuery.data?.filter((notif) => notif.isRead !== true).length || 0;
 
 	return (
