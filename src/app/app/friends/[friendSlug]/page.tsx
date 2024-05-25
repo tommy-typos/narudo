@@ -83,7 +83,7 @@ export default function Home() {
 					{taskQuery.data?.length === 0 && (
 						<>
 							<div className="flex w-full items-center">
-								<p className="text-muted-foreground">No task found for this date.</p>
+								<p className="text-muted-foreground">No shared task with this friend yet.</p>
 							</div>
 						</>
 					)}
