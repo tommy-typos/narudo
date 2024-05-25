@@ -350,5 +350,37 @@ export async function getTasksBySubCategory(subCatId: string) {
 		)) as TaskType[];
 
 	// TODO ::: make order work with distinct  .orderBy(tasks.id, asc(tasks.date), asc(tasks.time), asc(tasks.createdAt)))
-	return data;
+	return data.sort(compareTasks); // TODO ::: temporary sorting with custom function
+}
+
+// Function to compare two tasks based on the given criteria
+function compareTasks(a: TaskType, b: TaskType): number {
+	const dateA = a.task.date ? new Date(a.task.date) : null;
+	const dateB = b.task.date ? new Date(b.task.date) : null;
+
+	// Compare dates
+	if (dateA && dateB) {
+		if (dateA < dateB) return -1;
+		if (dateA > dateB) return 1;
+	} else if (dateA) {
+		return -1;
+	} else if (dateB) {
+		return 1;
+	}
+
+	// If dates are the same, compare times
+	if (a.task.time && b.task.time) {
+		if (a.task.time < b.task.time) return -1;
+		if (a.task.time > b.task.time) return 1;
+	} else if (a.task.time) {
+		return -1;
+	} else if (b.task.time) {
+		return 1;
+	}
+
+	// If dates and times are the same or null, compare createdAt
+	if (a.task.createdAt < b.task.createdAt) return -1;
+	if (a.task.createdAt > b.task.createdAt) return 1;
+
+	return 0;
 }
