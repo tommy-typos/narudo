@@ -72,7 +72,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const notifQuery = useQuery({
 		queryKey: ["notifications"],
 		queryFn: () => getNotifications(),
-		refetchInterval: 5000,
+		// refetchInterval: 5000,
 	});
 	// TODO ::: fetch notification count instead.
 
