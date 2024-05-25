@@ -1,7 +1,7 @@
 "use server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
-import { InferInsertModel, and, asc, desc, eq, inArray, ne, or, sql } from "drizzle-orm";
+import { InferInsertModel, SQL, and, asc, desc, eq, inArray, ne, or, sql } from "drizzle-orm";
 import {
 	assignees_x_tasks,
 	friendRequests,
@@ -196,7 +196,26 @@ export async function getFriendRequestsIncoming() {
 	}));
 }
 
-export async function getTasksByFriend(friendId: string) {
+type ReturnedTaskType = {
+	id: string;
+	title: string;
+	description: string | null;
+	created_at: Date;
+	date: string | null;
+	time: string | null;
+	is_completed: boolean | null;
+	owner_id: string;
+	is_together: boolean | null;
+	is_assigned_to_sb: boolean | null;
+	comments_and_logs: unknown;
+	task_location: {
+		project_id: string;
+		project_sub_cat_Id: string;
+	} | null;
+	assignees?: string[];
+};
+
+export async function getTasksByFriend(friendId: string): Promise<ReturnedTaskType[]> {
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
 
@@ -257,17 +276,17 @@ export async function getTasksByFriend(friendId: string) {
 	`;
 
 	const tasksData = await db.execute(rawSqlForTasks);
-	return tasksData.rows;
+	return tasksData.rows as ReturnedTaskType[];
 
 	/* alternative *
-...
-taskloc.project_id as project_id,
-taskloc.project_sub_cat_id as project_sub_cat_id,
-...
-LEFT JOIN
-	${taskLocations} taskloc ON taskloc.task_id = user_tasks.id and taskloc.user_id = ${clerkUser.userId}
-...
-*/
+	...
+	taskloc.project_id as project_id,
+	taskloc.project_sub_cat_id as project_sub_cat_id,
+	...
+	LEFT JOIN
+		${taskLocations} taskloc ON taskloc.task_id = user_tasks.id and taskloc.user_id = ${clerkUser.userId}
+	...
+	*/
 }
 
 // TODO ::: if user sent you a request before, now you send to them, then it should be automatically friendship.
