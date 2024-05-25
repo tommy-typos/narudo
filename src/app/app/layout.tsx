@@ -66,6 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		queryFn: () => getNotifications(),
 		refetchInterval: 5000,
 	});
+	// TODO ::: fetch notification count instead.
 
 	const friendsQuery = useQuery({
 		queryKey: ["friends"],
