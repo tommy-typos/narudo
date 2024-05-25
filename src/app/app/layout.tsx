@@ -190,7 +190,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				<div className="w-full">
 					<div className="h-13 flex w-full items-center justify-between border-b bg-muted/40 p-2">
 						<AddTask />
-						<Button variant="outline" className="w-52 justify-between">
+						{/* <Button variant="outline" className="w-52 justify-between">
 							<div className="flex items-center">
 								<Search className="mr-2 h-4 w-4" />
 								Search
@@ -199,7 +199,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 								<Command className=" mr-1 h-3 w-3 opacity-50" />
 								<p className="text-xs opacity-50">K</p>
 							</div>
-						</Button>
+						</Button> */}
 						<div className="flex items-center ">
 							<Link
 								className={cn(
@@ -217,10 +217,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 									</Badge>
 								)}
 							</Link>
-							<Button variant="ghost" className="text-narudorange hover:text-narudorange">
+							{/* <Button variant="ghost" className="text-narudorange hover:text-narudorange">
 								<NarutoBeltSvg className={cn("*:fill-narudorange", "mr-2 h-4 w-4")} />
 								23
-							</Button>
+							</Button> */}
 							<Popover>
 								<PopoverTrigger asChild>
 									<Button variant="ghost" size="icon">
@@ -239,7 +239,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 									</div>
 									<Separator className="my-2" />
 									<SettingsDialog />
-									<Button variant="ghost" className="justify-start">
+									{/* <Button variant="ghost" className="justify-start">
 										<Keyboard className="mr-2 h-4 w-4" />
 										Keyboard Shortcuts
 									</Button>
@@ -259,7 +259,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 									>
 										<GraduationCap className="mr-2 h-4 w-4" />
 										Guides
-									</a>
+									</a> */}
 								</PopoverContent>
 							</Popover>
 						</div>

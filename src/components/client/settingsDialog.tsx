@@ -21,14 +21,14 @@ export function SettingsDialog() {
 			</DialogTrigger>
 			<DialogContent className="flex h-[600px] gap-0 rounded-md p-0">
 				<div className="flex flex-col gap-2 bg-muted/40 p-2">
-					<Button
+					{/* <Button
 						variant="ghost"
 						className={cn("justify-start", openTab == "general" && "bg-accent")}
 						onClick={() => setOpenTab("general")}
 					>
 						<Settings className="mr-2 h-4 w-4" />
 						General
-					</Button>
+					</Button> */}
 					<Button
 						variant="ghost"
 						className={cn("justify-start", openTab == "theme" && "bg-accent")}
@@ -37,14 +37,14 @@ export function SettingsDialog() {
 						<Palette className="mr-2 h-4 w-4" />
 						Theme
 					</Button>
-					<Button
+					{/* <Button
 						variant="ghost"
 						className={cn("justify-start", openTab == "customization" && "bg-accent")}
 						onClick={() => setOpenTab("customization")}
 					>
 						<AppWindowMac className="mr-2 h-4 w-4" />
 						Customization
-					</Button>
+					</Button> */}
 				</div>
 				<div className="flex flex-col justify-between p-4">
 					{openTab == "general" && (
@@ -99,19 +99,19 @@ export function SettingsDialog() {
 									</p>
 								</div>
 							</div>
-							<div className="mt-8 flex justify-end gap-4">
+							{/* <div className="mt-8 flex justify-end gap-4">
 								<Button variant="secondary">Cancel</Button>
 								<Button>Save Changes</Button>
-							</div>
+							</div> */}
 						</>
 					)}
 					{openTab == "theme" && (
 						<>
 							<AdvancedTheme />
-							<div className="mt-8 flex justify-end gap-4">
+							{/* <div className="mt-8 flex justify-end gap-4">
 								<Button variant="secondary">Cancel</Button>
 								<Button>Save Changes</Button>
-							</div>
+							</div> */}
 						</>
 					)}
 					{openTab == "customization" && (
@@ -166,10 +166,10 @@ export function SettingsDialog() {
 									<p className="text-sm text-muted-foreground"></p>
 								</div>
 							</div>
-							<div className="mt-8 flex justify-end gap-4">
+							{/* <div className="mt-8 flex justify-end gap-4">
 								<Button variant="secondary">Cancel</Button>
 								<Button>Save Changes</Button>
-							</div>
+							</div> */}
 						</>
 					)}
 				</div>

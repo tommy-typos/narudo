@@ -38,10 +38,10 @@ export default function Home() {
 
 				<Popover>
 					<PopoverTrigger asChild>
-						<Button variant="ghost">
+						{/* <Button variant="ghost">
 							<SlidersHorizontal className="mr-2 h-4 w-4" /> View
 							<span className="sr-only">Settings and Stuff</span>
-						</Button>
+						</Button> */}
 					</PopoverTrigger>
 					<PopoverContent className="flex w-72 flex-col" align="end">
 						<ViewOption>

@@ -1,30 +1,12 @@
 "use client";
 import { useParams, usePathname } from "next/navigation";
-import { useEffect } from "react";
-import {
-	Calendar,
-	CalendarDays,
-	CheckCheck,
-	CircleOff,
-	Group,
-	Inbox,
-	SlidersHorizontal,
-	ToggleLeft,
-	ToggleRight,
-	Users,
-	Watch,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Calendar, Inbox, Users, Watch } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import * as React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskType, getProjects, getTasksByDate } from "@/app/_serverActions/queries";
-import { isToday, stringifyDate } from "@/components/client/addTask";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toggleTask } from "@/app/_serverActions/toggleTaskNotification";
 
 type projectListType = {
