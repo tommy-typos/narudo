@@ -324,7 +324,7 @@ export async function getTasksBySubCategory(subCatId: string) {
 	if (!clerkUser.userId) throw new Error("Unauthorized");
 
 	const data = (await db
-		.select({
+		.selectDistinctOn([tasks.id], {
 			task: tasks,
 			taskLocation: {
 				projectId: taskLocations.projectId,
