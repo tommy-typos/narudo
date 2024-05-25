@@ -10,6 +10,7 @@ import { TaskType, getProjects, getTasksByDate } from "@/app/_serverActions/quer
 import { isToday, stringifyDate } from "@/components/client/addTask";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TaskCardMiniView } from "@/components/client/taskCardMini";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Home() {
 	const params = useParams<{ dateSlug: string }>();
@@ -157,12 +158,39 @@ function DateWrapper() {
 				</div>
 				<div className="flex-1">
 					<h3 className="shad-h3 mb-4">Notes</h3>
-					<div className="min-h-80 w-full border"></div>
+					<TemporaryNote />
 				</div>
 			</div>
 		</>
 	);
 }
+
+function TemporaryNote() {
+	const timeoutRef = React.useRef<React.MutableRefObject<NodeJS.Timeout>>(null);
+	return (
+		<Textarea
+			className="min-h-96 w-full resize-none border !ring-0 !ring-offset-0"
+			onChange={(e) => {
+				debounce(
+					() => {
+						// write to database...
+					},
+					undefined,
+					timeoutRef as any
+				)();
+			}}
+		/>
+	);
+}
+
+const debounce = (cb: Function, delay = 1000, timeoutRef: React.MutableRefObject<NodeJS.Timeout>) => {
+	return (...args: any[]) => {
+		clearTimeout(timeoutRef.current);
+		timeoutRef.current = setTimeout(() => {
+			cb(...args);
+		}, delay);
+	};
+};
 
 type ViewOptionProps = {
 	className?: string;
