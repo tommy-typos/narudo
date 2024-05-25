@@ -5,9 +5,7 @@ import {
 	ArrowUpNarrowWide,
 	CheckCheck,
 	CornerDownRight,
-	Slash,
 	SlidersHorizontal,
-	Tag,
 	ToggleLeft,
 	ToggleRight,
 } from "lucide-react";
@@ -15,47 +13,16 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import * as React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getProjects } from "@/app/_serverActions/queries";
+import { getProjects, getTasksBySubCategory } from "@/app/_serverActions/queries";
 import { useParams } from "next/navigation";
 
-import { Protest_Revolution } from "next/font/google";
-import {
-	Atom,
-	BellRing,
-	Clock10,
-	Command,
-	Ellipsis,
-	EllipsisVertical,
-	GraduationCap,
-	Hash,
-	Inbox,
-	Keyboard,
-	Newspaper,
-	Plus,
-	Rows4,
-	Search,
-	Settings,
-	Swords,
-	Trash2,
-	Users,
-} from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { UserButton } from "@clerk/nextjs";
-import { NarutoBeltSvg } from "@/lib/svgs/svgExporter";
+import { Ellipsis, Inbox, Plus } from "lucide-react";
 import { redirect, usePathname, useRouter } from "next/navigation";
-import { SettingsDialog } from "@/components/client/settingsDialog";
-import { Badge } from "@/components/ui/badge";
-import { AddTask } from "@/components/client/addTask";
-import { Welcomer } from "@/components/client/welcomer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFriends, getNotifications } from "@/app/_serverActions/queries";
 import {
 	Dialog,
 	DialogContent,
@@ -69,6 +36,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createNewProject, createNewSubCat } from "@/app/_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TaskCardMiniView } from "@/components/client/taskCardMini";
 
 export default function Home() {
 	const { projectSlug, subCatSlug } = useParams();
@@ -90,6 +58,13 @@ export default function Home() {
 		},
 	});
 
+	const pathname = usePathname();
+
+	const taskQuery = useQuery({
+		queryKey: [pathname],
+		queryFn: () => getTasksBySubCategory(pathname.split("/").at(-1) as string),
+	});
+
 	return (
 		<>
 			<div className="mb-6 flex items-center justify-between">
@@ -103,12 +78,12 @@ export default function Home() {
 					{/* <p className="ml-8 mt-0.5 text-xs opacity-50">Tasks with no date or a project</p> */}
 				</div>
 
-				<Popover>
+				{/* <Popover>
 					<PopoverTrigger asChild>
-						{/* <Button variant="ghost">
+						<Button variant="ghost">
 							<SlidersHorizontal className="mr-2 h-4 w-4" /> View
 							<span className="sr-only">Settings and Stuff</span>
-						</Button> */}
+						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="flex w-72 flex-col" align="end">
 						<ViewOption>
@@ -116,7 +91,7 @@ export default function Home() {
 						</ViewOption>
 						<ViewSortOption />
 					</PopoverContent>
-				</Popover>
+				</Popover> */}
 			</div>
 			<div className="flex justify-between gap-4">
 				<Card className="w-60">
@@ -201,6 +176,51 @@ export default function Home() {
 					</CardContent>
 				</Card>
 				<div className="flex flex-1 flex-col gap-2">
+					{taskQuery.isLoading && (
+						<>
+							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
+								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
+								<div className="flex w-full flex-col gap-2">
+									<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
+									<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
+								</div>
+							</div>
+							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
+								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
+								<div className="flex w-full flex-col gap-2">
+									<Skeleton className="mb-1 h-4 w-[70px] leading-7" />
+									<Skeleton className="mb-1 h-4 w-[120px] leading-7" />
+								</div>
+							</div>
+							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
+								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
+								<div className="flex w-full flex-col gap-2">
+									<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
+									<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
+								</div>
+							</div>
+						</>
+					)}
+					{taskQuery.data && projectsQuery.data && (
+						<>
+							{taskQuery.data.map((task) => (
+								<TaskCardMiniView
+									key={task.task.id}
+									task={task}
+									projectsList={projectsQuery.data}
+									showDate
+									showLocation={false}
+								/>
+							))}
+						</>
+					)}
+					{taskQuery.data?.length === 0 && (
+						<>
+							<div className="flex w-full items-center">
+								<p className="text-muted-foreground">No shared task with this friend yet.</p>
+							</div>
+						</>
+					)}
 					{/* <TaskCardOnTodayView />
 					<TaskCardOnTodayView />
 					<div className="mt-1 flex items-center text-sm">

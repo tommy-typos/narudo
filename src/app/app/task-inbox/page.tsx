@@ -14,7 +14,7 @@ export default function Home() {
 	const router = useRouter();
 	React.useEffect(() => {
 		if (projectsQuery.data) {
-			router.push(`/app/projects/${projectsQuery.data[0].id}/$${projectsQuery.data[0].subCategories[0].id}`);
+			router.push(`/app/projects/${projectsQuery.data[0].id}/${projectsQuery.data[0].subCategories[0].id}`);
 		}
 	}, [projectsQuery.data]);
 

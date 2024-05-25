@@ -319,7 +319,7 @@ export async function getTasksByFriend(friendId: string): Promise<TaskType[]> {
 
 export async function getTasksBySubCategory(subCatId: string) {
 	// TODO ::: check if the user is the owner of the subcat first. do this check in db query itself
-	// TODO ::: should use left join or inner join
+	// TODO ::: should use left join or inner join, learn when which
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
 

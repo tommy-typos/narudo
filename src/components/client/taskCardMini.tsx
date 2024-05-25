@@ -43,10 +43,12 @@ export function TaskCardMiniView({
 	task,
 	projectsList,
 	showDate = false,
+	showLocation = true,
 }: {
 	task: TaskType;
 	projectsList: projectListType;
 	showDate?: boolean;
+	showLocation?: boolean;
 }) {
 	const locationDetails = getLocationDetail(task, projectsList);
 
@@ -94,9 +96,11 @@ export function TaskCardMiniView({
 							</>
 						)}
 					</div>
-					<div className="flex items-center text-muted-foreground">
-						<Inbox className="mr-1 h-4 w-4" /> {locationDetails.projectName}
-					</div>
+					{showLocation && (
+						<div className="flex items-center text-muted-foreground">
+							<Inbox className="mr-1 h-4 w-4" /> {locationDetails.projectName}
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
