@@ -44,11 +44,13 @@ export function TaskCardMiniView({
 	projectsList,
 	showDate = false,
 	showLocation = true,
+	showAsOverdue = false,
 }: {
 	task: TaskType;
 	projectsList: projectListType;
 	showDate?: boolean;
 	showLocation?: boolean;
+	showAsOverdue?: boolean;
 }) {
 	const locationDetails = getLocationDetail(task, projectsList);
 
@@ -62,6 +64,7 @@ export function TaskCardMiniView({
 		mutationFn: () => toggleTask(task.task.id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [pathName] });
+			queryClient.invalidateQueries({ queryKey: ["overdueCount"] });
 		},
 	});
 
@@ -84,7 +87,7 @@ export function TaskCardMiniView({
 					{(task.assignees || []).length > 0 && <Users className="h-3 w-3 text-muted-foreground" />}
 				</div>
 				<div className="flex w-full items-center justify-between text-xs">
-					<div className="flex items-center text-primary">
+					<div className={cn("flex items-center text-primary", showAsOverdue && "text-destructive")}>
 						{showDate && task.task.date && (
 							<>
 								<Calendar className="h-4 w-4" /> {task.task.date}{" "}

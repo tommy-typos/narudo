@@ -37,7 +37,7 @@ import { Badge } from "@/components/ui/badge";
 import { AddTask } from "@/components/client/addTask";
 import { Welcomer } from "@/components/client/welcomer";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getFriends, getNotifications, getProjects } from "../_serverActions/queries";
+import { getFriends, getNotifications, getOverdueTasksCount, getProjects } from "../_serverActions/queries";
 import {
 	Dialog,
 	DialogContent,
@@ -75,6 +75,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const projectsQuery = useQuery({
 		queryKey: ["projects"],
 		queryFn: () => getProjects(),
+	});
+
+	const overdueCount = useQuery({
+		queryKey: ["overdueCount"],
+		queryFn: () => getOverdueTasksCount(new Date()),
+		refetchInterval: 60 * 1000,
 	});
 
 	React.useEffect(() => {
@@ -164,13 +170,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							<Rows4 className="mr-2 h-4 w-4" />
 							All Tasks
 						</RouteLink> */}
-						<RouteLink path="/app/overdue" highlightPath="/app/overdue">
-							<Clock10 className="mr-2 h-4 w-4 stroke-destructive" />
-							<div className="flex w-full items-center justify-between">
-								<p className="text-destructive">Overdue</p>
-								<Badge variant="destructive">15</Badge>
-							</div>
-						</RouteLink>
+						{overdueCount.data && overdueCount.data >= 1 ? (
+							<RouteLink path="/app/overdue" highlightPath="/app/overdue">
+								<Clock10 className="mr-2 h-4 w-4 stroke-destructive" />
+								<div className="flex w-full items-center justify-between">
+									<p className="text-destructive">Overdue</p>
+									<Badge variant="destructive">{overdueCount.data}</Badge>
+								</div>
+							</RouteLink>
+						) : (
+							<></>
+						)}
 
 						<Separator className="my-2" />
 

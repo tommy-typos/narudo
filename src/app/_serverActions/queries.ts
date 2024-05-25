@@ -440,7 +440,7 @@ export async function getOverdueTasks(userCurrentDateTime: Date) {
 			)
 		)) as TaskType[];
 
-	return data;
+	return data.sort(compareTasks);
 }
 
 export async function getOverdueTasksCount(userCurrentDateTime: Date) {
@@ -472,7 +472,7 @@ export async function getOverdueTasksCount(userCurrentDateTime: Date) {
 			)
 		);
 
-	return data.length;
+	return data.length as number;
 }
 
 function createDateFromDateTime(dateStr: string, timeStr: string | null) {

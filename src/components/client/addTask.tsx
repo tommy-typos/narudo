@@ -78,6 +78,7 @@ export function AddTask() {
 		mutationFn: (data: InsertTaskType) => addNewTask(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [pathName] });
+			queryClient.invalidateQueries({ queryKey: ["overdueCount"] });
 		},
 	});
 

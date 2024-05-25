@@ -18,7 +18,7 @@ import * as React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getProjects, getTasksByDate, getTasksBySubCategory } from "@/app/_serverActions/queries";
+import { getOverdueTasks, getProjects, getTasksByDate, getTasksBySubCategory } from "@/app/_serverActions/queries";
 import { useParams } from "next/navigation";
 
 import { Ellipsis, Inbox, Plus } from "lucide-react";
@@ -49,7 +49,7 @@ export default function Home() {
 
 	const taskQuery = useQuery({
 		queryKey: [pathname],
-		queryFn: () => getTasksByDate("2024-05-25"),
+		queryFn: () => getOverdueTasks(new Date()),
 	});
 
 	return (
@@ -93,14 +93,14 @@ export default function Home() {
 					)}
 					{taskQuery.data && projectsQuery.data && (
 						<div className="m-auto">
-							<div className="min-w-[300px] max-w-[450px]">
+							<div className="flex min-w-[300px] max-w-[450px] flex-col gap-2">
 								{taskQuery.data.map((task) => (
 									<TaskCardMiniView
 										key={task.task.id}
 										task={task}
 										projectsList={projectsQuery.data}
 										showDate
-										showLocation={false}
+										showAsOverdue
 									/>
 								))}
 							</div>
@@ -109,8 +109,8 @@ export default function Home() {
 					{taskQuery.data?.length === 0 && (
 						<div className="m-auto">
 							<div className="min-w-[300px] max-w-[450px]">
-								<div className="flex w-full items-center">
-									<p className="text-muted-foreground">No unfinished old tasks 🙂</p>
+								<div className="flex w-full items-center justify-center">
+									<p className="text-center text-muted-foreground">No unfinished old tasks 🙂</p>
 								</div>
 							</div>
 						</div>
