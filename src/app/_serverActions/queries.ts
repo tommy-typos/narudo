@@ -196,26 +196,7 @@ export async function getFriendRequestsIncoming() {
 	}));
 }
 
-type ReturnedTaskType = {
-	id: string;
-	title: string;
-	description: string | null;
-	created_at: Date;
-	date: string | null;
-	time: string | null;
-	is_completed: boolean | null;
-	owner_id: string;
-	is_together: boolean | null;
-	is_assigned_to_sb: boolean | null;
-	comments_and_logs: unknown;
-	task_location: {
-		project_id: string;
-		project_sub_cat_Id: string;
-	} | null;
-	assignees?: string[];
-};
-
-export async function getTasksByFriend(friendId: string): Promise<ReturnedTaskType[]> {
+export async function getTasksByFriend(friendId: string): Promise<TaskType[]> {
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
 
@@ -275,8 +256,49 @@ export async function getTasksByFriend(friendId: string): Promise<ReturnedTaskTy
 			user_tasks.created_at ASC;
 	`;
 
+	type ReturnedTaskType = {
+		id: string;
+		title: string;
+		description: string | null;
+		created_at: Date;
+		date: string | null;
+		time: string | null;
+		is_completed: boolean | null;
+		owner_id: string;
+		is_together: boolean | null;
+		is_assigned_to_sb: boolean | null;
+		comments_and_logs: unknown;
+		task_location: {
+			project_id: string;
+			project_sub_cat_Id: string;
+		} | null;
+		assignees?: string[];
+	};
+
 	const tasksData = await db.execute(rawSqlForTasks);
-	return tasksData.rows as ReturnedTaskType[];
+	return (tasksData.rows as ReturnedTaskType[]).map(
+		(item) =>
+			({
+				task: {
+					date: item.date,
+					id: item.id,
+					createdAt: item.created_at,
+					title: item.title,
+					description: item.description,
+					time: item.time,
+					isCompleted: item.is_completed,
+					ownerId: item.owner_id,
+					isTogether: item.is_together,
+					isAssignedToSb: item.is_assigned_to_sb,
+					commentsAndLogs: item.comments_and_logs,
+				},
+				taskLocation: {
+					projectId: item.task_location?.project_id,
+					subCatId: item.task_location?.project_sub_cat_Id,
+				},
+				assignees: item.assignees,
+			}) as TaskType
+	);
 
 	/* alternative *
 	...
