@@ -1,7 +1,22 @@
 "use server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/db";
-import { InferInsertModel, SQL, and, asc, desc, eq, inArray, ne, or, sql } from "drizzle-orm";
+import {
+	InferInsertModel,
+	SQL,
+	and,
+	asc,
+	desc,
+	eq,
+	gt,
+	inArray,
+	isNotNull,
+	isNull,
+	lt,
+	ne,
+	or,
+	sql,
+} from "drizzle-orm";
 import {
 	assignees_x_tasks,
 	friendRequests,
@@ -383,4 +398,71 @@ function compareTasks(a: TaskType, b: TaskType): number {
 	if (a.task.createdAt > b.task.createdAt) return 1;
 
 	return 0;
+}
+
+export async function getOverdueTasks(userCurrentDateTime: Date) {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const data = await db
+		.selectDistinctOn([tasks.id], {
+			task: tasks,
+			taskLocation: {
+				projectId: taskLocations.projectId,
+				subCatId: taskLocations.projectSubCatId,
+			},
+			assignees: sql`
+				COALESCE((
+					SELECT array_agg(${assignees_x_tasks.assigneeId})
+					FROM ${assignees_x_tasks}
+					WHERE ${assignees_x_tasks.taskId} = ${tasks.id}
+				), '{}') AS assignees
+			`,
+		})
+		.from(tasks)
+		.leftJoin(assignees_x_tasks, eq(assignees_x_tasks.taskId, tasks.id))
+		.leftJoin(taskLocations, and(eq(taskLocations.taskId, tasks.id), eq(taskLocations.userId, clerkUser.userId)))
+		.where(
+			and(
+				or(eq(tasks.ownerId, clerkUser.userId), eq(assignees_x_tasks.assigneeId, clerkUser.userId)),
+				eq(tasks.isCompleted, false),
+				isNotNull(tasks.date),
+				sql`
+					make_timestamp(
+						extract(year FROM ${tasks.date})::int,
+						extract(month FROM ${tasks.date})::int,
+						extract(day FROM ${tasks.date})::int,
+						extract(hour FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
+						extract(minute FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
+						extract(second FROM COALESCE(${tasks.time}, '23:59:59'::time))::int
+					) < ${userCurrentDateTime}
+				`
+			)
+		);
+
+	return data;
+}
+
+function createDateFromDateTime(dateStr: string, timeStr: string | null) {
+	const dateTimeStr = `${dateStr}T${timeStr ? timeStr : "23:59:59"}`;
+
+	const dateObj = new Date(dateTimeStr);
+
+	return dateObj;
+}
+
+function formatDateTime(dateObj: Date) {
+	const year = dateObj.getFullYear();
+	const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so add 1
+	const day = String(dateObj.getDate()).padStart(2, "0");
+
+	const currdate = `${year}-${month}-${day}`;
+
+	const hours = String(dateObj.getHours()).padStart(2, "0");
+	const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+	const seconds = String(dateObj.getSeconds()).padStart(2, "0");
+
+	const currtime = `${hours}:${minutes}:${seconds}`;
+
+	return [currdate, currtime];
 }

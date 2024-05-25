@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { addNewTask } from "@/app/_serverActions/addNewTask";
 import {
 	getFriends,
+	getOverdueTasks,
 	getProjects,
 	getTasksByDate,
 	getTasksByFriend,
@@ -75,6 +76,7 @@ export async function GET(request: Request) {
 			// }));
 			// data = await getTasksBySubCategory('5d8a9e54-a962-49ae-b145-a28d4662c58d');
 			// data = await getTasksBySubCategory('a70e7615-27a3-43c0-a397-0788cc770088'); // task inbox > default
+			// data = await getOverdueTasks(new Date());
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //
