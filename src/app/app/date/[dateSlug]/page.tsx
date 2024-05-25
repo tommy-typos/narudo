@@ -169,6 +169,7 @@ function TemporaryNote() {
 	const timeoutRef = React.useRef<React.MutableRefObject<NodeJS.Timeout>>(null);
 	return (
 		<Textarea
+			placeholder="Start typing..."
 			className="min-h-96 w-full resize-none border !ring-0 !ring-offset-0"
 			onChange={(e) => {
 				debounce(
