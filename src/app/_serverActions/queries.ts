@@ -349,6 +349,6 @@ export async function getTasksBySubCategory(subCatId: string) {
 			)
 		)) as TaskType[];
 
-	// .orderBy(tasks.id, asc(tasks.date), asc(tasks.time), asc(tasks.createdAt)))
+	// TODO ::: make order work with distinct  .orderBy(tasks.id, asc(tasks.date), asc(tasks.time), asc(tasks.createdAt)))
 	return data;
 }
