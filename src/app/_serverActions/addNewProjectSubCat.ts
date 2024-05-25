@@ -31,4 +31,12 @@ export async function createNewProject(projectName: string) {
 export async function createNewSubCat(subCatName: string, projectId: string) {
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	await db.insert(projectSubCategories).values({
+		projectId: projectId,
+		ownerId: clerkUser.userId,
+		isDefault: false,
+		name: subCatName,
+		id: genId(),
+	});
 }
