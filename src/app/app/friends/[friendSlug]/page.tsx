@@ -76,7 +76,7 @@ export default function Home() {
 					{taskQuery.data && projectsList && (
 						<>
 							{taskQuery.data.map((task) => (
-								<TaskCardMiniView key={task.task.id} task={task} projectsList={projectsList} />
+								<TaskCardMiniView key={task.task.id} task={task} projectsList={projectsList} showDate />
 							))}
 						</>
 					)}

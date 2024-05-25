@@ -2,6 +2,7 @@
 import { useParams, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
+	Calendar,
 	CalendarDays,
 	CheckCheck,
 	CircleOff,
@@ -56,7 +57,15 @@ function getLocationDetail(task: TaskType, projectsList: projectListType): locat
 	return location;
 }
 
-export function TaskCardMiniView({ task, projectsList }: { task: TaskType; projectsList: projectListType }) {
+export function TaskCardMiniView({
+	task,
+	projectsList,
+	showDate = false,
+}: {
+	task: TaskType;
+	projectsList: projectListType;
+	showDate?: boolean;
+}) {
 	const locationDetails = getLocationDetail(task, projectsList);
 
 	const pathName = usePathname();
@@ -92,6 +101,11 @@ export function TaskCardMiniView({ task, projectsList }: { task: TaskType; proje
 				</div>
 				<div className="flex w-full items-center justify-between text-xs">
 					<div className="flex items-center text-primary">
+						{showDate && task.task.date && (
+							<>
+								<Calendar className="h-4 w-4" /> {task.task.date}{" "}
+							</>
+						)}
 						{task.task.time && (
 							<>
 								<Watch className="h-4 w-4" /> {task.task.time.slice(0, 5)}{" "}
