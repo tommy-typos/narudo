@@ -316,3 +316,37 @@ export async function getTasksByFriend(friendId: string): Promise<TaskType[]> {
 // TODO ::: dont forget that passing empty array to clerk returns list of all users.
 // TODO ::: input field should be reset after succesfull friend request sent.
 // TODO ::: some users might be no longer friends, so better to return user data not just assignee ids or owner id
+
+export async function getTasksBySubCategory(subCatId: string) {
+	// TODO ::: check if the user is the owner of the subcat first. do this check in db query itself
+	// TODO ::: should use left join or inner join
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const data = (await db
+		.select({
+			task: tasks,
+			taskLocation: {
+				projectId: taskLocations.projectId,
+				subCatId: taskLocations.projectSubCatId,
+			},
+			assignees: sql`
+				COALESCE((
+					SELECT array_agg(${assignees_x_tasks.assigneeId})
+					FROM ${assignees_x_tasks}
+					WHERE ${assignees_x_tasks.taskId} = ${tasks.id}
+				), '{}') AS assignees
+			`,
+		})
+		.from(tasks)
+		.leftJoin(assignees_x_tasks, eq(assignees_x_tasks.taskId, tasks.id))
+		.leftJoin(taskLocations, and(eq(taskLocations.taskId, tasks.id), eq(taskLocations.userId, clerkUser.userId)))
+		.where(
+			and(
+				or(eq(tasks.ownerId, clerkUser.userId), eq(assignees_x_tasks.assigneeId, clerkUser.userId)),
+				eq(taskLocations.projectSubCatId, subCatId)
+			)
+		)) as TaskType[];
+
+	return data;
+}

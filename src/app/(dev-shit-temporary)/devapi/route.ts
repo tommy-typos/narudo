@@ -1,7 +1,13 @@
 export const dynamic = "force-dynamic";
 
 import { addNewTask } from "@/app/_serverActions/addNewTask";
-import { getFriends, getProjects, getTasksByDate, getTasksByFriend } from "@/app/_serverActions/queries";
+import {
+	getFriends,
+	getProjects,
+	getTasksByDate,
+	getTasksByFriend,
+	getTasksBySubCategory,
+} from "@/app/_serverActions/queries";
 import { toggleTask } from "@/app/_serverActions/toggleTaskNotification";
 import { db } from "@/drizzle/db";
 import {
@@ -67,7 +73,8 @@ export async function GET(request: Request) {
 			// 	imageUrl: item.imageUrl,
 			// 	hasImage: item.hasImage,
 			// }));
-			// data = await getTasksByFriend('user_2ggPhKPHYhN40Nhpuy4agsJ7bvk');
+			// data = await getTasksBySubCategory('0d2e7549-1e7a-4181-8b5c-671d60eaf037');
+			// data = await getTasksBySubCategory('a70e7615-27a3-43c0-a397-0788cc770088'); // task inbox > default
 			// ======================================================================================================== //
 			// ======================================================================================================== //
 			// ======================================================================================================== //
