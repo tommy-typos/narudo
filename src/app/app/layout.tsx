@@ -76,10 +76,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	});
 	// TODO ::: fetch notification count instead.
 
-	const friendsQuery = useQuery({
-		queryKey: ["friends"],
-		queryFn: () => getFriends(),
-	});
+	// const friendsQuery = useQuery({
+	// 	queryKey: ["friends"],
+	// 	queryFn: () => getFriends(),
+	// });
 
 	const projectsQuery = useQuery({
 		queryKey: ["projects"],
@@ -113,7 +113,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		}
 	}, [pathName]);
 
-	const queryClient = useQueryClient();
+	// const queryClient = useQueryClient();
 
 	// React.useEffect(() => {
 	// 	// TODO ::: delete this temporary solution for 'queries keep hanging on loading state when redirected from '/sign-in' page.
