@@ -12,13 +12,27 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getFriends } from "@/app/_serverActions/queries";
+import { getFriends, getProjects, getTasksByFriend } from "@/app/_serverActions/queries";
 import { usePathname } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TaskCardMiniView } from "@/components/client/taskCardMini";
 
 export default function Home() {
 	const friendsQuery = useQuery({
 		queryKey: ["friends"],
 		queryFn: () => getFriends(),
+	});
+
+	const { data: projectsList } = useQuery({
+		queryKey: ["projects"],
+		queryFn: () => getProjects(),
+	});
+
+	const pathname = usePathname();
+
+	const taskQuery = useQuery({
+		queryKey: [pathname],
+		queryFn: () => getTasksByFriend(pathname.split("/").at(-1) as string),
 	});
 
 	return (
@@ -33,13 +47,52 @@ export default function Home() {
 						{friendsQuery.data?.map((friend) => <FriendLinkComponent key={friend.id} data={friend} />)}
 					</CardContent>
 				</Card>
-				<div className="flex flex-1 flex-col gap-2 border-l pl-2">
-					<TaskCardOnTodayView />
-					<TaskCardOnTodayView />
-					<div className="mt-1 flex items-center text-sm">
+				<div className="flex flex-1 flex-col gap-2 border-l pl-2 pr-2">
+					{taskQuery.isLoading && (
+						<>
+							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
+								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
+								<div className="flex w-full flex-col gap-2">
+									<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
+									<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
+								</div>
+							</div>
+							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
+								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
+								<div className="flex w-full flex-col gap-2">
+									<Skeleton className="mb-1 h-4 w-[70px] leading-7" />
+									<Skeleton className="mb-1 h-4 w-[120px] leading-7" />
+								</div>
+							</div>
+							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
+								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
+								<div className="flex w-full flex-col gap-2">
+									<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
+									<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
+								</div>
+							</div>
+						</>
+					)}
+					{taskQuery.data && projectsList && (
+						<>
+							{taskQuery.data.map((task) => (
+								<TaskCardMiniView key={task.task.id} task={task} projectsList={projectsList} />
+							))}
+						</>
+					)}
+					{taskQuery.data?.length === 0 && (
+						<>
+							<div className="flex w-full items-center">
+								<p className="text-muted-foreground">No task found for this date.</p>
+							</div>
+						</>
+					)}
+					{/* <TaskCardOnTodayView />
+					<TaskCardOnTodayView /> */}
+					{/* <div className="mt-1 flex items-center text-sm">
 						<Plus className="mr-2 h-4 w-4 text-primary" /> Add Task
 					</div>
-					{/* <Accordion type="single" collapsible>
+					<Accordion type="single" collapsible>
 						<AccordionItem value="completed">
 							<AccordionTrigger className="py-2 text-sm hover:no-underline">
 								Completed (15)
@@ -96,32 +149,6 @@ function FriendLinkComponent({ data }: { data: FriendType }) {
 			>
 				<Ellipsis className="h-4 w-4" />
 			</Button>
-		</div>
-	);
-}
-
-type TaskCardProps = {
-	checked?: boolean;
-};
-
-function TaskCardOnTodayView({ checked }: TaskCardProps) {
-	return (
-		<div
-			className={cn(
-				"flex items-center rounded border p-2 hover:cursor-pointer hover:bg-secondary/30",
-				checked && "opacity-70"
-			)}
-		>
-			<Checkbox
-				className="ml-2 mr-4 h-6 w-6 data-[state=checked]:border-muted data-[state=checked]:bg-muted data-[state=checked]:text-primary-foreground"
-				checked={checked}
-			/>
-			<div className="w-full">
-				<p className={cn("shad-p mb-1", checked && "line-through")}>task name</p>
-				<div className="flex w-full items-center justify-between text-xs opacity-70">
-					<p>Hi I am a task description and I describe myself as a task</p>
-				</div>
-			</div>
 		</div>
 	);
 }
