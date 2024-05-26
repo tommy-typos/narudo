@@ -8,6 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskType, getProjects, getTasksByDate } from "@/app/_serverActions/queries";
 import { toggleTask } from "@/app/_serverActions/toggleTaskNotification";
+import { UpdateTask } from "./updateTask";
 
 type projectListType = {
 	id: string;
@@ -84,32 +85,34 @@ export function TaskCardMiniView({
 				checked={checked || false}
 				onCheckedChange={() => mutation.mutate()}
 			/>
-			<div className="w-full">
-				<div className="flex justify-between">
-					<p className={cn("shad-p mb-1")}>{task.task.title}</p>
+			<UpdateTask task={task}>
+				<div className="w-full">
+					<div className="flex justify-between">
+						<p className={cn("shad-p mb-1")}>{task.task.title}</p>
 
-					{(task.assignees || []).length > 0 && <Users className="h-3 w-3 text-muted-foreground" />}
-				</div>
-				<div className="flex w-full items-center justify-between text-xs">
-					<div className={cn("flex items-center text-primary", showAsOverdue && "text-destructive")}>
-						{showDate && task.task.date && (
-							<>
-								<Calendar className="h-4 w-4" /> {task.task.date}{" "}
-							</>
-						)}
-						{task.task.time && (
-							<>
-								<Watch className="h-4 w-4" /> {task.task.time.slice(0, 5)}{" "}
-							</>
+						{(task.assignees || []).length > 0 && <Users className="h-3 w-3 text-muted-foreground" />}
+					</div>
+					<div className="flex w-full items-center justify-between text-xs">
+						<div className={cn("flex items-center text-primary", showAsOverdue && "text-destructive")}>
+							{showDate && task.task.date && (
+								<>
+									<Calendar className="h-4 w-4" /> {task.task.date}{" "}
+								</>
+							)}
+							{task.task.time && (
+								<>
+									<Watch className="h-4 w-4" /> {task.task.time.slice(0, 5)}{" "}
+								</>
+							)}
+						</div>
+						{showLocation && (
+							<div className="flex items-center text-muted-foreground">
+								<Inbox className="mr-1 h-4 w-4" /> {locationDetails.projectName}
+							</div>
 						)}
 					</div>
-					{showLocation && (
-						<div className="flex items-center text-muted-foreground">
-							<Inbox className="mr-1 h-4 w-4" /> {locationDetails.projectName}
-						</div>
-					)}
 				</div>
-			</div>
+			</UpdateTask>
 		</div>
 	);
 }
