@@ -168,6 +168,7 @@ function DateWrapper() {
 
 function TemporaryNote() {
 	const timeoutRef = React.useRef<React.MutableRefObject<NodeJS.Timeout>>(null);
+	const [value, setValue] = React.useState("");
 
 	const { dateSlug } = useParams();
 
@@ -190,6 +191,14 @@ function TemporaryNote() {
 		}) => saveOrUpdateNote(date, lastModifiedTimestamp, content),
 	});
 
+	React.useEffect(() => {
+		if (noteQuery.data) {
+			setValue(() => {
+				return noteQuery.data[0]?.content || "";
+			});
+		}
+	}, [noteQuery.data]);
+
 	return (
 		<>
 			{noteQuery.isPending && (
@@ -205,9 +214,10 @@ function TemporaryNote() {
 			{noteQuery.data && (
 				<Textarea
 					placeholder="Start typing..."
-					defaultValue={noteQuery.data[0]?.content || ""}
+					value={value}
 					className="min-h-96 w-full resize-none border !ring-0 !ring-offset-0"
 					onChange={(e) => {
+						setValue(e.target.value);
 						debounce(
 							() => {
 								noteMutation.mutate({
