@@ -148,18 +148,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	const unReadNotifCount: number = notifQuery.data || 0;
 
-	const [customization, setCustomization] = React.useState<{ friends: boolean; challenges: boolean }>(() => {
-		return (
-			JSON.parse(window.localStorage.getItem("uiCustomization")!) || {
-				friends: true,
-				challenges: true,
-			}
-		);
+	const [customization, setCustomization] = React.useState<{ friends: boolean; challenges: boolean }>({
+		friends: true,
+		challenges: true,
 	});
 
 	React.useEffect(() => {
-		window.localStorage.setItem("uiCustomization", JSON.stringify(customization));
-	}, [customization]);
+		setCustomization(() => {
+			return (
+				JSON.parse(window.localStorage.getItem("uiCustomization")!) || {
+					friends: true,
+					challenges: true,
+				}
+			);
+		});
+	}, []);
 
 	return (
 		<>

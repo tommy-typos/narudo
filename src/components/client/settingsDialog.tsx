@@ -148,10 +148,14 @@ export function SettingsDialog({
 											id="smart-date-recognition-switch"
 											checked={customization.friends}
 											onCheckedChange={(value) => {
-												setCustomization((prev) => ({
-													...prev,
-													friends: value,
-												}));
+												setCustomization((prev) => {
+													const newval = { ...prev, friends: value };
+													window.localStorage.setItem(
+														"uiCustomization",
+														JSON.stringify(newval)
+													);
+													return newval;
+												});
 											}}
 										/>
 									</div>
@@ -168,10 +172,14 @@ export function SettingsDialog({
 											id="smart-date-recognition-switch"
 											checked={customization.challenges}
 											onCheckedChange={(value) => {
-												setCustomization((prev) => ({
-													...prev,
-													challenges: value,
-												}));
+												setCustomization((prev) => {
+													const newval = { ...prev, challenges: value };
+													window.localStorage.setItem(
+														"uiCustomization",
+														JSON.stringify(newval)
+													);
+													return newval;
+												});
 											}}
 										/>
 									</div>
