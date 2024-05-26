@@ -266,5 +266,5 @@ function ViewOption({ children, className }: ViewOptionProps) {
 
 /***
  * TODO :::
- * go to overdues > finish a task > go to date of the finished task > it is still shown as not finished. Gotta fix this.
+ *
  */
