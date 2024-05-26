@@ -58,6 +58,7 @@ import { Label } from "@/components/ui/label";
 import { createNewProject } from "../_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { CustomizationContext } from "@/lib/customizationContext";
 
 function stringifyDate(date: Date) {
 	const year = date.getFullYear();
@@ -148,8 +149,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	const unReadNotifCount: number = notifQuery.data || 0;
 
+	const [customization, setCustomization] = React.useState<{ friends: boolean; challenges: boolean }>(() => {
+		return (
+			JSON.parse(window.localStorage.getItem("uiCustomization")!) || {
+				friends: true,
+				challenges: true,
+			}
+		);
+	});
+
+	React.useEffect(() => {
+		window.localStorage.setItem("uiCustomization", JSON.stringify(customization));
+	}, [customization]);
+
 	return (
-		<>
+		<CustomizationContext.Provider value={customization}>
 			<Welcomer />
 			<div className="flex min-h-full w-full">
 				<div className="flex min-h-full w-80 flex-col border-r bg-muted/40 px-4 py-2">
@@ -215,21 +229,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						)}
 
 						<Separator className="my-2" />
-
-						<RouteLink path="/app/friends" highlightPath="/app/friends">
-							<Users className="mr-2 h-4 w-4" />
-							Friends
-						</RouteLink>
-						<RouteLink path="/app/challenges" highlightPath="/app/challenges">
-							<Swords className="mr-2 h-4 w-4" />
-							Daily Challenges
-						</RouteLink>
+						{customization.friends && (
+							<RouteLink path="/app/friends" highlightPath="/app/friends">
+								<Users className="mr-2 h-4 w-4" />
+								Friends
+							</RouteLink>
+						)}
+						{customization.challenges && (
+							<RouteLink path="/app/challenges" highlightPath="/app/challenges">
+								<Swords className="mr-2 h-4 w-4" />
+								Daily Challenges
+							</RouteLink>
+						)}
 						{/* <RouteLink path="/app/ai">
 							<Atom className="mr-2 h-4 w-4" />
 							Ai
 						</RouteLink> */}
-
-						<Separator className="my-2" />
+						{(customization.friends || customization.challenges) && <Separator className="my-2" />}
 
 						<ProjectsList />
 					</div>
@@ -293,7 +309,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 										<UserButton showName />
 									</div>
 									<Separator className="my-2" />
-									<SettingsDialog />
+									<SettingsDialog customization={customization} setCustomization={setCustomization} />
 									{/* <Button variant="ghost" className="justify-start">
 										<Keyboard className="mr-2 h-4 w-4" />
 										Keyboard Shortcuts
@@ -322,7 +338,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					<div className="p-5">{children}</div>
 				</div>
 			</div>
-		</>
+		</CustomizationContext.Provider>
 	);
 }
 

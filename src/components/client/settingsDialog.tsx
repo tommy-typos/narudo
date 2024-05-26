@@ -8,7 +8,21 @@ import { Switch } from "@/components/ui/switch";
 import { NarutoBeltSvg } from "@/lib/svgs/svgExporter";
 import { useTheme } from "next-themes";
 
-export function SettingsDialog() {
+export function SettingsDialog({
+	customization,
+	setCustomization,
+}: {
+	customization: {
+		friends: boolean;
+		challenges: boolean;
+	};
+	setCustomization: React.Dispatch<
+		React.SetStateAction<{
+			friends: boolean;
+			challenges: boolean;
+		}>
+	>;
+}) {
 	const [openTab, setOpenTab] = useState<"general" | "theme" | "customization">("theme");
 	return (
 		<Dialog>
@@ -37,14 +51,14 @@ export function SettingsDialog() {
 						<Palette className="mr-2 h-4 w-4" />
 						Theme
 					</Button>
-					{/* <Button
+					<Button
 						variant="ghost"
 						className={cn("justify-start", openTab == "customization" && "bg-accent")}
 						onClick={() => setOpenTab("customization")}
 					>
 						<AppWindowMac className="mr-2 h-4 w-4" />
 						Customization
-					</Button> */}
+					</Button>
 				</div>
 				<div className="flex flex-col justify-between p-4">
 					{openTab == "general" && (
@@ -118,19 +132,28 @@ export function SettingsDialog() {
 						<>
 							<div className="px-2">
 								<h1 className="my-2 text-xl">Show in Sidebar</h1>
-								<div className="my-2 flex flex-col gap-1">
+								{/* <div className="my-2 flex flex-col gap-1">
 									<div className="flex items-center gap-2">
 										<Rows4 className=" h-4 w-4" />
 										<h3 className="">All tasks</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
 									<p className="text-sm text-muted-foreground"></p>
-								</div>
+								</div> */}
 								<div className="my-2 flex flex-col gap-1">
 									<div className="flex items-center gap-2">
 										<Users className=" h-4 w-4" />
 										<h3 className="">Friends</h3>
-										<Switch id="smart-date-recognition-switch" />
+										<Switch
+											id="smart-date-recognition-switch"
+											checked={customization.friends}
+											onCheckedChange={(value) => {
+												setCustomization((prev) => ({
+													...prev,
+													friends: value,
+												}));
+											}}
+										/>
 									</div>
 									<p className="text-sm text-muted-foreground">
 										By hiding this, you won&lsquo;t see the option to add your friends to your new
@@ -141,22 +164,30 @@ export function SettingsDialog() {
 									<div className="flex items-center gap-2">
 										<Swords className=" h-4 w-4" />
 										<h3 className="">Daily challenges</h3>
-										<Switch id="smart-date-recognition-switch" />
+										<Switch
+											id="smart-date-recognition-switch"
+											checked={customization.challenges}
+											onCheckedChange={(value) => {
+												setCustomization((prev) => ({
+													...prev,
+													challenges: value,
+												}));
+											}}
+										/>
 									</div>
 									<p className="text-sm text-muted-foreground">
-										By hiding this, your past daily challenges will be hidden in day view mode as
-										well. Only the active ones will be visible if there is any for today.
+										By hiding this, your won&apos;t see daily challenges tab anymore.
 									</p>
 								</div>
-								<div className="my-2 flex flex-col gap-1">
+								{/* <div className="my-2 flex flex-col gap-1">
 									<div className="flex items-center gap-2">
 										<Atom className=" h-4 w-4" />
 										<h3 className="">Ai</h3>
 										<Switch id="smart-date-recognition-switch" />
 									</div>
 									<p className="text-sm text-muted-foreground"></p>
-								</div>
-								<h1 className="my-2 mt-6 text-xl">Show in Topbar</h1>
+								</div> */}
+								{/* <h1 className="my-2 mt-6 text-xl">Show in Topbar</h1>
 								<div className="my-2 flex flex-col gap-1">
 									<div className="flex items-center gap-2">
 										<NarutoBeltSvg className={cn("*:fill-narudorange", "h-4 w-4")} />
@@ -164,7 +195,7 @@ export function SettingsDialog() {
 										<Switch id="smart-date-recognition-switch" />
 									</div>
 									<p className="text-sm text-muted-foreground"></p>
-								</div>
+								</div> */}
 							</div>
 							{/* <div className="mt-8 flex justify-end gap-4">
 								<Button variant="secondary">Cancel</Button>
