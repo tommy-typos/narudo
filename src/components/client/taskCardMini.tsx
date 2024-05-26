@@ -69,6 +69,10 @@ export function TaskCardMiniView({
 	});
 
 	React.useEffect(() => {
+		setChecked(task.task.isCompleted);
+	}, [task.task.isCompleted]);
+
+	React.useEffect(() => {
 		if (mutation.isPending) {
 			setChecked((prev) => !prev);
 		}
