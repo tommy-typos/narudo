@@ -6,11 +6,12 @@ import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TaskType, getProjects, getTasksByDate } from "@/app/_serverActions/queries";
+import { TaskType, getProjects, getTasksByDate, retrieveNote, saveOrUpdateNote } from "@/app/_serverActions/queries";
 import { isToday, stringifyDate } from "@/components/client/addTask";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TaskCardMiniView } from "@/components/client/taskCardMini";
 import { Textarea } from "@/components/ui/textarea";
+import { addDays, format } from "date-fns";
 
 export default function Home() {
 	const params = useParams<{ dateSlug: string }>();
@@ -54,7 +55,7 @@ function DateWrapper() {
 							></div>
 						</>
 					)}
-					<h3 className="shad-h3">May 12, 2024</h3>
+					<h3 className="shad-h3">{format(dateFromRoute, "MMMM d, yyyy")}</h3>
 				</div>
 
 				<Popover>
@@ -167,20 +168,61 @@ function DateWrapper() {
 
 function TemporaryNote() {
 	const timeoutRef = React.useRef<React.MutableRefObject<NodeJS.Timeout>>(null);
+
+	const { dateSlug } = useParams();
+
+	const noteQuery = useQuery({
+		queryKey: ["notes", dateSlug],
+		queryFn: () => retrieveNote(dateSlug as string),
+	});
+
+	// TODO ::: learn when dateSlug can be string[] rather than just string, we should be careful
+
+	const noteMutation = useMutation({
+		mutationFn: ({
+			date,
+			lastModifiedTimestamp,
+			content,
+		}: {
+			date: string;
+			lastModifiedTimestamp: Date;
+			content: string;
+		}) => saveOrUpdateNote(date, lastModifiedTimestamp, content),
+	});
+
 	return (
-		<Textarea
-			placeholder="Start typing..."
-			className="min-h-96 w-full resize-none border !ring-0 !ring-offset-0"
-			onChange={(e) => {
-				debounce(
-					() => {
-						// write to database...
-					},
-					undefined,
-					timeoutRef as any
-				)();
-			}}
-		/>
+		<>
+			{noteQuery.isPending && (
+				<div className="flex min-h-96 w-full resize-none flex-col gap-2 border p-4">
+					<Skeleton className="h-8 w-4/5 rounded-sm" />
+					<Skeleton className="h-4 w-3/5 rounded-sm" />
+					<Skeleton className="h-4 w-3/4 rounded-sm" />
+					<Skeleton className="h-6 w-2/4 rounded-sm" />
+					<Skeleton className="h-4 w-11/12 rounded-sm" />
+					<Skeleton className="h-4 w-8/12 rounded-sm" />
+				</div>
+			)}
+			{noteQuery.data && (
+				<Textarea
+					placeholder="Start typing..."
+					defaultValue={noteQuery.data[0]?.content || ""}
+					className="min-h-96 w-full resize-none border !ring-0 !ring-offset-0"
+					onChange={(e) => {
+						debounce(
+							() => {
+								noteMutation.mutate({
+									date: dateSlug as string,
+									lastModifiedTimestamp: new Date(),
+									content: e.target.value,
+								});
+							},
+							undefined,
+							timeoutRef as any
+						)();
+					}}
+				/>
+			)}
+		</>
 	);
 }
 

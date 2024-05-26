@@ -22,6 +22,7 @@ import {
 	assignees_x_tasks,
 	friendRequests,
 	friendships,
+	notes,
 	notifications,
 	projectSubCategories,
 	projects,
@@ -494,4 +495,37 @@ function createDateFromDateTime(dateStr: string, timeStr: string | null) {
 	const dateObj = new Date(dateTimeStr);
 
 	return dateObj;
+}
+
+export async function saveOrUpdateNote(date: string, lastModifiedTimestamp: Date, content: string) {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	await db
+		.insert(notes)
+		.values({
+			ownerId: clerkUser.userId,
+			date: date,
+			lastModifiedTimestamp: lastModifiedTimestamp,
+			content: content,
+		})
+		.onConflictDoUpdate({
+			target: [notes.ownerId, notes.date],
+			set: {
+				lastModifiedTimestamp: lastModifiedTimestamp,
+				content: content,
+			},
+		});
+}
+
+export async function retrieveNote(date: string) {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const data = await db
+		.select()
+		.from(notes)
+		.where(and(eq(notes.date, date), eq(notes.ownerId, clerkUser.userId)));
+
+	return data;
 }
