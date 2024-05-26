@@ -62,7 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<ShowCompletedContext.Provider value={showCompleted}>
 			<div className="mb-6 flex items-center justify-between">
-				<div className="flex flex-col">
+				<div className="flex w-full flex-col">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">
 							<Users className="mr-2" />
