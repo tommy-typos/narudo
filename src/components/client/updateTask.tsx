@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { CalendarHeart, CircleSlash, Clock, CornerDownRight, Hash, Inbox, Plus, Slash, Sun, Tag } from "lucide-react";
 import { Textarea } from "../ui/textarea";
@@ -17,10 +16,20 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { InsertTaskType, addNewTask } from "@/app/_serverActions/addNewTask";
 import { produce } from "immer";
-import { genId } from "@/lib/generateId";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskType, getProjects } from "@/app/_serverActions/queries";
 import { usePathname } from "next/navigation";
+import { deleteTask, updateTask } from "@/app/_serverActions/updateOrDeleteTask";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 
 const emptyState: InsertTaskType = {
 	task: {
@@ -83,20 +92,41 @@ export function UpdateTask({ task: givenTask, children }: { task: TaskType; chil
 	const queryClient = useQueryClient();
 	const pathName = usePathname();
 
-	const mutation = useMutation({
-		mutationFn: (data: InsertTaskType) => addNewTask(data),
+	const updateMutation = useMutation({
+		mutationFn: (data: InsertTaskType) =>
+			updateTask({
+				date: data.task.date as string,
+				description: data.task.description as string,
+				id: data.task.id,
+				projectId: data.project.projectId,
+				subCatId: data.project.subCatId,
+				time: data.task.time as string,
+				title: data.task.title,
+			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [pathName] });
 			queryClient.invalidateQueries({ queryKey: ["overdueCount"] });
 		},
 	});
 
-	async function handleClick() {
-		mutation.mutate({
+	const deleteMutation = useMutation({
+		mutationFn: (id: string) => deleteTask(id),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: [pathName] });
+			queryClient.invalidateQueries({ queryKey: ["overdueCount"] });
+		},
+	});
+
+	async function handleDelete() {
+		deleteMutation.mutate(task.task.id);
+		setOpen(false);
+		setTask(emptyState);
+	}
+
+	async function handleUpdate() {
+		updateMutation.mutate({
 			task: {
 				...task.task,
-				createdAt: new Date(),
-				id: genId(),
 			},
 			assignees: task.assignees,
 			project: task.project,
@@ -183,14 +213,32 @@ export function UpdateTask({ task: givenTask, children }: { task: TaskType; chil
 					<Separator className="my-1 bg-transparent" />
 				</div>
 				<DialogFooter className="!justify-between">
-					<Button
-						variant="destructive"
-						onClick={() => {
-							// setOpen(false);
-						}}
-					>
-						Delete
-					</Button>
+					<Dialog>
+						<DialogTrigger>
+							<Button variant="destructive">Delete</Button>
+						</DialogTrigger>
+						<DialogContent className="w-fit">
+							<DialogHeader className="mb-4 pr-14">
+								<DialogTitle>Are you sure to delete &quot;{task.task.title}&quot; ?</DialogTitle>
+								<DialogDescription>
+									This will delete the task for all it&apos;s members.
+								</DialogDescription>
+							</DialogHeader>
+							<DialogFooter>
+								<DialogClose className="flex gap-4">
+									<Button variant="secondary">Cancel</Button>
+									<Button
+										variant="destructive"
+										onClick={() => {
+											handleDelete();
+										}}
+									>
+										Delete
+									</Button>
+								</DialogClose>
+							</DialogFooter>
+						</DialogContent>
+					</Dialog>
 					<div className="flex items-center gap-2">
 						<Button
 							variant="secondary"
@@ -203,7 +251,7 @@ export function UpdateTask({ task: givenTask, children }: { task: TaskType; chil
 						</Button>
 						<Button
 							onClick={() => {
-								// handleClick()
+								handleUpdate();
 							}}
 							disabled={task.task.title === ""}
 						>
