@@ -435,7 +435,7 @@ export async function getOverdueTasks(userCurrentDateTime: Date) {
 						extract(hour FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
 						extract(minute FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
 						extract(second FROM COALESCE(${tasks.time}, '23:59:59'::time))::int
-					) < ${userCurrentDateTime}
+					) < ${userCurrentDateTime.toISOString()}
 				`
 			)
 		)) as TaskType[];
@@ -467,7 +467,7 @@ export async function getOverdueTasksCount(userCurrentDateTime: Date) {
 						extract(hour FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
 						extract(minute FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
 						extract(second FROM COALESCE(${tasks.time}, '23:59:59'::time))::int
-					) < ${userCurrentDateTime}
+					) < ${userCurrentDateTime.toISOString()}
 				`
 			)
 		);
