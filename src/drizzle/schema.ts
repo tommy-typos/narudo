@@ -74,7 +74,7 @@ export const notes = createTable(
 			.references(() => users.id),
 		date: date("date").notNull(),
 		lastModifiedTimestamp: timestamp("last_modified_timestamp").notNull(),
-		content: json("content"),
+		content: text("content"),
 	},
 	(table) => ({
 		pk: primaryKey({ columns: [table.ownerId, table.date] }),
