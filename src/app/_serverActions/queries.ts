@@ -20,6 +20,7 @@ import {
 } from "drizzle-orm";
 import {
 	assignees_x_tasks,
+	dailyChallenges,
 	friendRequests,
 	friendships,
 	notes,
@@ -528,4 +529,37 @@ export async function retrieveNote(date: string) {
 		.where(and(eq(notes.date, date), eq(notes.ownerId, clerkUser.userId)));
 
 	return data;
+}
+
+export async function getTodaysChallenges(date: string) {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const challenges = await db
+		.select({
+			id: dailyChallenges.id,
+			ownerId: dailyChallenges.ownerId,
+			title: dailyChallenges.title,
+		})
+		.from(dailyChallenges)
+		.where(eq(dailyChallenges.createdAt, date));
+
+	if (challenges.length === 0) {
+		return [];
+	}
+
+	const challengeOwners = (
+		await clerkClient.users.getUserList({
+			userId: challenges.map((item) => item.ownerId),
+		})
+	).data.map((item) => ({
+		userId: item.id,
+		fullName: item.fullName || "Anonymous User",
+	}));
+
+	return challenges.map((item) => ({
+		id: item.id,
+		title: item.title,
+		ownerFullName: challengeOwners.find((user) => user.userId === item.ownerId)?.fullName,
+	}));
 }
