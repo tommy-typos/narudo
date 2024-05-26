@@ -37,7 +37,13 @@ import { Badge } from "@/components/ui/badge";
 import { AddTask } from "@/components/client/addTask";
 import { Welcomer } from "@/components/client/welcomer";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getFriends, getNotifications, getOverdueTasksCount, getProjects } from "../_serverActions/queries";
+import {
+	getFriends,
+	getNotificationCount,
+	getNotifications,
+	getOverdueTasksCount,
+	getProjects,
+} from "../_serverActions/queries";
 import {
 	Dialog,
 	DialogContent,
@@ -86,8 +92,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 
 	const notifQuery = useQuery({
-		queryKey: ["notifications"],
-		queryFn: () => getNotifications(),
+		queryKey: ["notificationCount"],
+		queryFn: () => getNotificationCount(),
 		refetchInterval: 5000,
 	});
 	// TODO ::: fetch notification count instead.
@@ -139,7 +145,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	// 	}, 1);
 	// }, []);
 
-	const unReadNotifCount: number = notifQuery.data?.filter((notif) => notif.isRead !== true).length || 0;
+	const unReadNotifCount: number = notifQuery.data || 0;
 
 	return (
 		<>
@@ -257,10 +263,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 								<BellRing
 									className={cn("h-4 w-4", unReadNotifCount > 0 && "mr-2 stroke-destructive")}
 								/>
-								{notifQuery.data && unReadNotifCount > 0 && (
+								{notifQuery.data && unReadNotifCount > 0 ? (
 									<Badge variant="destructive" className="hover:bg-destructive">
 										{notifQuery.data && unReadNotifCount}
 									</Badge>
+								) : (
+									<></>
 								)}
 							</Link>
 							{/* <Button variant="ghost" className="text-narudorange hover:text-narudorange">

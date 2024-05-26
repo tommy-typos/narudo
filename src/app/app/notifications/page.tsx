@@ -15,14 +15,16 @@ export default function Home() {
 	const notifQuery = useQuery({
 		queryKey: ["notifications"],
 		queryFn: () => getNotifications(),
-		refetchInterval: 5000,
 	});
 
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
 		mutationFn: (notifId: number) => toggleNotification(notifId),
-		onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["notifications"] });
+			queryClient.invalidateQueries({ queryKey: ["notificationCount"] });
+		},
 	});
 
 	/**

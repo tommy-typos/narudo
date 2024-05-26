@@ -6,6 +6,7 @@ import {
 	SQL,
 	and,
 	asc,
+	count,
 	desc,
 	eq,
 	gt,
@@ -166,6 +167,18 @@ export async function getNotifications() {
 		.orderBy(desc(notifications.dateTime));
 
 	return data;
+}
+
+export async function getNotificationCount() {
+	const clerkUser = auth();
+	if (!clerkUser.userId) throw new Error("Unauthorized");
+
+	const data = await db
+		.select({ count: count() })
+		.from(notifications)
+		.where(and(eq(notifications.userId, clerkUser.userId), eq(notifications.isRead, false)));
+
+	return data[0].count;
 }
 
 export async function getFriendRequestsPending() {
