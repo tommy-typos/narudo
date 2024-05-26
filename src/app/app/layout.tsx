@@ -57,6 +57,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createNewProject } from "../_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
 
 function stringifyDate(date: Date) {
 	const year = date.getFullYear();
@@ -330,6 +331,25 @@ TODO :::
 Any click on the dialog that is defined inside of accordion, will trigger accordion item to collapse/expance. Fix this.
 */
 
+const MyAccordionTrigger = React.forwardRef<
+	React.ElementRef<typeof AccordionPrimitive.Trigger>,
+	React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+	<AccordionPrimitive.Header className="flex">
+		<AccordionPrimitive.Trigger
+			ref={ref}
+			className={cn(
+				"flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+				className
+			)}
+			{...props}
+		>
+			{children}
+		</AccordionPrimitive.Trigger>
+	</AccordionPrimitive.Header>
+));
+MyAccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
+
 function ProjectsList() {
 	const projectsQuery = useQuery({
 		queryKey: ["projects"],
@@ -347,9 +367,9 @@ function ProjectsList() {
 		},
 	});
 	return (
-		<Accordion type="single" collapsible className="w-full" defaultValue="item-1">
+		<Accordion type="single" collapsible className="w-full" value="item-1">
 			<AccordionItem value="item-1" className="border-b-0">
-				<AccordionTrigger className="py-2 hover:no-underline">
+				<MyAccordionTrigger className="py-2 hover:no-underline">
 					<>
 						<div className="flex w-full items-center justify-between pr-2">
 							<p>Projects</p>
@@ -404,7 +424,7 @@ function ProjectsList() {
 							</Dialog>
 						</div>
 					</>
-				</AccordionTrigger>
+				</MyAccordionTrigger>
 
 				<AccordionContent asChild>
 					<div className="flex flex-col">
