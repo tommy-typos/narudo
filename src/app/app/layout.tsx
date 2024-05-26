@@ -62,6 +62,22 @@ function stringifyDate(date: Date) {
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
+function formatDateTime(dateObj: Date) {
+	const year = dateObj.getFullYear();
+	const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so add 1
+	const day = String(dateObj.getDate()).padStart(2, "0");
+
+	const currdate = `${year}-${month}-${day}`;
+
+	const hours = String(dateObj.getHours()).padStart(2, "0");
+	const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+	const seconds = String(dateObj.getSeconds()).padStart(2, "0");
+
+	const currtime = `${hours}:${minutes}:${seconds}`;
+
+	return { currdate, currtime };
+}
+
 export default function Layout({ children }: { children: React.ReactNode }) {
 	const pathName = usePathname();
 	const params = useParams();
@@ -72,7 +88,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const notifQuery = useQuery({
 		queryKey: ["notifications"],
 		queryFn: () => getNotifications(),
-		// refetchInterval: 5000,
+		refetchInterval: 5000,
 	});
 	// TODO ::: fetch notification count instead.
 
@@ -88,7 +104,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	const overdueCount = useQuery({
 		queryKey: ["overdueCount"],
-		queryFn: () => getOverdueTasksCount(new Date()),
+		queryFn: () => getOverdueTasksCount(formatDateTime(new Date())),
 		refetchInterval: 60 * 1000,
 	});
 

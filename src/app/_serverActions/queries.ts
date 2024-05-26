@@ -443,7 +443,7 @@ export async function getOverdueTasks({ currdate, currtime }: { currdate: string
 	return data.sort(compareTasks);
 }
 
-export async function getOverdueTasksCount(userCurrentDateTime: Date) {
+export async function getOverdueTasksCount({ currdate, currtime }: { currdate: string; currtime: string }) {
 	// TODO ::: learn proper counting, man
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
@@ -467,7 +467,7 @@ export async function getOverdueTasksCount(userCurrentDateTime: Date) {
 						extract(hour FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
 						extract(minute FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
 						extract(second FROM COALESCE(${tasks.time}, '23:59:59'::time))::int
-					) < ${userCurrentDateTime.toISOString()}
+					) < ${new Date(`${currdate}T${currtime}`)}
 				`
 			)
 		);
