@@ -400,7 +400,7 @@ function compareTasks(a: TaskType, b: TaskType): number {
 	return 0;
 }
 
-export async function getOverdueTasks(userCurrentDateTime: Date) {
+export async function getOverdueTasks({ currdate, currtime }: { currdate: string; currtime: string }) {
 	const clerkUser = auth();
 	if (!clerkUser.userId) throw new Error("Unauthorized");
 
@@ -435,7 +435,7 @@ export async function getOverdueTasks(userCurrentDateTime: Date) {
 						extract(hour FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
 						extract(minute FROM COALESCE(${tasks.time}, '23:59:59'::time))::int,
 						extract(second FROM COALESCE(${tasks.time}, '23:59:59'::time))::int
-					) < ${userCurrentDateTime.toISOString()}
+					) < ${new Date(`${currdate}T${currtime}`)}
 				`
 			)
 		)) as TaskType[];
@@ -481,20 +481,4 @@ function createDateFromDateTime(dateStr: string, timeStr: string | null) {
 	const dateObj = new Date(dateTimeStr);
 
 	return dateObj;
-}
-
-function formatDateTime(dateObj: Date) {
-	const year = dateObj.getFullYear();
-	const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so add 1
-	const day = String(dateObj.getDate()).padStart(2, "0");
-
-	const currdate = `${year}-${month}-${day}`;
-
-	const hours = String(dateObj.getHours()).padStart(2, "0");
-	const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-	const seconds = String(dateObj.getSeconds()).padStart(2, "0");
-
-	const currtime = `${hours}:${minutes}:${seconds}`;
-
-	return [currdate, currtime];
 }

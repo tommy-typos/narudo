@@ -39,6 +39,22 @@ import { createNewProject, createNewSubCat } from "@/app/_serverActions/addNewPr
 import { Skeleton } from "@/components/ui/skeleton";
 import { TaskCardMiniView } from "@/components/client/taskCardMini";
 
+export function formatDateTime(dateObj: Date) {
+	const year = dateObj.getFullYear();
+	const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so add 1
+	const day = String(dateObj.getDate()).padStart(2, "0");
+
+	const currdate = `${year}-${month}-${day}`;
+
+	const hours = String(dateObj.getHours()).padStart(2, "0");
+	const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+	const seconds = String(dateObj.getSeconds()).padStart(2, "0");
+
+	const currtime = `${hours}:${minutes}:${seconds}`;
+
+	return { currdate, currtime };
+}
+
 export default function Home() {
 	const projectsQuery = useQuery({
 		queryKey: ["projects"],
@@ -49,7 +65,7 @@ export default function Home() {
 
 	const taskQuery = useQuery({
 		queryKey: [pathname],
-		queryFn: () => getOverdueTasks(new Date()),
+		queryFn: () => getOverdueTasks(formatDateTime(new Date())),
 	});
 
 	return (
