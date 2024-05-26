@@ -96,6 +96,16 @@ export function AddTask() {
 		setTask(emptyState);
 	}
 
+	React.useEffect(() => {
+		if (!task.task.date) {
+			setTask(
+				produce((draft) => {
+					draft!.task.time = null;
+				})
+			);
+		}
+	}, [task.task.date]);
+
 	return (
 		<Dialog
 			open={open}
@@ -140,7 +150,7 @@ export function AddTask() {
 					/>
 					<div className="flex justify-between">
 						<DatePickerWithPresets setTask={setTask} />
-						<TimePickerWithPresets setTask={setTask} />
+						<TimePickerWithPresets setTask={setTask} task={task} />
 					</div>
 					<DestinationPicker setTask={setTask} />
 					<Separator className="my-1 bg-transparent" />
@@ -635,15 +645,28 @@ export function DatePickerWithPresets({ setTask }: { setTask: React.Dispatch<Rea
 	);
 }
 
-export function TimePickerWithPresets({ setTask }: { setTask: React.Dispatch<React.SetStateAction<InsertTaskType>> }) {
+export function TimePickerWithPresets({
+	task,
+	setTask,
+}: {
+	task: InsertTaskType;
+	setTask: React.Dispatch<React.SetStateAction<InsertTaskType>>;
+}) {
 	const [open, setOpen] = React.useState(false);
 	const [value, setValue] = React.useState("");
 	const [cmdInput, setCmdInput] = React.useState("");
+
+	React.useEffect(() => {
+		if (!task.task.time) {
+			setValue("");
+		}
+	}, [task.task.time]);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
+					disabled={!task.task.date}
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
