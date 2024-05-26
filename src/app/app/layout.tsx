@@ -58,7 +58,6 @@ import { Label } from "@/components/ui/label";
 import { createNewProject } from "../_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { CustomizationContext } from "@/lib/customizationContext";
 
 function stringifyDate(date: Date) {
 	const year = date.getFullYear();
@@ -163,7 +162,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	}, [customization]);
 
 	return (
-		<CustomizationContext.Provider value={customization}>
+		<>
 			<Welcomer />
 			<div className="flex min-h-full w-full">
 				<div className="flex min-h-full w-80 flex-col border-r bg-muted/40 px-4 py-2">
@@ -310,6 +309,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 									</div>
 									<Separator className="my-2" />
 									<SettingsDialog customization={customization} setCustomization={setCustomization} />
+									<Button variant="ghost" className="justify-start">
+										<GraduationCap className="mr-2 h-4 w-4" />
+										Tips
+									</Button>
 									{/* <Button variant="ghost" className="justify-start">
 										<Keyboard className="mr-2 h-4 w-4" />
 										Keyboard Shortcuts
@@ -338,7 +341,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					<div className="p-5">{children}</div>
 				</div>
 			</div>
-		</CustomizationContext.Provider>
+		</>
 	);
 }
 
