@@ -67,7 +67,7 @@ function DateWrapper() {
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="flex w-72 flex-col" align="end">
-						<ViewOption onClick={() => setShowCompleted((prev) => !prev)}>
+						<ViewOption onClick={() => setShowCompleted((prev) => !prev)} isOn={showCompleted}>
 							<CheckCheck className="mr-2 h-4 w-4" /> Show Completed
 						</ViewOption>
 						{/* <ViewOption>
@@ -257,10 +257,12 @@ type ViewOptionProps = {
 	className?: string;
 	children: React.ReactNode;
 	onClick?: () => void;
+	isOn?: boolean;
 };
 
-function ViewOption({ children, className, onClick }: ViewOptionProps) {
-	const [active, setActive] = React.useState<boolean>(false);
+function ViewOption({ children, className, onClick, isOn }: ViewOptionProps) {
+	const [active, setActive] = React.useState<boolean>(isOn !== undefined ? isOn : false);
+
 	return (
 		<Button
 			variant="ghost"

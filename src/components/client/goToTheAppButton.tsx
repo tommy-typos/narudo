@@ -7,7 +7,7 @@ import { MoveRight } from "lucide-react";
 
 export function GoToApp() {
 	return (
-		<Link className={cn(buttonVariants(), "mt-10 w-40")} href={`/app/date/${stringifyDate(new Date())}`}>
+		<Link className={cn(buttonVariants(), "mt-10 w-40")} href={`/sign-in`}>
 			Go to the app <MoveRight className="ml-2 h-4 w-4" />
 		</Link>
 	);
