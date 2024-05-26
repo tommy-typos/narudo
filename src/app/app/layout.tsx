@@ -147,6 +147,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	// }, []);
 
 	const unReadNotifCount: number = notifQuery.data || 0;
+	const [openTab, setOpenTab] = React.useState<"tips" | "theme" | "customization">("theme");
+	const [settingsOpen, setSettingsOpen] = React.useState<boolean>(false);
 
 	const [customization, setCustomization] = React.useState<{ friends: boolean; challenges: boolean }>({
 		friends: true,
@@ -311,8 +313,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 										<UserButton showName />
 									</div>
 									<Separator className="my-2" />
-									<SettingsDialog customization={customization} setCustomization={setCustomization} />
-									<Button variant="ghost" className="justify-start">
+									<SettingsDialog
+										customization={customization}
+										setCustomization={setCustomization}
+										openTab={openTab}
+										setOpenTab={setOpenTab}
+										setSettingsOpen={setSettingsOpen}
+										settingsOpen={settingsOpen}
+									/>
+									<Button
+										variant="ghost"
+										className="justify-start"
+										onClick={() => {
+											setOpenTab("tips");
+											setSettingsOpen(true);
+										}}
+									>
 										<GraduationCap className="mr-2 h-4 w-4" />
 										Tips
 									</Button>

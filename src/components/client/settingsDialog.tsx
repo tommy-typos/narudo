@@ -1,8 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { AppWindowMac, Atom, Moon, Palette, Rows4, Settings, Sun, Swords, Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+	AppWindowMac,
+	Atom,
+	Bookmark,
+	GraduationCap,
+	Moon,
+	Palette,
+	Rows4,
+	Settings,
+	Sun,
+	Swords,
+	Users,
+} from "lucide-react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { NarutoBeltSvg } from "@/lib/svgs/svgExporter";
@@ -11,6 +23,10 @@ import { useTheme } from "next-themes";
 export function SettingsDialog({
 	customization,
 	setCustomization,
+	openTab,
+	setOpenTab,
+	settingsOpen,
+	setSettingsOpen,
 }: {
 	customization: {
 		friends: boolean;
@@ -22,10 +38,13 @@ export function SettingsDialog({
 			challenges: boolean;
 		}>
 	>;
+	openTab: "tips" | "theme" | "customization";
+	setOpenTab: Dispatch<SetStateAction<"tips" | "theme" | "customization">>;
+	settingsOpen: boolean;
+	setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-	const [openTab, setOpenTab] = useState<"general" | "theme" | "customization">("theme");
 	return (
-		<Dialog>
+		<Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
 			<DialogTrigger asChild>
 				{/* <Button variant="outline">Temporary MF</Button> */}
 				<Button variant="ghost" className="justify-start">
@@ -59,9 +78,17 @@ export function SettingsDialog({
 						<AppWindowMac className="mr-2 h-4 w-4" />
 						Customization
 					</Button>
+					<Button
+						variant="ghost"
+						className={cn("justify-start", openTab == "tips" && "bg-accent")}
+						onClick={() => setOpenTab("tips")}
+					>
+						<GraduationCap className="mr-2 h-4 w-4" />
+						Tips
+					</Button>
 				</div>
 				<div className="flex flex-col justify-between p-4">
-					{openTab == "general" && (
+					{/* {openTab == "general" && (
 						<>
 							<div className="px-2">
 								<h2 className="my-2 text-xl">Date & Time</h2>
@@ -113,12 +140,12 @@ export function SettingsDialog({
 									</p>
 								</div>
 							</div>
-							{/* <div className="mt-8 flex justify-end gap-4">
+							<div className="mt-8 flex justify-end gap-4">
 								<Button variant="secondary">Cancel</Button>
 								<Button>Save Changes</Button>
-							</div> */}
+							</div>
 						</>
-					)}
+					)} */}
 					{openTab == "theme" && (
 						<>
 							<AdvancedTheme />
@@ -209,6 +236,26 @@ export function SettingsDialog({
 								<Button variant="secondary">Cancel</Button>
 								<Button>Save Changes</Button>
 							</div> */}
+						</>
+					)}
+					{openTab == "tips" && (
+						<>
+							<div className="px-2">
+								<h1 className="my-2 text-xl">Tips</h1>
+								<div className="my-2 flex flex-col gap-1">
+									<div className="flex items-center gap-2">
+										<Bookmark className=" h-4 w-4" />
+										<h3 className="">Today&apos;s Tasks & Notes</h3>
+									</div>
+									<p className="text-sm text-muted-foreground">
+										Make the following link a bookmark in your editor. It will direct you to
+										today&apos;s notes & task automatically.
+									</p>
+									<p className="w-fit rounded-md bg-muted p-1 px-2 text-sm text-muted-foreground underline">
+										https://narudo.vercel.app/app/today
+									</p>
+								</div>
+							</div>
 						</>
 					)}
 				</div>
