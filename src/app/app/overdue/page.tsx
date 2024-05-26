@@ -39,7 +39,7 @@ import { createNewProject, createNewSubCat } from "@/app/_serverActions/addNewPr
 import { Skeleton } from "@/components/ui/skeleton";
 import { TaskCardMiniView } from "@/components/client/taskCardMini";
 
-export function formatDateTime(dateObj: Date) {
+function formatDateTime(dateObj: Date) {
 	const year = dateObj.getFullYear();
 	const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so add 1
 	const day = String(dateObj.getDate()).padStart(2, "0");
