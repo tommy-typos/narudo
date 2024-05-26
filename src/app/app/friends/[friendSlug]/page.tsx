@@ -16,12 +16,15 @@ import { getFriends, getProjects, getTasksByFriend } from "@/app/_serverActions/
 import { usePathname } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TaskCardMiniView } from "@/components/client/taskCardMini";
+import { ShowCompletedContext } from "@/lib/friendsShowCompletedContext";
 
 export default function Home() {
 	const friendsQuery = useQuery({
 		queryKey: ["friends"],
 		queryFn: () => getFriends(),
 	});
+
+	const showCompleted = React.useContext(ShowCompletedContext);
 
 	const { data: projectsList } = useQuery({
 		queryKey: ["projects"],
@@ -75,9 +78,21 @@ export default function Home() {
 					)}
 					{taskQuery.data && projectsList && (
 						<>
-							{taskQuery.data.map((task) => (
-								<TaskCardMiniView key={task.task.id} task={task} projectsList={projectsList} showDate />
-							))}
+							{taskQuery.data
+								.filter((item) => {
+									if (showCompleted) {
+										return true;
+									}
+									return !item.task.isCompleted;
+								})
+								.map((task) => (
+									<TaskCardMiniView
+										key={task.task.id}
+										task={task}
+										projectsList={projectsList}
+										showDate
+									/>
+								))}
 						</>
 					)}
 					{taskQuery.data?.length === 0 && (

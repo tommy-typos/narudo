@@ -40,6 +40,7 @@ import { TaskCardMiniView } from "@/components/client/taskCardMini";
 
 export default function Home() {
 	const { projectSlug, subCatSlug } = useParams();
+	const [showCompleted, setShowCompleted] = React.useState(false);
 
 	const projectsQuery = useQuery({
 		queryKey: ["projects"],
@@ -78,7 +79,7 @@ export default function Home() {
 					{/* <p className="ml-8 mt-0.5 text-xs opacity-50">Tasks with no date or a project</p> */}
 				</div>
 
-				{/* <Popover>
+				<Popover>
 					<PopoverTrigger asChild>
 						<Button variant="ghost">
 							<SlidersHorizontal className="mr-2 h-4 w-4" /> View
@@ -86,12 +87,12 @@ export default function Home() {
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="flex w-72 flex-col" align="end">
-						<ViewOption>
+						<ViewOption onClick={() => setShowCompleted((prev) => !prev)}>
 							<CheckCheck className="mr-2 h-4 w-4" /> Show Completed
 						</ViewOption>
-						<ViewSortOption />
+						{/* <ViewSortOption /> */}
 					</PopoverContent>
-				</Popover> */}
+				</Popover>
 			</div>
 			<div className="flex justify-between gap-4">
 				<Card className="w-60">
@@ -203,15 +204,22 @@ export default function Home() {
 					)}
 					{taskQuery.data && projectsQuery.data && (
 						<>
-							{taskQuery.data.map((task) => (
-								<TaskCardMiniView
-									key={task.task.id}
-									task={task}
-									projectsList={projectsQuery.data}
-									showDate
-									showLocation={false}
-								/>
-							))}
+							{taskQuery.data
+								.filter((item) => {
+									if (showCompleted) {
+										return true;
+									}
+									return !item.task.isCompleted;
+								})
+								.map((task) => (
+									<TaskCardMiniView
+										key={task.task.id}
+										task={task}
+										projectsList={projectsQuery.data}
+										showDate
+										showLocation={false}
+									/>
+								))}
 						</>
 					)}
 					{taskQuery.data?.length === 0 && (
@@ -293,15 +301,21 @@ function SubCatComponent({ subCat, projectSlug }: { subCat: SubCatProps; project
 type ViewOptionProps = {
 	className?: string;
 	children: React.ReactNode;
+	onClick?: () => void;
 };
 
-function ViewOption({ children, className }: ViewOptionProps) {
+function ViewOption({ children, className, onClick }: ViewOptionProps) {
 	const [active, setActive] = React.useState<boolean>(false);
 	return (
 		<Button
 			variant="ghost"
 			className={cn("items-center justify-between", !active && "opacity-50", className)}
-			onClick={() => setActive((prev) => !prev)}
+			onClick={() => {
+				setActive((prev) => !prev);
+				if (onClick) {
+					onClick();
+				}
+			}}
 		>
 			<div className="flex items-center">{children}</div>
 			{!active ? <ToggleLeft className="h-4 w-4" /> : <ToggleRight className="h-4 w-4" />}

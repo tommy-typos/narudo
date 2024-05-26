@@ -1,6 +1,16 @@
 "use client";
 
-import { Ellipsis, LoaderCircle, Pin, User, Users } from "lucide-react";
+import {
+	CheckCheck,
+	Ellipsis,
+	LoaderCircle,
+	Pin,
+	SlidersHorizontal,
+	ToggleLeft,
+	ToggleRight,
+	User,
+	Users,
+} from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -22,6 +32,9 @@ import { addNewFriend } from "@/app/_serverActions/friendshipActions";
 import { useToast } from "@/components/ui/use-toast";
 import { getFriends } from "@/app/_serverActions/queries";
 import { usePathname } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { createContext } from "react";
+import { ShowCompletedContext } from "@/lib/friendsShowCompletedContext";
 
 type FriendsLinkProps = {
 	link: string;
@@ -37,16 +50,38 @@ function FriendsLink({ link, text, active }: FriendsLinkProps) {
 	);
 }
 
+/**
+ * TODO :::
+ * IF YOU EXPORT SOMETHING HERE, E.G. A FUNCTION YOU GET THIS ERROR: <SOMETHING> is not a valid Next.js entry export value.
+ */
+
 export default function Layout({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
+	const [showCompleted, setShowCompleted] = React.useState(false);
 
 	return (
-		<>
+		<ShowCompletedContext.Provider value={showCompleted}>
 			<div className="mb-6 flex items-center justify-between">
 				<div className="flex flex-col">
-					<div className="flex items-center">
-						<Users className="mr-2" />
-						<h3 className="shad-h3">Friends</h3>
+					<div className="flex items-center justify-between">
+						<div className="flex items-center">
+							<Users className="mr-2" />
+							<h3 className="shad-h3">Friends</h3>
+						</div>
+						<Popover>
+							<PopoverTrigger asChild>
+								<Button variant="ghost">
+									<SlidersHorizontal className="mr-2 h-4 w-4" /> View
+									<span className="sr-only">Settings and Stuff</span>
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent className="flex w-72 flex-col" align="end">
+								<ViewOption onClick={() => setShowCompleted((prev) => !prev)}>
+									<CheckCheck className="mr-2 h-4 w-4" /> Show Completed
+								</ViewOption>
+								{/* <ViewSortOption /> */}
+							</PopoverContent>
+						</Popover>
 					</div>
 					<div className="flex items-center gap-12 py-4">
 						<FriendsLink
@@ -69,7 +104,32 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				</div>
 			</div>
 			{children}
-		</>
+		</ShowCompletedContext.Provider>
+	);
+}
+
+type ViewOptionProps = {
+	className?: string;
+	children: React.ReactNode;
+	onClick?: () => void;
+};
+
+function ViewOption({ children, className, onClick }: ViewOptionProps) {
+	const [active, setActive] = React.useState<boolean>(false);
+	return (
+		<Button
+			variant="ghost"
+			className={cn("items-center justify-between", !active && "opacity-50", className)}
+			onClick={() => {
+				setActive((prev) => !prev);
+				if (onClick) {
+					onClick();
+				}
+			}}
+		>
+			<div className="flex items-center">{children}</div>
+			{!active ? <ToggleLeft className="h-4 w-4" /> : <ToggleRight className="h-4 w-4" />}
+		</Button>
 	);
 }
 

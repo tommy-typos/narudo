@@ -27,6 +27,7 @@ export default function Home() {
 function DateWrapper() {
 	const params = useParams<{ dateSlug: string }>();
 	const dateFromRoute = new Date(params.dateSlug);
+	const [showCompleted, setShowCompleted] = React.useState(false);
 
 	const pathName = usePathname();
 
@@ -60,23 +61,23 @@ function DateWrapper() {
 
 				<Popover>
 					<PopoverTrigger asChild>
-						{/* <Button variant="ghost">
+						<Button variant="ghost">
 							<SlidersHorizontal className="mr-2 h-4 w-4" /> View
 							<span className="sr-only">Settings and Stuff</span>
-						</Button> */}
+						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="flex w-72 flex-col" align="end">
-						<ViewOption>
+						<ViewOption onClick={() => setShowCompleted((prev) => !prev)}>
 							<CheckCheck className="mr-2 h-4 w-4" /> Show Completed
 						</ViewOption>
-						<ViewOption>
+						{/* <ViewOption>
 							<Group className="mr-2 h-4 w-4" />
 							Group by project
 						</ViewOption>
 						<ViewOption className="ml-6">
 							<CircleOff className="mr-2 h-4 w-4" />
 							Hide empty projects
-						</ViewOption>
+						</ViewOption> */}
 					</PopoverContent>
 				</Popover>
 			</div>
@@ -111,9 +112,16 @@ function DateWrapper() {
 						)}
 						{taskQuery.data && projectsList && (
 							<>
-								{taskQuery.data.map((task) => (
-									<TaskCardMiniView key={task.task.id} task={task} projectsList={projectsList} />
-								))}
+								{taskQuery.data
+									.filter((item) => {
+										if (showCompleted) {
+											return true;
+										}
+										return !item.task.isCompleted;
+									})
+									.map((task) => (
+										<TaskCardMiniView key={task.task.id} task={task} projectsList={projectsList} />
+									))}
 							</>
 						)}
 						{taskQuery.data?.length === 0 && (
@@ -248,15 +256,21 @@ const debounce = (cb: Function, delay = 1000, timeoutRef: React.MutableRefObject
 type ViewOptionProps = {
 	className?: string;
 	children: React.ReactNode;
+	onClick?: () => void;
 };
 
-function ViewOption({ children, className }: ViewOptionProps) {
+function ViewOption({ children, className, onClick }: ViewOptionProps) {
 	const [active, setActive] = React.useState<boolean>(false);
 	return (
 		<Button
 			variant="ghost"
 			className={cn("items-center justify-between", !active && "opacity-50", className)}
-			onClick={() => setActive((prev) => !prev)}
+			onClick={() => {
+				setActive((prev) => !prev);
+				if (onClick) {
+					onClick();
+				}
+			}}
 		>
 			<div className="flex items-center">{children}</div>
 			{!active ? <ToggleLeft className="h-4 w-4" /> : <ToggleRight className="h-4 w-4" />}
