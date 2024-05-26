@@ -407,7 +407,9 @@ export function DatePickerWithPresets({
 	setTask: React.Dispatch<React.SetStateAction<InsertTaskType>>;
 }) {
 	const [open, setOpen] = React.useState(false);
-	const [date, setDate] = React.useState<Date>(new Date(task.task.date as string));
+	const [date, setDate] = React.useState<Date | undefined>(
+		task.task.date ? new Date(task.task.date as string) : undefined
+	);
 	const [month, setMonth] = React.useState<Date | undefined>();
 
 	React.useEffect(() => {
