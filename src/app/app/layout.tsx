@@ -166,6 +166,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		});
 	}, []);
 
+	const queryClient = useQueryClient();
+
+	React.useEffect(() => {
+		const focusChangeHandler = () => {
+			queryClient.invalidateQueries({ queryKey: ["projects"] });
+			queryClient.invalidateQueries({ queryKey: ["friends"] });
+			queryClient.invalidateQueries({ queryKey: ["notificationCount"] });
+			queryClient.invalidateQueries({ queryKey: ["overdueCount"] });
+			queryClient.invalidateQueries({ queryKey: [pathName] });
+			queryClient.invalidateQueries({ queryKey: [`${pathName}+++notes`] });
+		};
+
+		window.addEventListener("focus", focusChangeHandler);
+
+		return () => {
+			window.removeEventListener("focus", focusChangeHandler);
+		};
+	}, []);
+
 	return (
 		<>
 			<Welcomer />

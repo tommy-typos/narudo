@@ -178,11 +178,12 @@ function TemporaryNote() {
 	const timeoutRef = React.useRef<React.MutableRefObject<NodeJS.Timeout>>(null);
 	const [value, setValue] = React.useState("");
 
+	const pathName = usePathname();
 	const { dateSlug } = useParams();
 
 	const noteQuery = useQuery({
-		queryKey: ["notes", dateSlug],
-		queryFn: () => retrieveNote(dateSlug as string),
+		queryKey: [`${pathName}+++notes`],
+		queryFn: () => retrieveNote(pathName.split("/").at(-1) as string),
 	});
 
 	// TODO ::: learn when dateSlug can be string[] rather than just string, we should be careful
