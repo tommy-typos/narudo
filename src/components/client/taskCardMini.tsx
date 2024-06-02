@@ -96,7 +96,9 @@ export function TaskCardMiniView({
 						}}
 					/>
 					<div className="flex w-full items-start justify-between">
-						<p className={cn("shad-p mb-1 text-sm")}>{task.task.title}</p>
+						<p className={cn("shad-p mb-1 text-sm", checked && "text-foreground/40 line-through")}>
+							{task.task.title}
+						</p>
 						{/* {(task.assignees || []).length > 0 && (
 							<Users className="h-3 w-3 min-w-3 text-muted-foreground mt-2.5" />
 						)} */}
@@ -104,7 +106,13 @@ export function TaskCardMiniView({
 				</div>
 				<div className="w-full pl-8">
 					<div className="flex w-full items-center justify-between text-xs">
-						<div className={cn("flex items-center text-primary", showAsOverdue && "text-destructive")}>
+						<div
+							className={cn(
+								"flex items-center text-primary",
+								checked && "text-primary/40",
+								showAsOverdue && "text-destructive"
+							)}
+						>
 							{showDate && task.task.date && (
 								<>
 									<Calendar className="h-3 w-3" /> {task.task.date}{" "}
@@ -117,7 +125,12 @@ export function TaskCardMiniView({
 							)}
 						</div>
 						{showLocation && (
-							<div className="flex items-center text-muted-foreground">
+							<div
+								className={cn(
+									"flex items-center text-muted-foreground",
+									checked && "text-muted-foreground/40"
+								)}
+							>
 								<Inbox className="mr-1 h-3 w-3" /> {locationDetails.projectName}
 							</div>
 						)}
