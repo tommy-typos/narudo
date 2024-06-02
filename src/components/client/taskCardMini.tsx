@@ -88,7 +88,7 @@ export function TaskCardMiniView({
 			>
 				<div className="flex w-full items-start">
 					<Checkbox
-						className="ml-2 mr-4 mt-0.5 h-6 w-6"
+						className="mr-2 mt-0.5 h-6 w-6"
 						checked={checked || false}
 						onClick={(e) => {
 							e.preventDefault();
@@ -102,7 +102,7 @@ export function TaskCardMiniView({
 						)} */}
 					</div>
 				</div>
-				<div className="w-full pl-12">
+				<div className="w-full pl-8">
 					<div className="flex w-full items-center justify-between text-xs">
 						<div className={cn("flex items-center text-primary", showAsOverdue && "text-destructive")}>
 							{showDate && task.task.date && (
