@@ -107,18 +107,18 @@ export function TaskCardMiniView({
 						<div className={cn("flex items-center text-primary", showAsOverdue && "text-destructive")}>
 							{showDate && task.task.date && (
 								<>
-									<Calendar className="h-4 w-4" /> {task.task.date}{" "}
+									<Calendar className="h-3 w-3" /> {task.task.date}{" "}
 								</>
 							)}
 							{task.task.time && (
 								<>
-									<Watch className="h-4 w-4" /> {task.task.time.slice(0, 5)}{" "}
+									<Watch className="h-3 w-3" /> {task.task.time.slice(0, 5)}{" "}
 								</>
 							)}
 						</div>
 						{showLocation && (
 							<div className="flex items-center text-muted-foreground">
-								<Inbox className="mr-1 h-4 w-4" /> {locationDetails.projectName}
+								<Inbox className="mr-1 h-3 w-3" /> {locationDetails.projectName}
 							</div>
 						)}
 					</div>
