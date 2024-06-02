@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createNewProject, createNewSubCat } from "@/app/_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TaskCardMiniView } from "@/components/client/taskCardMini";
+import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 
 export default function Home() {
 	const { projectSlug, subCatSlug } = useParams();
@@ -176,32 +176,8 @@ export default function Home() {
 						</Dialog>
 					</CardContent>
 				</Card>
-				<div className="flex flex-1 flex-col gap-2">
-					{taskQuery.isLoading && (
-						<>
-							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-								<div className="flex w-full flex-col gap-2">
-									<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
-									<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
-								</div>
-							</div>
-							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-								<div className="flex w-full flex-col gap-2">
-									<Skeleton className="mb-1 h-4 w-[70px] leading-7" />
-									<Skeleton className="mb-1 h-4 w-[120px] leading-7" />
-								</div>
-							</div>
-							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-								<div className="flex w-full flex-col gap-2">
-									<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
-									<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
-								</div>
-							</div>
-						</>
-					)}
+				<div className="flex flex-1 flex-col">
+					{taskQuery.isLoading && <MiniTasksSkeleton />}
 					{taskQuery.data && projectsQuery.data && (
 						<>
 							{taskQuery.data
