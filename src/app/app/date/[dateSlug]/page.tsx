@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskType, getProjects, getTasksByDate, retrieveNote, saveOrUpdateNote } from "@/app/_serverActions/queries";
 import { isToday, stringifyDate } from "@/components/client/addTask";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TaskCardMiniView } from "@/components/client/taskCardMini";
+import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 import { Textarea } from "@/components/ui/textarea";
 import { addDays, format } from "date-fns";
 
@@ -84,32 +84,8 @@ function DateWrapper() {
 			<div className="flex justify-between gap-4">
 				<div className="flex-1">
 					<h3 className="shad-h3 mb-4">Tasks</h3>
-					<div className="flex flex-col gap-2">
-						{taskQuery.isLoading && (
-							<>
-								<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-									<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-									<div className="flex w-full flex-col gap-2">
-										<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
-										<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
-									</div>
-								</div>
-								<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-									<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-									<div className="flex w-full flex-col gap-2">
-										<Skeleton className="mb-1 h-4 w-[70px] leading-7" />
-										<Skeleton className="mb-1 h-4 w-[120px] leading-7" />
-									</div>
-								</div>
-								<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-									<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-									<div className="flex w-full flex-col gap-2">
-										<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
-										<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
-									</div>
-								</div>
-							</>
-						)}
+					<div className="flex flex-col">
+						{taskQuery.isLoading && <MiniTasksSkeleton />}
 						{taskQuery.data && projectsList && (
 							<>
 								{taskQuery.data
@@ -224,7 +200,7 @@ function TemporaryNote() {
 				<Textarea
 					placeholder="Start typing..."
 					value={value}
-					className="min-h-96 w-full resize-none border !ring-0 !ring-offset-0"
+					className="min-h-96 w-full resize-none rounded-md border bg-muted/40 !ring-0 !ring-offset-0"
 					onChange={(e) => {
 						setValue(e.target.value);
 						debounce(

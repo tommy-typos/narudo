@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getFriends, getProjects, getTasksByFriend } from "@/app/_serverActions/queries";
 import { usePathname } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TaskCardMiniView } from "@/components/client/taskCardMini";
+import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 import { ShowCompletedContext } from "@/lib/friendsShowCompletedContext";
 
 export default function Home() {
@@ -50,32 +50,8 @@ export default function Home() {
 						{friendsQuery.data?.map((friend) => <FriendLinkComponent key={friend.id} data={friend} />)}
 					</CardContent>
 				</Card>
-				<div className="flex flex-1 flex-col gap-2 border-l pl-2 pr-2">
-					{taskQuery.isLoading && (
-						<>
-							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-								<div className="flex w-full flex-col gap-2">
-									<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
-									<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
-								</div>
-							</div>
-							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-								<div className="flex w-full flex-col gap-2">
-									<Skeleton className="mb-1 h-4 w-[70px] leading-7" />
-									<Skeleton className="mb-1 h-4 w-[120px] leading-7" />
-								</div>
-							</div>
-							<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-								<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-								<div className="flex w-full flex-col gap-2">
-									<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
-									<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
-								</div>
-							</div>
-						</>
-					)}
+				<div className="flex flex-1 flex-col border-l pl-2 pr-2">
+					{taskQuery.isLoading && <MiniTasksSkeleton />}
 					{taskQuery.data && projectsList && (
 						<>
 							{taskQuery.data

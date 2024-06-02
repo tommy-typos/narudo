@@ -37,7 +37,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createNewProject, createNewSubCat } from "@/app/_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TaskCardMiniView } from "@/components/client/taskCardMini";
+import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 
 function formatDateTime(dateObj: Date) {
 	const year = dateObj.getFullYear();
@@ -83,33 +83,13 @@ export default function Home() {
 					{taskQuery.isLoading && (
 						<div className="m-auto">
 							<div className="min-w-[300px] max-w-[450px]">
-								<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-									<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-									<div className="flex w-full flex-col gap-2">
-										<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
-										<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
-									</div>
-								</div>
-								<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-									<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-									<div className="flex w-full flex-col gap-2">
-										<Skeleton className="mb-1 h-4 w-[70px] leading-7" />
-										<Skeleton className="mb-1 h-4 w-[120px] leading-7" />
-									</div>
-								</div>
-								<div className={cn("flex items-center rounded p-2 hover:cursor-pointer")}>
-									<Skeleton className="ml-2 mr-4 h-6 min-w-6" />
-									<div className="flex w-full flex-col gap-2">
-										<Skeleton className="mb-1 h-4 w-[80px] leading-7" />
-										<Skeleton className="mb-1 h-4 w-[130px] leading-7" />
-									</div>
-								</div>
+								<MiniTasksSkeleton />
 							</div>
 						</div>
 					)}
 					{taskQuery.data && projectsQuery.data && (
 						<div className="m-auto">
-							<div className="flex min-w-[300px] max-w-[450px] flex-col gap-2">
+							<div className="flex min-w-[300px] max-w-[450px] flex-col">
 								{taskQuery.data.map((task) => (
 									<TaskCardMiniView
 										key={task.task.id}
