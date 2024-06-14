@@ -4,12 +4,10 @@ import * as React from "react";
 import { QueryKey, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getFriends } from "@/app/_serverActions/queries";
 import { useRouter } from "next/navigation";
+import { useFriendsQuery } from "@/lib/queries";
 
 export default function Home() {
-	const friendsQuery = useQuery({
-		queryKey: ["friends"],
-		queryFn: () => getFriends(),
-	});
+	const friendsQuery = useFriendsQuery();
 
 	const router = useRouter();
 

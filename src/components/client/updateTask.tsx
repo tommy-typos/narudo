@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { isToday, stringifyDate } from "@/lib/dateUtils";
 import { formatTimeIntoTwoDigits, generatedTimes, isNotQuarterTime, isValidTime, tomorrow } from "@/lib/dateUtils";
+import { useProjectsQuery } from "@/lib/queries";
 
 const emptyState: InsertTaskType = {
 	task: {
@@ -312,10 +313,7 @@ export function DestinationPicker({
 	task: InsertTaskType;
 	setTask: React.Dispatch<React.SetStateAction<InsertTaskType>>;
 }) {
-	const { data, isSuccess } = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const { data, isSuccess } = useProjectsQuery();
 
 	const flattenedProjects = React.useMemo(() => flattenProjectsToSubCats(data), [data]);
 	const [open, setOpen] = React.useState(false);

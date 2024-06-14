@@ -12,19 +12,14 @@ import { getFriends, getProjects, getTasksByFriend } from "@/app/_serverActions/
 import { usePathname } from "next/navigation";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 import { ShowCompletedContext } from "@/lib/friendsShowCompletedContext";
+import { useFriendsQuery, useProjectsQuery } from "@/lib/queries";
 
 export default function Home() {
-	const friendsQuery = useQuery({
-		queryKey: ["friends"],
-		queryFn: () => getFriends(),
-	});
+	const friendsQuery = useFriendsQuery();
 
 	const showCompleted = React.useContext(ShowCompletedContext);
 
-	const { data: projectsList } = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const { data: projectsList } = useProjectsQuery();
 
 	const pathname = usePathname();
 

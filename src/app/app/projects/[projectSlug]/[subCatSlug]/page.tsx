@@ -36,15 +36,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createNewProject, createNewSubCat } from "@/app/_serverActions/addNewProjectSubCat";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
+import { useProjectsQuery } from "@/lib/queries";
 
 export default function Home() {
 	const { projectSlug, subCatSlug } = useParams();
 	const [showCompleted, setShowCompleted] = React.useState(false);
 
-	const projectsQuery = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const projectsQuery = useProjectsQuery();
 
 	const [value, setValue] = React.useState("");
 	const [open, setOpen] = React.useState(false);

@@ -50,6 +50,7 @@ import { TaskType, getFriends, getProjects } from "@/app/_serverActions/queries"
 import { usePathname } from "next/navigation";
 import { isToday, stringifyDate } from "@/lib/dateUtils";
 import { formatTimeIntoTwoDigits, generatedTimes, isNotQuarterTime, isValidTime, tomorrow } from "@/lib/dateUtils";
+import { useFriendsQuery, useProjectsQuery } from "@/lib/queries";
 
 const emptyState: InsertTaskType = {
 	task: {
@@ -184,10 +185,7 @@ function AssignToFriends({
 	setTask: React.Dispatch<React.SetStateAction<InsertTaskType>>;
 	task: InsertTaskType;
 }) {
-	const friendsQuery = useQuery({
-		queryKey: ["friends"],
-		queryFn: () => getFriends(),
-	});
+	const friendsQuery = useFriendsQuery();
 
 	const [values, setValues] = React.useState<string[]>([]);
 
@@ -331,10 +329,7 @@ function flattenProjectsToSubCats(projects: ProjectType[] | undefined): SubcatTy
 }
 
 export function DestinationPicker({ setTask }: { setTask: React.Dispatch<React.SetStateAction<InsertTaskType>> }) {
-	const { data, isSuccess } = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const { data, isSuccess } = useProjectsQuery();
 
 	const flattenedProjects = React.useMemo(() => flattenProjectsToSubCats(data), [data]);
 	const [open, setOpen] = React.useState(false);

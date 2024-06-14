@@ -4,12 +4,10 @@ import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getProjects } from "@/app/_serverActions/queries";
 import { useRouter } from "next/navigation";
+import { useProjectsQuery } from "@/lib/queries";
 
 export default function Home() {
-	const projectsQuery = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const projectsQuery = useProjectsQuery();
 
 	const router = useRouter();
 	React.useEffect(() => {

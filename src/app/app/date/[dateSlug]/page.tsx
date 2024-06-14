@@ -12,6 +12,7 @@ import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCar
 import { Textarea } from "@/components/ui/textarea";
 import { addDays, format } from "date-fns";
 import { isToday } from "@/lib/dateUtils";
+import { useProjectsQuery } from "@/lib/queries";
 
 export default function Home() {
 	const params = useParams<{ dateSlug: string }>();
@@ -31,10 +32,7 @@ function DateWrapper() {
 
 	const pathName = usePathname();
 
-	const { data: projectsList } = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const { data: projectsList } = useProjectsQuery();
 
 	const taskQuery = useQuery({
 		queryKey: [pathName],
