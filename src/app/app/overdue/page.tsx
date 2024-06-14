@@ -8,6 +8,7 @@ import { getOverdueTasks, getProjects } from "@/app/_serverActions/queries";
 
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
+import { useProjectsQuery } from "@/lib/queries";
 
 function formatDateTime(dateObj: Date) {
 	const year = dateObj.getFullYear();
@@ -26,10 +27,7 @@ function formatDateTime(dateObj: Date) {
 }
 
 export default function Home() {
-	const projectsQuery = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const projectsQuery = useProjectsQuery();
 
 	const pathname = usePathname();
 

@@ -55,6 +55,7 @@ import { createNewProject } from "../_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { stringifyDate } from "@/lib/dateUtils";
+import { useProjectsQuery } from "@/lib/queries";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -86,10 +87,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		queryFn: () => getNotificationCount(),
 		refetchInterval: 5000,
 	});
-	const projectsQuery = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const projectsQuery = useProjectsQuery();
 
 	const overdueCount = useQuery({
 		queryKey: ["overdueCount"],
@@ -342,10 +340,7 @@ const MyAccordionTrigger = React.forwardRef<
 MyAccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
 function ProjectsList() {
-	const projectsQuery = useQuery({
-		queryKey: ["projects"],
-		queryFn: () => getProjects(),
-	});
+	const projectsQuery = useProjectsQuery();
 	const [value, setValue] = React.useState("");
 	const [open, setOpen] = React.useState(false);
 

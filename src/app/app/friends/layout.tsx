@@ -35,6 +35,7 @@ import { usePathname } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { createContext } from "react";
 import { ShowCompletedContext } from "@/lib/friendsShowCompletedContext";
+import { useFriendsQuery } from "@/lib/queries";
 
 type FriendsLinkProps = {
 	link: string;
@@ -139,10 +140,7 @@ function AddFriendDialog() {
 	const { toast } = useToast();
 	const [alreadyFriend, setAlreadyFriend] = React.useState(false);
 
-	const friendsQuery = useQuery({
-		queryKey: ["friends"],
-		queryFn: () => getFriends(),
-	});
+	const friendsQuery = useFriendsQuery();
 
 	const queryClient = useQueryClient();
 
