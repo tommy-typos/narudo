@@ -99,9 +99,6 @@ export function TaskCardMiniView({
 						<p className={cn("shad-p mb-1 text-sm", checked && "text-foreground/40 line-through")}>
 							{task.task.title}
 						</p>
-						{/* {(task.assignees || []).length > 0 && (
-							<Users className="h-3 w-3 min-w-3 text-muted-foreground mt-2.5" />
-						)} */}
 					</div>
 				</div>
 				<div className="w-full pl-8">

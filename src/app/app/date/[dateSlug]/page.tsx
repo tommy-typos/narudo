@@ -1,16 +1,16 @@
 "use client";
 import { useParams, usePathname } from "next/navigation";
-import { CalendarDays, CheckCheck, CircleOff, Group, SlidersHorizontal, ToggleLeft, ToggleRight } from "lucide-react";
+import { CalendarDays, CheckCheck, SlidersHorizontal, ToggleLeft, ToggleRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import * as React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TaskType, getProjects, getTasksByDate, retrieveNote, saveOrUpdateNote } from "@/app/_serverActions/queries";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getTasksByDate, retrieveNote, saveOrUpdateNote } from "@/app/_serverActions/queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 import { Textarea } from "@/components/ui/textarea";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { isToday } from "@/lib/dateUtils";
 import { useProjectsQuery } from "@/lib/queries";
 
@@ -97,38 +97,6 @@ function DateWrapper() {
 								</div>
 							</>
 						)}
-						{/* <div className="flex items-center text-sm">
-							<Plus className="mr-2 h-4 w-4 text-primary" /> Add Task
-						</div>
-						<Accordion type="single" collapsible>
-							<AccordionItem value="delegated-to-friends">
-								<AccordionTrigger className="py-2 text-sm hover:no-underline">
-									Delegated to friends (15)
-								</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-2 pt-2">
-									<TaskCardOnTodayView />
-									<TaskCardOnTodayView />
-								</AccordionContent>
-							</AccordionItem>
-							<AccordionItem value="challenges">
-								<AccordionTrigger className="py-2 text-sm hover:no-underline">
-									Challenges (15)
-								</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-2 pt-2">
-									<TaskCardOnTodayView />
-									<TaskCardOnTodayView />
-								</AccordionContent>
-							</AccordionItem>
-							<AccordionItem value="completed">
-								<AccordionTrigger className="py-2 text-sm hover:no-underline">
-									Completed (15)
-								</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-2 pt-2">
-									<TaskCardOnTodayView />
-									<TaskCardOnTodayView />
-								</AccordionContent>
-							</AccordionItem>
-						</Accordion> */}
 					</div>
 				</div>
 				<div className="flex flex-1 flex-col">
