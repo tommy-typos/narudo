@@ -79,7 +79,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 								<ViewOption onClick={() => setShowCompleted((prev) => !prev)} isOn={showCompleted}>
 									<CheckCheck className="mr-2 h-4 w-4" /> Show Completed
 								</ViewOption>
-								{/* <ViewSortOption /> */}
 							</PopoverContent>
 						</Popover>
 					</div>

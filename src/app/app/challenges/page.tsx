@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createNewChallenge } from "@/app/_serverActions/createNewChallenge";
 import { getTodaysChallenges } from "@/app/_serverActions/queries";
-import { stringifyDate } from "@/components/client/addTask";
+import { stringifyDate } from "@/lib/dateUtils";
 
 type FriendsLinkProps = {
 	link: string;

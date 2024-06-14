@@ -5,7 +5,6 @@ import { LanguageToggle } from "../components/client/languageToggle";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 import { GoToApp } from "@/components/client/goToTheAppButton";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });

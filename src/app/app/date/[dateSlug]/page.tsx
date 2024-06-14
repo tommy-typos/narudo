@@ -7,11 +7,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import * as React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskType, getProjects, getTasksByDate, retrieveNote, saveOrUpdateNote } from "@/app/_serverActions/queries";
-import { isToday, stringifyDate } from "@/components/client/addTask";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 import { Textarea } from "@/components/ui/textarea";
 import { addDays, format } from "date-fns";
+import { isToday } from "@/lib/dateUtils";
 
 export default function Home() {
 	const params = useParams<{ dateSlug: string }>();
@@ -70,14 +70,6 @@ function DateWrapper() {
 						<ViewOption onClick={() => setShowCompleted((prev) => !prev)} isOn={showCompleted}>
 							<CheckCheck className="mr-2 h-4 w-4" /> Show Completed
 						</ViewOption>
-						{/* <ViewOption>
-							<Group className="mr-2 h-4 w-4" />
-							Group by project
-						</ViewOption>
-						<ViewOption className="ml-6">
-							<CircleOff className="mr-2 h-4 w-4" />
-							Hide empty projects
-						</ViewOption> */}
 					</PopoverContent>
 				</Popover>
 			</div>
@@ -256,8 +248,3 @@ function ViewOption({ children, className, onClick, isOn }: ViewOptionProps) {
 		</Button>
 	);
 }
-
-/***
- * TODO :::
- *
- */
