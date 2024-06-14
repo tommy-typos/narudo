@@ -279,7 +279,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						</div>
 					</div>
 				</div>
-				<div className="w-full">
+				<div className="flex w-full flex-col">
 					<div className="h-13 flex w-full items-center justify-between border-b bg-muted/40 p-2">
 						<AddTask />
 						{/* <Button variant="outline" className="w-52 justify-between">
@@ -376,7 +376,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							</Popover>
 						</div>
 					</div>
-					<div className="p-5">{children}</div>
+					<div className="flex flex-1 flex-col p-5">{children}</div>
 				</div>
 			</div>
 		</>

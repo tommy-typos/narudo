@@ -81,7 +81,7 @@ function DateWrapper() {
 					</PopoverContent>
 				</Popover>
 			</div>
-			<div className="flex justify-between gap-4">
+			<div className="flex flex-1 justify-between gap-4">
 				<div className="flex-1">
 					<h3 className="shad-h3 mb-4">Tasks</h3>
 					<div className="flex flex-col">
@@ -141,7 +141,7 @@ function DateWrapper() {
 						</Accordion> */}
 					</div>
 				</div>
-				<div className="flex-1">
+				<div className="flex flex-1 flex-col">
 					<h3 className="shad-h3 mb-4">Notes</h3>
 					<TemporaryNote />
 				</div>
@@ -200,7 +200,7 @@ function TemporaryNote() {
 				<Textarea
 					placeholder="Start typing..."
 					value={value}
-					className="min-h-96 w-full resize-none rounded-md border bg-muted/40 !ring-0 !ring-offset-0"
+					className="min-h-96 w-full flex-1 resize-none rounded-md border bg-muted/40 !ring-0 !ring-offset-0"
 					onChange={(e) => {
 						setValue(e.target.value);
 						debounce(
