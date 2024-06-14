@@ -1,6 +1,6 @@
 "use client";
 
-import { stringifyDate } from "@/components/client/addTask";
+import { stringifyDate } from "@/lib/dateUtils";
 import { redirect, useRouter } from "next/navigation";
 
 export default function Home() {

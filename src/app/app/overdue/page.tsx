@@ -1,42 +1,12 @@
 "use client";
 
-import {
-	ArrowDownNarrowWide,
-	ArrowUpNarrowWide,
-	CheckCheck,
-	Clock10,
-	CornerDownRight,
-	SlidersHorizontal,
-	ToggleLeft,
-	ToggleRight,
-} from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Clock10 } from "lucide-react";
 import * as React from "react";
 
-import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getOverdueTasks, getProjects, getTasksByDate, getTasksBySubCategory } from "@/app/_serverActions/queries";
-import { useParams } from "next/navigation";
+import { getOverdueTasks, getProjects } from "@/app/_serverActions/queries";
 
-import { Ellipsis, Inbox, Plus } from "lucide-react";
 import { redirect, usePathname, useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { createNewProject, createNewSubCat } from "@/app/_serverActions/addNewProjectSubCat";
-import { Skeleton } from "@/components/ui/skeleton";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 
 function formatDateTime(dateObj: Date) {

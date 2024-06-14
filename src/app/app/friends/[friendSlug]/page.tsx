@@ -2,19 +2,14 @@
 
 import { Ellipsis, LoaderCircle, Pin, User, Users } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import * as React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getFriends, getProjects, getTasksByFriend } from "@/app/_serverActions/queries";
 import { usePathname } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 import { ShowCompletedContext } from "@/lib/friendsShowCompletedContext";
 
@@ -43,10 +38,6 @@ export default function Home() {
 			<div className="flex justify-between">
 				<Card className="w-60 border-0 pr-2 shadow-none">
 					<CardContent className="flex w-full flex-col gap-1 p-0 ">
-						{/* <div className="mb-2 ml-4 mt-2 flex items-center text-xs opacity-50">
-							<Pin className="mr-2 h-3 w-3 rotate-45" /> Pinned
-						</div>
-						<Separator className="my-2" /> */}
 						{friendsQuery.data?.map((friend) => <FriendLinkComponent key={friend.id} data={friend} />)}
 					</CardContent>
 				</Card>
@@ -78,22 +69,6 @@ export default function Home() {
 							</div>
 						</>
 					)}
-					{/* <TaskCardOnTodayView />
-					<TaskCardOnTodayView /> */}
-					{/* <div className="mt-1 flex items-center text-sm">
-						<Plus className="mr-2 h-4 w-4 text-primary" /> Add Task
-					</div>
-					<Accordion type="single" collapsible>
-						<AccordionItem value="completed">
-							<AccordionTrigger className="py-2 text-sm hover:no-underline">
-								Completed (15)
-							</AccordionTrigger>
-							<AccordionContent className="flex flex-col gap-2 pt-2">
-								<TaskCardOnTodayView />
-								<TaskCardOnTodayView />
-							</AccordionContent>
-						</AccordionItem>
-					</Accordion> */}
 				</div>
 			</div>
 		</>

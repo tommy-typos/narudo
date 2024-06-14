@@ -16,9 +16,6 @@ import {
 	Keyboard,
 	Newspaper,
 	Plus,
-	Rows4,
-	Search,
-	Settings,
 	Swords,
 	Trash2,
 	Users,
@@ -30,7 +27,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import { UserButton } from "@clerk/nextjs";
-import { NarutoBeltSvg } from "@/lib/svgs/svgExporter";
 import { redirect, useParams, usePathname, useRouter } from "next/navigation";
 import { SettingsDialog } from "@/components/client/settingsDialog";
 import { Badge } from "@/components/ui/badge";
@@ -58,14 +54,7 @@ import { Label } from "@/components/ui/label";
 import { createNewProject } from "../_serverActions/addNewProjectSubCat";
 import { Skeleton } from "@/components/ui/skeleton";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-
-function stringifyDate(date: Date) {
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() returns 0-11, so we add 1
-	const day = String(date.getDate()).padStart(2, "0"); // getDate() returns the day of the month
-
-	return `${year}-${month}-${day}`;
-}
+import { stringifyDate } from "@/lib/dateUtils";
 
 const protestRevolution = Protest_Revolution({ weight: "400", subsets: ["latin"] });
 
@@ -97,13 +86,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		queryFn: () => getNotificationCount(),
 		refetchInterval: 5000,
 	});
-	// TODO ::: fetch notification count instead.
-
-	// const friendsQuery = useQuery({
-	// 	queryKey: ["friends"],
-	// 	queryFn: () => getFriends(),
-	// });
-
 	const projectsQuery = useQuery({
 		queryKey: ["projects"],
 		queryFn: () => getProjects(),
@@ -136,16 +118,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		}
 	}, [pathName]);
 
-	// const queryClient = useQueryClient();
-
-	// React.useEffect(() => {
-	// 	// TODO ::: delete this temporary solution for 'queries keep hanging on loading state when redirected from '/sign-in' page.
-	// 	setTimeout(() => {
-	// 		queryClient.cancelQueries();
-	// 		queryClient.refetchQueries();
-	// 	}, 1);
-	// }, []);
-
 	const unReadNotifCount: number = notifQuery.data || 0;
 	const [openTab, setOpenTab] = React.useState<"tips" | "theme" | "customization">("theme");
 	const [settingsOpen, setSettingsOpen] = React.useState<boolean>(false);
@@ -169,6 +141,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const queryClient = useQueryClient();
 
 	React.useEffect(() => {
+		// TODO::: DELETE THIS
 		const focusChangeHandler = () => {
 			queryClient.invalidateQueries({ queryKey: ["projects"] });
 			queryClient.invalidateQueries({ queryKey: ["friends"] });
@@ -235,10 +208,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							<Inbox className="mr-2 h-4 w-4" />
 							Task Inbox
 						</RouteLink>
-						{/* <RouteLink path="/app/all-tasks">
-							<Rows4 className="mr-2 h-4 w-4" />
-							All Tasks
-						</RouteLink> */}
 						{overdueCount.data && overdueCount.data >= 1 ? (
 							<RouteLink path="/app/overdue" highlightPath="/app/overdue">
 								<Clock10 className="mr-2 h-4 w-4 stroke-destructive" />
@@ -264,10 +233,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 								Daily Challenges
 							</RouteLink>
 						)}
-						{/* <RouteLink path="/app/ai">
-							<Atom className="mr-2 h-4 w-4" />
-							Ai
-						</RouteLink> */}
 						{(customization.friends || customization.challenges) && <Separator className="my-2" />}
 
 						<ProjectsList />
@@ -282,16 +247,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				<div className="flex w-full flex-col">
 					<div className="h-13 flex w-full items-center justify-between border-b bg-muted/40 p-2">
 						<AddTask />
-						{/* <Button variant="outline" className="w-52 justify-between">
-							<div className="flex items-center">
-								<Search className="mr-2 h-4 w-4" />
-								Search
-							</div>
-							<div className="ml-6 flex w-fit items-center rounded-md bg-muted p-0.5 px-2">
-								<Command className=" mr-1 h-3 w-3 opacity-50" />
-								<p className="text-xs opacity-50">K</p>
-							</div>
-						</Button> */}
 						<div className="flex items-center ">
 							<Link
 								className={cn(
@@ -351,27 +306,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 										<GraduationCap className="mr-2 h-4 w-4" />
 										Tips
 									</Button>
-									{/* <Button variant="ghost" className="justify-start">
-										<Keyboard className="mr-2 h-4 w-4" />
-										Keyboard Shortcuts
-									</Button>
-									<Button variant="ghost" className="justify-start">
-										<Trash2 className="mr-2 h-4 w-4" />
-										Deleted Tasks
-									</Button>
-									<Button variant="ghost" className="justify-start">
-										<Newspaper className="mr-2 h-4 w-4" />
-										v1.2 <div className="m-2 h-0.5 w-0.5 rounded-full bg-foreground"></div>{" "}
-										What&apos;s new
-									</Button>
-									<a
-										href="/guides"
-										target="_blank"
-										className={cn(buttonVariants({ variant: "ghost" }), "justify-start")}
-									>
-										<GraduationCap className="mr-2 h-4 w-4" />
-										Guides
-									</a> */}
 								</PopoverContent>
 							</Popover>
 						</div>

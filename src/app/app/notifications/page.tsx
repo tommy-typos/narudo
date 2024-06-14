@@ -1,6 +1,5 @@
 "use client";
 import { getNotifications } from "@/app/_serverActions/queries";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BellRing } from "lucide-react";

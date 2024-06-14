@@ -35,7 +35,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createNewProject, createNewSubCat } from "@/app/_serverActions/addNewProjectSubCat";
-import { Skeleton } from "@/components/ui/skeleton";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 
 export default function Home() {
@@ -97,18 +96,6 @@ export default function Home() {
 			<div className="flex justify-between gap-4">
 				<Card className="w-60">
 					<CardContent className="flex w-full flex-col p-2">
-						{/* <Button variant="ghost" className="justify-start pl-10">
-							All
-						</Button>
-						<Button variant="ghost" className="justify-start">
-							<div className="relative mr-6 flex items-center">
-								<Tag className="absolute mr-2 h-4 w-4 rotate-90" />
-								<Slash className="absolute mr-2 h-4 w-4 rotate-90" />
-							</div>
-							No Label
-						</Button>
-
-						<Separator className="my-2" /> */}
 						{projectsQuery.data &&
 							projectsQuery.data
 								.find((item) => item.id === projectSlug)
@@ -205,31 +192,6 @@ export default function Home() {
 							</div>
 						</>
 					)}
-					{/* <TaskCardOnTodayView />
-					<TaskCardOnTodayView />
-					<div className="mt-1 flex items-center text-sm">
-						<Plus className="mr-2 h-4 w-4 text-primary" /> Add Task
-					</div>
-					<Accordion type="single" collapsible>
-						<AccordionItem value="delegated-to-friends">
-							<AccordionTrigger className="py-2 text-sm hover:no-underline">
-								Delegated to friends (15)
-							</AccordionTrigger>
-							<AccordionContent className="flex flex-col gap-2 pt-2">
-								<TaskCardOnTodayView />
-								<TaskCardOnTodayView />
-							</AccordionContent>
-						</AccordionItem>
-						<AccordionItem value="completed">
-							<AccordionTrigger className="py-2 text-sm hover:no-underline">
-								Completed (15)
-							</AccordionTrigger>
-							<AccordionContent className="flex flex-col gap-2 pt-2">
-								<TaskCardOnTodayView />
-								<TaskCardOnTodayView />
-							</AccordionContent>
-						</AccordionItem>
-					</Accordion> */}
 				</div>
 			</div>
 		</>
@@ -257,7 +219,6 @@ function SubCatComponent({ subCat, projectSlug }: { subCat: SubCatProps; project
 				href={`/app/projects/${projectSlug}/${subCat.id}`}
 			>
 				<CornerDownRight className="mr-2 h-4 w-4" />
-				{/* <Tag className="mr-2 h-4 w-4 rotate-90" /> */}
 				{subCat.name}
 			</Link>
 			<Button
