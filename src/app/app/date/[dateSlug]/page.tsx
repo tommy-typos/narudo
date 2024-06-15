@@ -74,7 +74,7 @@ function DateWrapper() {
 			<div className="flex flex-1 justify-between gap-4">
 				<div className="flex-1">
 					<h3 className="shad-h3 mb-4">Tasks</h3>
-					<div className="flex flex-col">
+					<div className="flex flex-col gap-2">
 						{taskQuery.isLoading && <MiniTasksSkeleton />}
 						{taskQuery.data && projectsList && (
 							<>

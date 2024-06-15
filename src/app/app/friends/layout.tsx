@@ -62,7 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	return (
 		<ShowCompletedContext.Provider value={showCompleted}>
-			<div className="mb-6 flex items-center justify-between">
+			<div className="mb-2 flex items-center justify-between">
 				<div className="flex w-full flex-col">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">
@@ -172,7 +172,7 @@ function AddFriendDialog() {
 				}}
 			>
 				<DialogTrigger asChild>
-					<Button variant="secondary">
+					<Button variant="secondary" size={"sm"}>
 						<Plus className="mr-2 h-4 w-4" /> Add Friend
 					</Button>
 				</DialogTrigger>
