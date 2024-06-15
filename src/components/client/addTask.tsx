@@ -70,7 +70,7 @@ const emptyState: InsertTaskType = {
 	},
 };
 
-export function AddTask() {
+export function AddTask({ children }: { children?: React.ReactNode | null }) {
 	const [open, setOpen] = React.useState(false);
 	const [task, setTask] = React.useState<InsertTaskType>(emptyState);
 
@@ -120,10 +120,12 @@ export function AddTask() {
 			}}
 		>
 			<DialogTrigger asChild>
-				<Button variant="ghost">
-					<Plus className="mr-2 h-4 w-4" />
-					Add Task
-				</Button>
+				{children || (
+					<Button variant="ghost">
+						<Plus className="mr-2 h-4 w-4" />
+						Add Task
+					</Button>
+				)}
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<div className="flex flex-col gap-2">
