@@ -14,6 +14,7 @@ import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCar
 import { ShowCompletedContext } from "@/lib/friendsShowCompletedContext";
 import { useFriendsQuery, useProjectsQuery } from "@/lib/queries";
 import { TeamGoalsSvg } from "@/lib/svgs/svgExporter";
+import { AddTask } from "@/components/client/addTask";
 
 export default function Home() {
 	const friendsQuery = useFriendsQuery();
@@ -56,17 +57,20 @@ export default function Home() {
 								))}
 						</>
 					)}
-					{taskQuery.data?.length === 0 && (
-						<>
-							<div className="flex w-full items-center">
+					{(taskQuery.data?.length === 0 ||
+						(!showCompleted && taskQuery.data?.filter((item) => !item.task.isCompleted).length == 0)) && (
+						<div className="flex flex-col gap-4 p-4 pt-10">
+							{/* <div className="flex w-full items-center">
 								<p className="text-muted-foreground">No shared task with this friend yet.</p>
-							</div>
-						</>
+							</div> */}
+							<TeamGoalsSvg />
+							<AddTask>
+								<Button variant="ghost" className="pl-3 text-primary hover:text-primary">
+									<Plus className="mr-1 size-4 rounded-full bg-primary text-white" /> Add task
+								</Button>
+							</AddTask>
+						</div>
 					)}
-					{/* <Button variant="ghost" size="sm" className="text-primary justify-start pl-3">
-						<Plus className="size-4 bg-primary text-white rounded-full mr-1"/> Add task
-					</Button> */}
-					{/* <TeamGoalsSvg /> */}
 				</div>
 			</div>
 		</>
