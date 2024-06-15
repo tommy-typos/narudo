@@ -59,11 +59,11 @@ export default function Home() {
 					)}
 					{(taskQuery.data?.length === 0 ||
 						(!showCompleted && taskQuery.data?.filter((item) => !item.task.isCompleted).length == 0)) && (
-						<div className="flex flex-col gap-4 p-4 pt-10">
+						<div className="flex flex-col items-center justify-center gap-4 p-4 pt-10">
 							{/* <div className="flex w-full items-center">
 								<p className="text-muted-foreground">No shared task with this friend yet.</p>
 							</div> */}
-							<TeamGoalsSvg />
+							<TeamGoalsSvg className="max-w-[500px]" />
 							<AddTask>
 								<Button variant="ghost" className="pl-3 text-primary hover:text-primary">
 									<Plus className="mr-1 size-4 rounded-full bg-primary text-white" /> Add task
