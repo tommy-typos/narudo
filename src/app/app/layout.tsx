@@ -254,9 +254,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						<div className="flex items-center">
 							<Button variant="ghost" size="sm" onClick={() => setSidebar((prev) => !prev)}>
 								{sidebar ? (
-									<PanelRightOpen className="size-4 text-muted-foreground" />
+									<PanelRightOpen className="size-5 text-muted-foreground" />
 								) : (
-									<PanelRightClose className="size-4 text-muted-foreground" />
+									<PanelRightClose className="size-5 text-muted-foreground" />
 								)}
 							</Button>
 							<AddTask />
