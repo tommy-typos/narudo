@@ -217,7 +217,7 @@ export function UpdateTask({ task: givenTask, children }: { task: TaskType; chil
 				</div>
 				<DialogFooter className="!justify-between">
 					<Dialog>
-						<DialogTrigger>
+						<DialogTrigger asChild>
 							<Button variant="destructive">Delete</Button>
 						</DialogTrigger>
 						<DialogContent className="w-fit">
