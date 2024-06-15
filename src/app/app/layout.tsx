@@ -206,7 +206,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							path={"/app/task-inbox"}
 							highlightPath={
 								projectsQuery.data
-									? `/app/projects/${projectsQuery.data[0].id}/$${projectsQuery.data[0].subCategories[0].id}`
+									? `/app/projects/${projectsQuery.data[0].id}/${projectsQuery.data[0].subCategories[0].id}`
 									: "/app/task-inbox"
 							}
 						>
