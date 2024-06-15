@@ -15,6 +15,8 @@ import {
 	Inbox,
 	Keyboard,
 	Newspaper,
+	PanelRightClose,
+	PanelRightOpen,
 	Plus,
 	Swords,
 	Trash2,
@@ -156,11 +158,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		};
 	}, []);
 
+	const [sidebar, setSidebar] = React.useState(true);
+
 	return (
 		<>
 			<Welcomer />
 			<div className="flex min-h-full w-full">
-				<div className="flex min-h-full w-80 flex-col border-r bg-muted/40 px-4 py-2">
+				<div
+					className={cn("flex min-h-full w-80 flex-col border-r bg-muted/40 px-4 py-2", !sidebar && "hidden")}
+				>
 					<div className="flex flex-col justify-between">
 						<Calendar
 							mode="single"
@@ -245,7 +251,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				</div>
 				<div className="flex w-full flex-col">
 					<div className="h-13 flex w-full items-center justify-between border-b bg-muted/40 p-2">
-						<AddTask />
+						<div className="flex items-center">
+							<Button variant="ghost" size="sm" onClick={() => setSidebar((prev) => !prev)}>
+								{sidebar ? (
+									<PanelRightOpen className="text-muted-foreground" />
+								) : (
+									<PanelRightClose className="text-muted-foreground" />
+								)}
+							</Button>
+							<AddTask />
+						</div>
 						<div className="flex items-center ">
 							<Link
 								className={cn(
