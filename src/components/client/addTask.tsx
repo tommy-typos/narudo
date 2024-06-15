@@ -121,7 +121,7 @@ export function AddTask({ children }: { children?: React.ReactNode | null }) {
 		>
 			<DialogTrigger asChild>
 				{children || (
-					<Button variant="ghost">
+					<Button variant="ghost" size="sm">
 						<Plus className="mr-2 h-4 w-4" />
 						Add Task
 					</Button>

@@ -190,6 +190,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 								setMonth(new Date());
 								router.push(`/app/date/${stringifyDate(new Date())}`);
 							}}
+							size="sm"
 						>
 							Go to Today
 						</Button>
@@ -248,7 +249,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						<div className="flex items-center ">
 							<Link
 								className={cn(
-									buttonVariants({ variant: "ghost" }),
+									buttonVariants({ variant: "ghost", size: "sm" }),
 									unReadNotifCount > 0 && "text-destructive"
 								)}
 								href="/app/notifications"
@@ -270,7 +271,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							</Button> */}
 							<Popover>
 								<PopoverTrigger asChild>
-									<Button variant="ghost" size="icon">
+									<Button variant="ghost" size="sm">
 										<EllipsisVertical className="h-4 w-4" />
 										<span className="sr-only">Settings and Stuff</span>
 									</Button>
@@ -469,7 +470,11 @@ function RouteLink({
 
 	return (
 		<Link
-			className={cn(buttonVariants({ variant: "ghost" }), "justify-start", isPath(highlightPath) && "bg-accent")}
+			className={cn(
+				buttonVariants({ variant: "ghost", size: "sm" }),
+				"justify-start",
+				isPath(highlightPath) && "bg-accent"
+			)}
 			href={path}
 		>
 			{children}
@@ -500,7 +505,10 @@ function ProjectRouteLink({
 			)}
 		>
 			<Link
-				className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start hover:bg-transparent")}
+				className={cn(
+					buttonVariants({ variant: "ghost", size: "sm" }),
+					"w-full justify-start hover:bg-transparent"
+				)}
 				href={`/app/projects/${projectId}/${defaultSubCatId}`}
 			>
 				<Hash className="mr-2 h-4 w-4" />
