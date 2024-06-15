@@ -181,13 +181,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							}}
 							month={month}
 							onMonthChange={setMonth}
-							className="p-2"
+							className="p-0"
 							classNames={{
 								row: "flex w-full mt-1",
 								caption: "flex pt-1 relative items-center justify-between px-4",
 								nav: "flex items-center gap-4",
 								nav_button_previous: "",
 								nav_button_next: "",
+								month: "space-y-3",
 							}}
 						/>
 						<Button
@@ -197,11 +198,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 								router.push(`/app/date/${stringifyDate(new Date())}`);
 							}}
 							size="sm"
+							className="mb-2 mt-2"
 						>
 							Go to Today
 						</Button>
 
-						<Separator className="my-2" />
 						<RouteLink
 							path={"/app/task-inbox"}
 							highlightPath={
@@ -225,7 +226,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 							<></>
 						)}
 
-						<Separator className="my-2" />
 						{customization.friends && (
 							<RouteLink path="/app/friends" highlightPath="/app/friends">
 								<Users className="mr-2 h-4 w-4" />
@@ -488,7 +488,8 @@ function RouteLink({
 			className={cn(
 				buttonVariants({ variant: "ghost", size: "sm" }),
 				"justify-start",
-				isPath(highlightPath) && "bg-accent"
+				isPath(highlightPath) && "bg-accent",
+				"font-normal"
 			)}
 			href={path}
 		>
@@ -522,7 +523,7 @@ function ProjectRouteLink({
 			<Link
 				className={cn(
 					buttonVariants({ variant: "ghost", size: "sm" }),
-					"w-full justify-start hover:bg-transparent"
+					"w-full justify-start font-normal hover:bg-transparent"
 				)}
 				href={`/app/projects/${projectId}/${defaultSubCatId}`}
 			>
