@@ -65,7 +65,7 @@ export default function Home() {
 							</div> */}
 							<TeamGoalsSvg className="max-w-[500px]" />
 							<AddTask>
-								<Button variant="ghost" className="pl-3 text-primary hover:text-primary">
+								<Button variant="ghost" className="w-full pl-3 text-primary hover:text-primary">
 									<Plus className="mr-1 size-4 rounded-full bg-primary text-white" /> Add task
 								</Button>
 							</AddTask>
