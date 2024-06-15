@@ -1,6 +1,6 @@
 "use client";
 
-import { Ellipsis, LoaderCircle, Pin, User, Users } from "lucide-react";
+import { Ellipsis, LoaderCircle, Pin, Plus, User, Users } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import * as React from "react";
@@ -30,13 +30,11 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="flex justify-between">
-				<Card className="w-60 border-0 pr-2 shadow-none">
-					<CardContent className="flex w-full flex-col gap-1 p-0 ">
-						{friendsQuery.data?.map((friend) => <FriendLinkComponent key={friend.id} data={friend} />)}
-					</CardContent>
-				</Card>
-				<div className="flex flex-1 flex-col border-l pl-2 pr-2">
+			<div className="flex h-full justify-between rounded-md border shadow-xl">
+				<div className="flex min-w-64 flex-col gap-1 border-r p-2">
+					{friendsQuery.data?.map((friend) => <FriendLinkComponent key={friend.id} data={friend} />)}
+				</div>
+				<div className="flex flex-1 flex-col gap-2 bg-muted/40 p-2">
 					{taskQuery.isLoading && <MiniTasksSkeleton />}
 					{taskQuery.data && projectsList && (
 						<>
@@ -64,6 +62,9 @@ export default function Home() {
 							</div>
 						</>
 					)}
+					{/* <Button variant="ghost" size="sm" className="text-primary justify-start pl-3">
+						<Plus className="size-4 bg-primary text-white rounded-full mr-1"/> Add task
+					</Button> */}
 				</div>
 			</div>
 		</>
@@ -83,7 +84,7 @@ function FriendLinkComponent({ data }: { data: FriendType }) {
 	return (
 		<div
 			className={cn(
-				"group relative flex items-center justify-between rounded-md pr-2 hover:bg-accent",
+				"group relative flex items-center justify-between rounded-md p-2 pl-0 hover:bg-accent",
 				pathname.includes(data.id) && "bg-accent"
 			)}
 		>
@@ -91,14 +92,19 @@ function FriendLinkComponent({ data }: { data: FriendType }) {
 				className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start hover:bg-transparent")}
 				href={`/app/friends/${data.id}`}
 			>
-				<div className="mr-2 size-8">
+				<div className="mr-2 size-10">
 					<img
 						src={data.imageUrl}
-						className="size-8 rounded-full border-0 object-cover"
+						className="size-10 rounded-full border-0 object-cover"
 						alt={data.fullName || "user image"}
 					></img>
 				</div>
-				{data.fullName || `@ ${data.userName}`}
+				<div>
+					<p>{data.fullName || ``}</p>
+					<p
+						className={cn("text-muted-foreground", !data.fullName && "text-foreground")}
+					>{`@ ${data.userName}`}</p>
+				</div>
 			</Link>
 			<Button
 				variant="ghost"

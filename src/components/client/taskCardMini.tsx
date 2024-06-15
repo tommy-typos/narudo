@@ -1,6 +1,6 @@
 "use client";
 import { useParams, usePathname } from "next/navigation";
-import { Calendar, Inbox, Users, Watch } from "lucide-react";
+import { Calendar, Clock, Inbox, Users, Watch } from "lucide-react";
 import { cn } from "@/lib/utils";
 import * as React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,6 +10,7 @@ import { TaskType, getProjects, getTasksByDate } from "@/app/_serverActions/quer
 import { toggleTask } from "@/app/_serverActions/toggleTaskNotification";
 import { UpdateTask } from "./updateTask";
 import { Skeleton } from "../ui/skeleton";
+import { format } from "date-fns";
 
 type projectListType = {
 	id: string;
@@ -83,12 +84,13 @@ export function TaskCardMiniView({
 		<UpdateTask task={task}>
 			<div
 				className={cn(
-					"flex flex-col items-center border-b p-2 first:border-t hover:cursor-pointer hover:bg-muted/40"
+					"flex flex-col items-center rounded-md border p-2 hover:cursor-pointer hover:bg-muted/50",
+					!checked && "bg-background/70"
 				)}
 			>
 				<div className="flex w-full items-start">
 					<Checkbox
-						className="mr-2 mt-0.5 h-6 w-6"
+						className="mr-2 mt-0.5 size-6 rounded-full"
 						checked={checked || false}
 						onClick={(e) => {
 							e.preventDefault();
@@ -111,14 +113,14 @@ export function TaskCardMiniView({
 							)}
 						>
 							{showDate && task.task.date && (
-								<>
-									<Calendar className="h-3 w-3" /> {task.task.date}{" "}
-								</>
+								<div className="flex items-center gap-0.5">
+									<Calendar className="h-3 w-3" /> {format(task.task.date, "MMMM d, yyyy")}{" "}
+								</div>
 							)}
 							{task.task.time && (
-								<>
-									<Watch className="h-3 w-3" /> {task.task.time.slice(0, 5)}{" "}
-								</>
+								<div className="flex items-center gap-0.5">
+									<Clock className="ml-1 h-3 w-3" /> {task.task.time.slice(0, 5)}{" "}
+								</div>
 							)}
 						</div>
 						{showLocation && (

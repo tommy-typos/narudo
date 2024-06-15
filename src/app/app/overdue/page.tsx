@@ -57,7 +57,7 @@ export default function Home() {
 					)}
 					{taskQuery.data && projectsQuery.data && (
 						<div className="m-auto">
-							<div className="flex min-w-[300px] max-w-[450px] flex-col">
+							<div className="flex min-w-[300px] max-w-[450px] flex-col gap-2">
 								{taskQuery.data.map((task) => (
 									<TaskCardMiniView
 										key={task.task.id}
