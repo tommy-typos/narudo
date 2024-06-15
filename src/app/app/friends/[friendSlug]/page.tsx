@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { MiniTasksSkeleton, TaskCardMiniView } from "@/components/client/taskCardMini";
 import { ShowCompletedContext } from "@/lib/friendsShowCompletedContext";
 import { useFriendsQuery, useProjectsQuery } from "@/lib/queries";
+import { TeamGoalsSvg } from "@/lib/svgs/svgExporter";
 
 export default function Home() {
 	const friendsQuery = useFriendsQuery();
@@ -65,6 +66,7 @@ export default function Home() {
 					{/* <Button variant="ghost" size="sm" className="text-primary justify-start pl-3">
 						<Plus className="size-4 bg-primary text-white rounded-full mr-1"/> Add task
 					</Button> */}
+					{/* <TeamGoalsSvg /> */}
 				</div>
 			</div>
 		</>
