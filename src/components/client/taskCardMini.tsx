@@ -113,13 +113,13 @@ export function TaskCardMiniView({
 							)}
 						>
 							{showDate && task.task.date && (
-								<div className="flex items-center gap-0.5">
+								<div className="mr-1 flex items-center gap-0.5">
 									<Calendar className="h-3 w-3" /> {format(task.task.date, "MMMM d, yyyy")}{" "}
 								</div>
 							)}
 							{task.task.time && (
 								<div className="flex items-center gap-0.5">
-									<Clock className="ml-1 h-3 w-3" /> {task.task.time.slice(0, 5)}{" "}
+									<Clock className="h-3 w-3" /> {task.task.time.slice(0, 5)}{" "}
 								</div>
 							)}
 						</div>
