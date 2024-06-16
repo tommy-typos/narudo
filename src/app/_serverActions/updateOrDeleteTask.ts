@@ -74,6 +74,7 @@ export async function deleteTask(id: string) {
 	}
 
 	// delete assignees > task locations > task.
+	// TODO ::: set proper cascade rules so u dont do these manually.
 	await db.delete(assignees_x_tasks).where(eq(assignees_x_tasks.taskId, id));
 
 	await db.delete(taskLocations).where(eq(taskLocations.taskId, id));
