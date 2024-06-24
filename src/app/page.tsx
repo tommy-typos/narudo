@@ -39,9 +39,7 @@ export default function Home() {
 							</div>
 						</div>
 						<div>
-							<h1 className={cn("shad-h1", protestRevolution.className)}>
-								- [ ] Black Belt Your Productivity
-							</h1>
+							<h1 className={cn("shad-h1", protestRevolution.className)}>- [ ] drink water</h1>
 						</div>
 						<GoToApp />
 					</div>
