@@ -165,7 +165,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 			<Welcomer />
 			<div className="flex min-h-full w-full">
 				<div
-					className={cn("flex min-h-full w-80 flex-col border-r bg-muted/40 px-4 py-2", !sidebar && "hidden")}
+					className={cn("flex min-h-full w-80 flex-col border-r bg-muted/50 px-4 py-2", !sidebar && "hidden")}
 				>
 					<div className="flex flex-col justify-between">
 						<Calendar
@@ -250,7 +250,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					</div>
 				</div>
 				<div className="flex w-full flex-col">
-					<div className="h-13 flex w-full items-center justify-between border-b bg-muted/40 p-2">
+					<div className="h-13 flex w-full items-center justify-between border-b bg-muted/50 p-2">
 						<div className="flex items-center">
 							<Button variant="ghost" size="sm" onClick={() => setSidebar((prev) => !prev)}>
 								{sidebar ? (
